@@ -240,7 +240,7 @@ function renderReglages(){
     if(wcode){navigator.clipboard.writeText(wcode).then(()=>wok.textContent="Code copié ✓ Colle-le dans Scriptable.",fail);return}
     if(window.ClipboardItem&&navigator.clipboard.write){navigator.clipboard.write([new ClipboardItem({"text/plain":wget.then(t=>{if(!t)throw 0;return new Blob([t],{type:"text/plain"})})})]).then(()=>wok.textContent="Code copié ✓ Colle-le dans Scriptable.",fail);return}
     fail()}catch(e){fail()}};
-  document.getElementById("ics-send").onclick=()=>{document.getElementById("ics-status").textContent="Envoi…";uploadIcs()};
+  document.getElementById("ics-send").onclick=()=>{document.getElementById("ics-status").textContent="Envoi…";uploadIcs(true)};
   document.getElementById("g-form").onsubmit=e=>{e.preventDefault();store.set("appKey",k.value.trim());document.getElementById("g-status").textContent="Clé enregistrée.";garminSync(true)};
   document.getElementById("g-sync").onclick=()=>garminSync(true);
   if(typeof IS_PWA==="undefined"||!IS_PWA)document.getElementById("g-status").textContent="La synchro marche seulement dans l'appli en ligne (Netlify).";
@@ -369,12 +369,16 @@ function sessionNutrition(s,date){
   return{line:parts.join(" · "),before,after,temp:t,why:r.why};
 }
 /* ---------- Calendrier personnel (.ics) envoyé au serveur ---------- */
+const ICS_DAYS=90;
 function buildIcs(){
   const esc=SCORE.esc,fold=SCORE.fold;const ymd=d=>iso(d).replace(/-/g,"");
   const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d+Z$/,"Z");
   const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Prepa Diag 2030//FR","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:Prépa Diag","X-WR-TIMEZONE:Europe/Paris","REFRESH-INTERVAL;VALUE=DURATION:PT1H","X-PUBLISHED-TTL:PT1H"];
   const [,end]=PLAN.range(mode);
+  /* Fenêtre glissante (J−7 → J+90) pour un fichier léger ; au-delà, seulement les jours de course. L'appli le renvoie quand il change. */
+  const horizon=addDays(TODAY,ICS_DAYS);
   for(let d=addDays(TODAY,-7);d<=end;d=addDays(d,1)){
+    if(d>horizon&&!PLAN.raceOn(d,ctxFor(d)))continue;
     const s=effSession(d,true);if(!s||s.kind==="rest")continue;
     const w=s.week;const sp=siteFor(d);const n=sessionNutrition(s,d);
     const summary=(s.kind==="race"?"🏁 ":s.kind==="gym"?"💪 ":s.kind==="hard"?"⚡ ":"🏃 ")+s.title+(s.dur&&s.dur!=="—"&&s.kind!=="race"?" ("+s.dur+")":"");
@@ -393,9 +397,14 @@ function buildIcs(){
   return L.map(fold).join("\r\n")+"\r\n";
 }
 let icsTimer=null;
-function uploadIcs(){clearTimeout(icsTimer);icsTimer=setTimeout(async()=>{
+/* Empreinte du calendrier (hors DTSTAMP) : on n'envoie que s'il a changé, pour économiser les crédits Netlify */
+function icsHash(t){t=t.replace(/\r\nDTSTAMP:[^\r]*/g,"");let h=5381;for(let i=0;i<t.length;i++)h=(h*33^t.charCodeAt(i))>>>0;return h.toString(36)+"."+t.length}
+function uploadIcs(force){clearTimeout(icsTimer);icsTimer=setTimeout(async()=>{
   const key=store.get("appKey","");if(typeof IS_PWA==="undefined"||!IS_PWA||!key)return;
-  try{await loadMeteo();const r=await fetch("/api/ics",{method:"POST",headers:{"content-type":"text/calendar","x-app-key":key},body:buildIcs()});
+  try{await loadMeteo();const body=buildIcs();const h=icsHash(body);
+    if(!force&&h===store.get("icsHash","")){return}
+    const r=await fetch("/api/ics",{method:"POST",headers:{"content-type":"text/calendar","x-app-key":key},body});
+    if(r.ok)store.set("icsHash",h);
     let msg="";try{msg=(await r.json()).error||""}catch(e){}
     store.set("icsStatus",r.ok?"Calendrier envoyé le "+new Date().toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"Calendrier non envoyé : "+(msg||"erreur "+r.status))}
   catch(e){store.set("icsStatus","Calendrier non envoyé : "+e.message)}

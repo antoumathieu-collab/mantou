@@ -45,7 +45,7 @@ async function getKey(ask) {
 }
 async function loadPlan(base) {
   const fm = FileManager.local(); const p = fm.joinPath(fm.documentsDirectory(), "prepa-diag-plan.ics");
-  try { const r = new Request(base + "/plan.ics"); r.timeoutInterval = 15; const t = await r.loadString(); if (t.startsWith("BEGIN:VCALENDAR")) { fm.writeString(p, t); return { ics: t, offline: false }; } } catch (e) {}
+  try { const r = new Request(base + "/plan.ics?days=3"); r.timeoutInterval = 15; const t = await r.loadString(); if (t.startsWith("BEGIN:VCALENDAR")) { fm.writeString(p, t); return { ics: t, offline: false }; } } catch (e) {}
   return { ics: fm.fileExists(p) ? fm.readString(p) : "", offline: true };
 }
 async function loadWell(base, key) {
@@ -97,7 +97,7 @@ async function buildWidget(base, key) {
   const [{ ics, offline }, well] = await Promise.all([loadPlan(base), loadWell(base, key)]);
   const evs = ics ? parseIcs(ics) : [];
   const today = dayInfo(evs, parisDay()), tomorrow = dayInfo(evs, parisDay(1));
-  const w = new ListWidget(); w.url = base + "/"; w.refreshAfterDate = new Date(Date.now() + 15 * 60 * 1000);
+  const w = new ListWidget(); w.url = base + "/"; w.refreshAfterDate = new Date(Date.now() + 30 * 60 * 1000);
   const s = split(today);
   /* écran verrouillé */
   if (fam === "accessoryInline") { addText(w, pill(well) + " · " + s.name + (s.dur ? " " + s.dur : ""), 12, C.ink, false, 1); return w; }

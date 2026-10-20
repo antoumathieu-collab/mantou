@@ -20,6 +20,22 @@ export async function scoreFor(date, env, store, f=fetch){
   const well = await wellness(env, SCORE.shift(date,-8), date, f);
   return Object.assign(SCORE.compute({date, ans, well}), {ans});
 }
+/* Score mis en cache 30 min (blob) : évite d'appeler intervals.icu à chaque rafraîchissement du widget ou du calendrier */
+const SCORE_TTL = 30*60*1000;
+export async function cachedScore(date, env, store, f=fetch){
+  try{ const c = await store.get("score/"+date, {type:"json"}); if(c && Date.now()-c.at < SCORE_TTL) return c.res; }catch{}
+  const res = await scoreFor(date, env, store, f);
+  try{ await store.setJSON("score/"+date, {at:Date.now(), res}); }catch{}
+  return res;
+}
+/* Ne garde que les événements de [from, from+days[ (widget : fichier minuscule) */
+export function slice(ics, from, days){
+  const lo = from.replace(/-/g,""), hi = SCORE.shift(from, days).replace(/-/g,"");
+  const parts = ics.split(/(?=BEGIN:VEVENT)/); const head = parts.shift();
+  const keep = parts.filter(p => { const m = p.match(/DTSTART[^:]*:(\d{8})/); return m && m[1]>=lo && m[1]<hi; })
+    .map(p => p.replace(/END:VCALENDAR\s*$/, ""));
+  return head + keep.join("") + "END:VCALENDAR\r\n";
+}
 export async function answers(store, from){
   const out = {};
   const {blobs} = await store.list({prefix:"ans/"});
@@ -37,10 +53,12 @@ export async function handleWell(req, env, store, f=fetch){
     const ans = {legs, pain, at:Date.now()};
     if(b.sleep!=null && +b.sleep>=1 && +b.sleep<=5) ans.sleep = Math.round(+b.sleep);
     await store.setJSON("ans/"+date, ans);
-    return json(await scoreFor(date, env, store, f));
+    const res = await scoreFor(date, env, store, f);
+    try{ await store.setJSON("score/"+date, {at:Date.now(), res}); }catch{}
+    return json(res);
   }
   const url = new URL(req.url); const date = url.searchParams.get("date") || parisDay();
-  return json(await scoreFor(date, env, store, f));
+  return json(await cachedScore(date, env, store, f));
 }
 /* /api/ics : l'appli envoie son calendrier */
 export async function handleIcsUpload(req, env, store){
@@ -55,6 +73,9 @@ export async function handleIcsUpload(req, env, store){
 export async function handlePlan(req, env, store, f=fetch){
   let ics = await store.get("plan.ics");
   if(!ics){ return new Response(null, {status:302, headers:{location:"/calendrier-courses.ics"}}); }
-  try{ const d = parisDay(); const res = await scoreFor(d, env, store, f); if(res.ans || res.level!=="vert") ics = SCORE.adaptIcs(ics, d, res); }catch{}
+  const d = parisDay();
+  try{ const res = await cachedScore(d, env, store, f); if(res.ans || res.level!=="vert") ics = SCORE.adaptIcs(ics, d, res); }catch{}
+  const days = +new URL(req.url).searchParams.get("days");
+  if(days>0 && days<=14) ics = slice(ics, d, days);
   return new Response(ics, {headers:{"content-type":"text/calendar; charset=utf-8","cache-control":"no-cache, max-age=0"}});
 }
