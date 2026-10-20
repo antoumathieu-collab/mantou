@@ -232,6 +232,7 @@ function renderReglages(){
   const k=document.getElementById("g-key");k.value=store.get("appKey","");
   document.getElementById("g-status").textContent=store.get("gStatus","Pas encore synchronisé.");
   document.getElementById("ics-status").textContent=store.get("icsStatus","Calendrier pas encore envoyé.");
+  renderIcs();
   document.getElementById("ics-send").onclick=()=>{document.getElementById("ics-status").textContent="Envoi…";uploadIcs()};
   document.getElementById("g-form").onsubmit=e=>{e.preventDefault();store.set("appKey",k.value.trim());document.getElementById("g-status").textContent="Clé enregistrée.";garminSync(true)};
   document.getElementById("g-sync").onclick=()=>garminSync(true);
@@ -448,7 +449,10 @@ function renderPlanning(){
   renderIcs();
 }
 function renderIcs(){
-  const box=document.getElementById("ics-box");if(!box)return;box.innerHTML="";
+  document.querySelectorAll("#ics-box,.ics-box").forEach(icsInto);
+}
+function icsInto(box){
+  box.innerHTML="";
   const file="plan.ics";
   if(typeof IS_PWA==="undefined"||!IS_PWA||location.protocol!=="https:"){
     box.append(el("p",{class:"small",text:"Disponible dans l'appli installée (mise en ligne sur Netlify) : le lien d'abonnement apparaîtra ici."}));return}

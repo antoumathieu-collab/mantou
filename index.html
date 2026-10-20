@@ -583,6 +583,11 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
       <p class="garmin" id="ics-status" aria-live="polite"></p>
       <p class="small">La synchro se fait aussi toute seule à l'ouverture de l'appli (si la dernière date de plus de 30 min) et quand tu reviens dessus.</p>
     </div>
+    <div class="panel">
+      <h2>Calendrier de l'iPhone</h2>
+      <p class="small">Touche « S'abonner sur iPhone », puis « S'abonner » et « Terminé ». Tes séances, la nutrition et les exercices de salle apparaissent dans l'app Calendrier.</p>
+      <div class="ics-box"></div>
+    </div>
   </section>
 
   <!-- FORME ET CHARGE -->
@@ -1715,6 +1720,7 @@ function renderReglages(){
   const k=document.getElementById("g-key");k.value=store.get("appKey","");
   document.getElementById("g-status").textContent=store.get("gStatus","Pas encore synchronisé.");
   document.getElementById("ics-status").textContent=store.get("icsStatus","Calendrier pas encore envoyé.");
+  renderIcs();
   document.getElementById("ics-send").onclick=()=>{document.getElementById("ics-status").textContent="Envoi…";uploadIcs()};
   document.getElementById("g-form").onsubmit=e=>{e.preventDefault();store.set("appKey",k.value.trim());document.getElementById("g-status").textContent="Clé enregistrée.";garminSync(true)};
   document.getElementById("g-sync").onclick=()=>garminSync(true);
@@ -1931,7 +1937,10 @@ function renderPlanning(){
   renderIcs();
 }
 function renderIcs(){
-  const box=document.getElementById("ics-box");if(!box)return;box.innerHTML="";
+  document.querySelectorAll("#ics-box,.ics-box").forEach(icsInto);
+}
+function icsInto(box){
+  box.innerHTML="";
   const file="plan.ics";
   if(typeof IS_PWA==="undefined"||!IS_PWA||location.protocol!=="https:"){
     box.append(el("p",{class:"small",text:"Disponible dans l'appli installée (mise en ligne sur Netlify) : le lien d'abonnement apparaîtra ici."}));return}
