@@ -122,3 +122,27 @@
       <p class="small">La synchro se fait aussi toute seule à l'ouverture de l'appli (si la dernière date de plus de 30 min) et quand tu reviens dessus.</p>
     </div>
   </section>
+
+  <!-- FORME ET CHARGE -->
+  <section class="view" id="v-forme" hidden>
+    <div class="tiles" id="fo-tiles"></div>
+    <div class="panel"><div id="fo-alerts" class="strat"></div></div>
+    <div class="cols2">
+      <div class="panel"><h3>Forme et fatigue</h3><p class="small">La forme monte quand tu t'entraînes régulièrement ; la fatigue réagit en quelques jours. Le but : faire monter la forme sans laisser la fatigue s'envoler.</p><div id="ch-ctl"></div></div>
+      <div class="panel"><h3>Fraîcheur</h3><p class="small">Forme moins fatigue. Négatif = en charge (normal à l'entraînement), positif = reposé (visé le jour d'une course).</p><div id="ch-tsb"></div></div>
+      <div class="panel"><h3>Forme du jour</h3><p class="small">Ton score du matin (check-in + montre).</p><div id="ch-ready"></div></div>
+      <div class="panel"><h3>VFC (variabilité cardiaque)</h3><p class="small">Une VFC sous ta moyenne habituelle signale de la fatigue, un stress ou une maladie qui arrive.</p><div id="ch-hrv"></div></div>
+      <div class="panel"><h3>FC au repos</h3><p class="small">5 battements au-dessus de ta moyenne = signal d'alerte.</p><div id="ch-rhr"></div></div>
+    </div>
+    <div class="panel">
+      <h3>Comment c'est calculé</h3>
+      <ul>
+        <li><b>Charge d'une séance</b> : celle calculée par intervals.icu à partir de ta montre, sinon une estimation selon la durée et l'intensité (100 = 1 h au seuil).</li>
+        <li><b>Forme</b> : moyenne de ta charge sur environ 42 jours. <b>Fatigue</b> : sur environ 7 jours. <b>Fraîcheur</b> : forme moins fatigue (modèle de Banister, utilisé par TrainingPeaks et intervals.icu).</li>
+        <li><b>Ratio aiguë / chronique</b> : au-dessus de 1,5, le risque de blessure augmente nettement ; entre 0,8 et 1,3, c'est la zone sûre.</li>
+        <li><b>Forme du jour</b> : départ à 70, puis VFC et FC au repos comparées à ta moyenne des 28 derniers jours, sommeil, check-in et fraîcheur. Vert ≥ 70, orange 50-69, rouge &lt; 50 ou douleur.</li>
+        <li><b>Plan adaptatif</b> : la semaine en cours est allégée de 15 % si les 2 semaines précédentes sont incomplètes, si la charge monte trop vite ou si la fatigue est trop forte. Après une course, une récupération est imposée (environ 1 jour par 6 km-effort).</li>
+      </ul>
+      <p class="small">Ces indicateurs aident à décider ; ils ne remplacent pas ton ressenti ni un avis médical.</p>
+    </div>
+  </section>

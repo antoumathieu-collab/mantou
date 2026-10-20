@@ -125,3 +125,25 @@ tr.past td{color:var(--muted)}
 .strat .x{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:.78rem;cursor:pointer}
 
 .garmin{font:500 .8rem var(--mono);color:var(--ink);background:var(--rest);border-radius:8px;padding:8px 10px;margin:0}
+
+/* --- Forme du jour --- */
+.scale button{min-width:44px;font:600 .9rem var(--mono)}
+.readyhead{display:flex;gap:14px;align-items:center}
+.ring{width:74px;height:74px;border-radius:50%;display:grid;place-content:center;text-align:center;border:5px solid var(--line);flex:none}
+.ring b{font-family:var(--display);font-size:1.7rem;line-height:1}
+.ring span{font:500 .65rem var(--mono);color:var(--muted)}
+.ring.vert{border-color:var(--accent)}.ring.orange{border-color:#d08a2c}.ring.rouge{border-color:var(--hard)}
+ul.why{list-style:none;padding:0;display:grid;gap:4px}
+ul.why li{font-size:.88rem;padding-left:18px;position:relative}
+ul.why li::before{content:"";position:absolute;left:2px;top:.45em;width:8px;height:8px;border-radius:50%;background:var(--muted)}
+ul.why li.good::before{background:var(--accent)}ul.why li.warn::before{background:#d08a2c}ul.why li.bad::before{background:var(--hard)}
+.banner{margin:0;padding:8px 12px;border-radius:8px;font-size:.88rem;background:var(--rest)}
+.banner.warn{background:color-mix(in srgb,#d08a2c 16%,var(--surface))}
+.banner.bad{background:var(--hard-soft);color:var(--ink)}
+.banner.good{background:var(--accent-soft)}
+.tile.z-surcharge b{color:var(--hard)}.tile.z-frais b,.tile.z-tres-frais b{color:var(--accent)}.tile.z-charge b{color:#b8741f}
+.prio{display:inline-block;font:600 .68rem var(--mono);padding:1px 6px;border-radius:5px;background:var(--rest);color:var(--muted);vertical-align:2px}
+.prio.pA{background:var(--race);color:var(--surface)}.prio.pB{background:var(--race-soft);color:var(--race)}
+.rinfo .ok{color:var(--accent)}.rinfo .warnt{color:#b8741f}
+
+@media (max-width:560px){#fo-tiles .tile:last-child:nth-child(odd){grid-column:1/-1}}
