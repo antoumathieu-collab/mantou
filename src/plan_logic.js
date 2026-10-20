@@ -12,6 +12,45 @@ const S=(kind,title,dur,text,note,short)=>({kind,title,dur,text,note:note||"",sh
 const ENIT_BLOCKS=[{from:"2026-08-31",to:"2026-09-20",site:"p"},{from:"2026-09-21",to:"2026-10-25",site:"t"},{from:"2026-10-26",to:"2026-11-22",site:"p"},
  {from:"2026-11-23",to:"2026-12-20",site:"t"},{from:"2026-12-21",to:"2027-02-21",site:"p"},{from:"2027-02-22",to:"2027-04-04",site:"t"},
  {from:"2027-04-05",to:"2027-05-09",site:"p"},{from:"2027-05-10",to:"2027-06-20",site:"t"},{from:"2027-06-21",to:"2027-08-29",site:"p"}];
+const GYM={
+  A:[{id:"squat",name:"Squat (barre ou goblet)",sets:4,lo:6,hi:8,unit:"rép",start:40,inc:2.5,tip:"Descente en 3 s"},
+     {id:"bulgare",name:"Fente bulgare",sets:3,lo:8,hi:8,unit:"rép/jambe",start:16,inc:2,tip:"Charge = total des 2 haltères"},
+     {id:"stepup",name:"Step-up lesté",sets:3,lo:10,hi:10,unit:"rép/jambe",start:16,inc:2,tip:"Box à hauteur du genou, total des 2 haltères"},
+     {id:"sdtr",name:"Soulevé de terre roumain",sets:3,lo:8,hi:8,unit:"rép",start:40,inc:2.5,tip:"Dos plat"},
+     {id:"excentrique",name:"Descente de marche excentrique",sets:3,lo:10,hi:10,unit:"rép/jambe",start:0,inc:2,tip:"4 s pour descendre ; 0 kg = poids du corps"},
+     {id:"mollets",name:"Mollets à une jambe (tendue + fléchie)",sets:3,lo:12,hi:15,unit:"rép/jambe",start:0,inc:2,tip:"0 kg = poids du corps"}],
+  B:[{id:"planche",name:"Planche ventrale",sets:3,lo:45,hi:60,unit:"s",start:0,inc:0,tip:"Bassin neutre"},
+     {id:"planchelat",name:"Planche latérale",sets:3,lo:30,hi:45,unit:"s/côté",start:0,inc:0,tip:"Hanche haute"},
+     {id:"deadbug",name:"Dead bug",sets:3,lo:10,hi:10,unit:"rép/côté",start:0,inc:0,tip:"Lombaires collées au sol"},
+     {id:"rowing",name:"Rowing haltère",sets:3,lo:10,hi:12,unit:"rép/bras",start:16,inc:2,tip:"Charge d'un haltère"},
+     {id:"pompes",name:"Pompes",sets:3,lo:8,hi:20,unit:"rép",start:0,inc:0,tip:"Max propre"},
+     {id:"pont",name:"Pont fessier à une jambe",sets:3,lo:12,hi:12,unit:"rép/jambe",start:0,inc:0,tip:"Fessier, pas les lombaires"}]
+,
+  C:[{id:"goblet",name:"Squat goblet",sets:3,lo:10,hi:12,unit:"rép",start:20,inc:2,tip:"Haltère contre la poitrine, descente contrôlée"},
+     {id:"sdt",name:"Soulevé de terre (barre ou trap bar)",sets:3,lo:5,hi:6,unit:"rép",start:50,inc:2.5,tip:"Dos plat, pousse le sol"},
+     {id:"fentesm",name:"Fentes marchées",sets:3,lo:10,hi:10,unit:"rép/jambe",start:16,inc:2,tip:"Total des 2 haltères, buste droit"},
+     {id:"tirage",name:"Tirage vertical (ou tractions)",sets:3,lo:8,hi:10,unit:"rép",start:40,inc:2.5,tip:"Omoplates serrées, poitrine haute"},
+     {id:"dch",name:"Développé couché haltères",sets:3,lo:8,hi:10,unit:"rép",start:14,inc:2,tip:"Charge d'un haltère"},
+     {id:"pallof",name:"Pallof press (élastique ou poulie)",sets:3,lo:12,hi:12,unit:"rép/côté",start:0,inc:0,tip:"Anti-rotation : le tronc ne bouge pas"},
+     {id:"mollets",name:"Mollets à une jambe (tendue + fléchie)",sets:3,lo:12,hi:15,unit:"rép/jambe",start:0,inc:2,tip:"0 kg = poids du corps"}],
+  D:[{id:"tirage",name:"Tirage vertical (ou tractions)",sets:4,lo:6,hi:10,unit:"rép",start:40,inc:2.5,tip:"Omoplates serrées, poitrine haute"},
+     {id:"rowbarre",name:"Rowing barre",sets:3,lo:8,hi:10,unit:"rép",start:30,inc:2.5,tip:"Dos plat, tire vers le nombril"},
+     {id:"facepull",name:"Face pull (poulie ou élastique)",sets:3,lo:15,hi:15,unit:"rép",start:10,inc:2,tip:"Coudes hauts : posture et épaules"},
+     {id:"rowing",name:"Rowing haltère",sets:3,lo:10,hi:12,unit:"rép/bras",start:16,inc:2,tip:"Charge d'un haltère"},
+     {id:"extlomb",name:"Extension lombaire",sets:3,lo:12,hi:15,unit:"rép",start:0,inc:2,tip:"Monte jusqu'à l'alignement, pas plus"},
+     {id:"ytw",name:"Y-T-W allongé",sets:2,lo:8,hi:8,unit:"rép par lettre",start:0,inc:1,tip:"Lent et contrôlé, très léger"},
+     {id:"planchelat",name:"Planche latérale",sets:3,lo:30,hi:45,unit:"s/côté",start:0,inc:0,tip:"Hanche haute"}],
+  E:[{id:"dch",name:"Développé couché haltères",sets:4,lo:8,hi:10,unit:"rép",start:14,inc:2,tip:"Charge d'un haltère"},
+     {id:"militaire",name:"Développé militaire haltères",sets:3,lo:8,hi:10,unit:"rép",start:10,inc:2,tip:"Charge d'un haltère, gainage serré"},
+     {id:"pompes",name:"Pompes",sets:3,lo:8,hi:20,unit:"rép",start:0,inc:0,tip:"Max propre"},
+     {id:"dips",name:"Dips (assistés si besoin)",sets:3,lo:8,hi:12,unit:"rép",start:0,inc:2,tip:"Épaules basses, descente à 90°"},
+     {id:"elevlat",name:"Élévations latérales",sets:3,lo:12,hi:15,unit:"rép",start:6,inc:1,tip:"Charge d'un haltère, sans élan"},
+     {id:"deadbug",name:"Dead bug",sets:3,lo:10,hi:10,unit:"rép/côté",start:0,inc:0,tip:"Lombaires collées au sol"}]
+};
+const GYM_NAMES={A:"Jambes et force",B:"Gainage et haut du corps",C:"Full body coureur",D:"Dos et posture",E:"Pecs et épaules"};
+const LIGHT_A=["squat","stepup","mollets"];
+function gymLines(type,light){let ex=GYM[type];if(light&&type==="A")ex=ex.filter(e=>LIGHT_A.includes(e.id));
+  return ex.map(e=>e.name+" "+(light?Math.max(2,e.sets-1):e.sets)+" × "+(e.lo===e.hi?e.lo:e.lo+"-"+e.hi)+" "+e.unit).join(" · ")}
 function weeksFor(mode){return mode==="race"?BASE.concat(EXT):BASE}
 /* Courses actives : conseillées (mode « avec courses », sauf masquées) + courses ajoutées par l'utilisateur (tous modes) */
 function activeRaces(ctx){const h=ctx.hidden||[];const rec=ctx.mode==="race"?RACES.filter(r=>!h.includes(r[0])):[];return rec.concat(ctx.extra||[]).sort((a,b)=>a[0]<b[0]?-1:1)}
@@ -37,7 +76,7 @@ function baseSession(w,dow,site){
   }
   if(dow===2){
     if(h<=3) return S("rest","Repos","—","Repos ou marche.");
-    return S("gym","Salle A + footing",light?"45 min":"1 h 15",(light?"Séance A à 60 % de la charge (squat, step-ups, mollets). ":"Séance A complète : squat, fente bulgare, step-up lesté, soulevé de terre roumain, descente excentrique, mollets. ")+(P?"Puis 20 min de tapis incliné à 12-15 %.":"Puis 20 min de footing Z1."));
+    const g=S("gym","Salle A · Jambes + footing",light?"45 min":"1 h 15",(light?"Jambes à 60 % de la charge : ":"Jambes et force : ")+gymLines("A",light)+". "+(P?"Puis 20 min de tapis incliné à 12-15 %.":"Puis 20 min de footing Z1."),"","💪 Salle A · Jambes + footing");g.gymType="A";return g;
   }
   if(dow===3){
     if(h<=3) return S("easy","Footing libre","30 min","Au ressenti, Z1-Z2.");
@@ -45,7 +84,10 @@ function baseSession(w,dow,site){
   }
   if(dow===4){
     if(light||h<=3) return S("rest","Repos","—","Repos (semaine allégée : une seule séance de salle).");
-    return S("gym","Salle B","45 min","Planche, planche latérale, dead bug, rowing haltère, pompes, pont fessier une jambe, 10 min de mobilité.");
+    /* rotation sur les vendredis réellement travaillés (les semaines allégées n'en ont pas) */
+    const k=BASE.concat(EXT).filter(x=>x[0]<n&&!/Allégée|Récup|Affûtage|Course|Reprise/.test(x[2])&&x[3]>3).length;
+    const t=["C","D","E","B"][k%4];
+    const g=S("gym","Salle · "+GYM_NAMES[t],t==="C"?"50 min":"45 min",GYM_NAMES[t]+" : "+gymLines(t,false)+". Puis 10 min de mobilité.","","💪 Salle · "+GYM_NAMES[t]);g.gymType=t;return g;
   }
   const val=dow===5?sat:sun;
   if(val.startsWith("RACE:")){const [t,txt]=val.slice(5).split("|");return S("race",t,"Course",txt||t,"La veille : repas riche en glucides. Le lendemain : Z1 ou repos.","COURSE · "+t)}
@@ -97,4 +139,4 @@ function sessionFor(date,ctx){
 /* Nombre de séances (hors repos) prévues sur une semaine */
 function plannedInWeek(w,ctx){let n=0;for(let i=0;i<7;i++){const s=sessionFor(addDays(parse(w[1]),i),ctx);if(s&&s.kind!=="rest")n++}return n}
 
-return {ENIT_BLOCKS,activeRaces,BASE,EXT,RACES,COURSES,PACKS,CHECK,parse,iso,addDays,MONTHS,DAYS,SITE,weeksFor,raceOn,raceInWeek,lookup,range,sessionFor,plannedInWeek};
+return {GYM,GYM_NAMES,gymLines,ENIT_BLOCKS,activeRaces,BASE,EXT,RACES,COURSES,PACKS,CHECK,parse,iso,addDays,MONTHS,DAYS,SITE,weeksFor,raceOn,raceInWeek,lookup,range,sessionFor,plannedInWeek};

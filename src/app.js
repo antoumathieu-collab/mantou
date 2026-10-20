@@ -99,23 +99,10 @@ function logWidget(date,s){
 
 
 /* ---------- Musculation : exercices, cibles et saisie ---------- */
-const GYM={
-  A:[{id:"squat",name:"Squat (barre ou goblet)",sets:4,lo:6,hi:8,unit:"rép",start:40,inc:2.5,tip:"Descente en 3 s"},
-     {id:"bulgare",name:"Fente bulgare",sets:3,lo:8,hi:8,unit:"rép/jambe",start:16,inc:2,tip:"Charge = total des 2 haltères"},
-     {id:"stepup",name:"Step-up lesté",sets:3,lo:10,hi:10,unit:"rép/jambe",start:16,inc:2,tip:"Box à hauteur du genou, total des 2 haltères"},
-     {id:"sdtr",name:"Soulevé de terre roumain",sets:3,lo:8,hi:8,unit:"rép",start:40,inc:2.5,tip:"Dos plat"},
-     {id:"excentrique",name:"Descente de marche excentrique",sets:3,lo:10,hi:10,unit:"rép/jambe",start:0,inc:2,tip:"4 s pour descendre ; 0 kg = poids du corps"},
-     {id:"mollets",name:"Mollets à une jambe (tendue + fléchie)",sets:3,lo:12,hi:15,unit:"rép/jambe",start:0,inc:2,tip:"0 kg = poids du corps"}],
-  B:[{id:"planche",name:"Planche ventrale",sets:3,lo:45,hi:60,unit:"s",start:0,inc:0,tip:"Bassin neutre"},
-     {id:"planchelat",name:"Planche latérale",sets:3,lo:30,hi:45,unit:"s/côté",start:0,inc:0,tip:"Hanche haute"},
-     {id:"deadbug",name:"Dead bug",sets:3,lo:10,hi:10,unit:"rép/côté",start:0,inc:0,tip:"Lombaires collées au sol"},
-     {id:"rowing",name:"Rowing haltère",sets:3,lo:10,hi:12,unit:"rép/bras",start:16,inc:2,tip:"Charge d'un haltère"},
-     {id:"pompes",name:"Pompes",sets:3,lo:8,hi:20,unit:"rép",start:0,inc:0,tip:"Max propre"},
-     {id:"pont",name:"Pont fessier à une jambe",sets:3,lo:12,hi:12,unit:"rép/jambe",start:0,inc:0,tip:"Fessier, pas les lombaires"}]
-};
-const GYM_ALL=[...GYM.A,...GYM.B];
+const GYM=PLAN.GYM;
+const GYM_ALL=Object.values(GYM).flat().filter((x,i,arr)=>arr.findIndex(y=>y.id===x.id)===i);
 const LIGHT_A=["squat","stepup","mollets"];
-function gymPlan(s){const type=s.noLegs||/Salle B/.test(s.title)?"B":"A";const light=/60 %/.test(s.text);
+function gymPlan(s){const type=s.noLegs?"B":(s.gymType||(/Salle B/.test(s.title)?"B":"A"));const light=/60 %/.test(s.text);
   let ex=GYM[type];if(light&&type==="A")ex=ex.filter(e=>LIGHT_A.includes(e.id));return{type,light,ex}}
 function lastGym(id,beforeKey){const ks=Object.keys(logs).filter(k=>k<beforeKey&&logs[k].gym&&logs[k].gym[id]&&logs[k].gym[id].some(x=>x&&x.r)).sort();
   if(!ks.length)return null;return{key:ks.at(-1),sets:logs[ks.at(-1)].gym[id].filter(x=>x&&x.r)}}
@@ -369,6 +356,8 @@ function buildIcs(){
     let desc=(sp==="t"?"Tarbes (école)":"Périgueux (entreprise)")+" · semaine "+w[0]+" · "+w[2]+"\n"+s.text;
     (s.banners||[]).forEach(b=>desc+="\n"+b[1]);
     if(s.note)desc+="\n"+s.note;
+    if(s.kind==="gym"){const gp=gymPlan(s);desc+="\n\n💪 Exercices"+(gp.light?" (semaine allégée)":"")+" :";
+      gp.ex.forEach(e=>{const t=gymTarget(e,iso(d),gp.light);desc+="\n- "+e.name+" : "+t.sets+" × "+(t.lo===t.hi?t.lo:t.lo+"-"+t.hi)+" "+e.unit+(t.kg>0?" · "+fmtKg(t.kg)+" kg":e.inc>0?" · poids du corps":"")})}
     if(n)desc+="\n\n🍌 Nutrition"+(n.temp!=null?" ("+Math.round(n.temp)+" °C prévus)":"")+" : "+n.line+"\n"+n.before+"\n"+n.after;
     const ri=s.raceDate?raceInfo(s.raceDate):null;
     L.push("BEGIN:VEVENT","UID:"+ymd(d)+"@prepa-diag-2030","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+ymd(d),"DTEND;VALUE=DATE:"+ymd(addDays(d,1)),
@@ -722,7 +711,7 @@ function renderProgress(){
 let strEx=store.get("strEx","squat");
 function renderStrength(color){
   const sel=document.getElementById("str-ex");if(!sel)return;
-  if(!sel.options.length){[["A",GYM.A],["B",GYM.B]].forEach(([t,list])=>{const g=el("optgroup",{label:"Séance "+t});list.forEach(e=>g.append(el("option",{value:e.id,text:e.name})));sel.append(g)});sel.onchange=()=>{strEx=sel.value;store.set("strEx",strEx);renderStrength(color)}}
+  if(!sel.options.length){const seen=new Set();Object.entries(GYM).forEach(([t,list0])=>{const list=list0.filter(e=>!seen.has(e.id)&&seen.add(e.id));if(!list.length)return;const g=el("optgroup",{label:PLAN.GYM_NAMES[t]});list.forEach(e=>g.append(el("option",{value:e.id,text:e.name})));sel.append(g)});sel.onchange=()=>{strEx=sel.value;store.set("strEx",strEx);renderStrength(color)}}
   if(!GYM_ALL.some(e=>e.id===strEx))strEx="squat";sel.value=strEx;
   const e=GYM_ALL.find(x=>x.id===strEx);const weighted=e.inc>0;
   const pts=Object.keys(logs).filter(k=>logs[k].gym&&logs[k].gym[e.id]).sort().map(k=>{const sets=logs[k].gym[e.id].filter(x=>x&&x.r);if(!sets.length)return null;
