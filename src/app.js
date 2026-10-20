@@ -233,6 +233,13 @@ function renderReglages(){
   document.getElementById("g-status").textContent=store.get("gStatus","Pas encore synchronisé.");
   document.getElementById("ics-status").textContent=store.get("icsStatus","Calendrier pas encore envoyé.");
   renderIcs();
+  const wc=document.getElementById("w-copy"),wok=document.getElementById("w-ok");
+  let wcode=null;const wget=fetch("widget/chargeur.js",{cache:"no-store"}).then(r=>r.ok?r.text():null).then(t=>wcode=t).catch(()=>null);
+  const fail=()=>wok.textContent="Copie impossible ici : touche « Voir le code », sélectionne tout et copie.";
+  wc.onclick=()=>{try{
+    if(wcode){navigator.clipboard.writeText(wcode).then(()=>wok.textContent="Code copié ✓ Colle-le dans Scriptable.",fail);return}
+    if(window.ClipboardItem&&navigator.clipboard.write){navigator.clipboard.write([new ClipboardItem({"text/plain":wget.then(t=>{if(!t)throw 0;return new Blob([t],{type:"text/plain"})})})]).then(()=>wok.textContent="Code copié ✓ Colle-le dans Scriptable.",fail);return}
+    fail()}catch(e){fail()}};
   document.getElementById("ics-send").onclick=()=>{document.getElementById("ics-status").textContent="Envoi…";uploadIcs()};
   document.getElementById("g-form").onsubmit=e=>{e.preventDefault();store.set("appKey",k.value.trim());document.getElementById("g-status").textContent="Clé enregistrée.";garminSync(true)};
   document.getElementById("g-sync").onclick=()=>garminSync(true);
@@ -271,6 +278,18 @@ function formNow(){const p=_pmc||pmcNow();const t=p.at(-1);const wk=p.at(-8)||p[
   return{ctl:t.ctl,atl:t.atl,tsb:t.tsb,acwr:t.ctl>1?t.atl/t.ctl:null,ramp:t.ctl-wk.ctl}}
 function readinessFor(date){const k=iso(date);return SCORE.compute({date:k,ans:checkins[k],well:wellList()})}
 /* Facteur de volume de la semaine en cours : régularité des 2 semaines passées, montée de charge, fatigue */
+/* Séance hors plan la veille, longue (course ≥ 1 h, vélo/natation ≥ 1 h 30) ou dure (RPE ≥ 8 ou charge ≥ 100) → pas d'intensité aujourd'hui */
+function extraBefore(date){
+  const y=iso(addDays(date,-1));let best=null;
+  for(const[k,r]of Object.entries(logs)){
+    if(!k.startsWith(y+"~")||!r||!r.free||!r.done)continue;
+    const sec=r.time||(isRunSport(r.sport)&&r.pace&&r.dist?r.pace*r.dist:0);
+    const hard=(r.rpe>=8)||(r.load>=100);const long=sec>=(isRunSport(r.sport)?3600:5400);
+    if(hard||long){const why=[long?fmtDur(sec):"",hard?(r.rpe>=8?"effort "+r.rpe+"/10":"charge "+Math.round(r.load)):""].filter(Boolean).join(", ");
+      if(!best||sec>best.sec)best={sec,name:r.title||"Activité",why}}
+  }
+  return best;
+}
 function weekFactor(w){
   const s0=parse(w[1]);const cur=addDays(TODAY,-((TODAY.getUTCDay()+6)%7));
   if(iso(s0)!==iso(cur))return{f:1,why:""};
@@ -301,6 +320,9 @@ function effSession(date,noReady){
     else if(s.kind==="easy")Object.assign(s,{dur:PRO.scaleText(s.dur,early?0.5:0.75),text:PRO.scaleText(s.text,early?0.5:0.75)+" En Z1-Z2 seulement."});
     s.banners.push(["warn","Récupération après "+rec.name+" : jour "+rec.i+"/"+rec.N+" (pas d'intensité)"]);
   }
+  const xb=date>=TODAY&&!rec?extraBefore(date):null;
+  if(xb&&s.kind==="hard"){s.planned={title:s.title,dur:s.dur};Object.assign(s,{kind:"easy",title:"Footing facile",dur:"40 min",text:"Hier : « "+xb.name+" » ("+xb.why+") en plus du plan. La séance intense est remplacée par 40 min en Z1-Z2 pour ne pas empiler la fatigue. Elle n'est pas rattrapée : la suivante reprend normalement."});
+    s.banners.push(["warn","Séance hors plan hier ("+xb.why+") : qualité remplacée par un footing facile"])}
   if(date>=TODAY&&(s.kind==="easy"||s.kind==="hard")&&s.dur!=="—"&&!rec){const wf=weekFactor(s.week);
     if(wf.f!==1){s.dur=PRO.scaleText(s.dur,wf.f);s.text=PRO.scaleText(s.text,wf.f);s.banners.push(["warn","Semaine allégée de "+Math.round((1-wf.f)*100)+" % : "+wf.why])}}
   if(!noReady&&iso(date)===iso(TODAY)){const r=readinessFor(TODAY);
@@ -760,7 +782,7 @@ function initProgressForms(){
   document.getElementById("f-form").onsubmit=e=>{e.preventDefault();if(!fd.value)return;const k=fd.value+"~"+Date.now().toString(36);
     const dist=document.getElementById("f-dist").value,dp=document.getElementById("f-dplus").value,nm=document.getElementById("f-name").value.trim();
     logs[k]={done:true,sport:fs.value,pace:(+fm.value)*60+(+fsec.value),dist:dist===""?null:+dist,dplus:dp===""?null:+dp,rpe:frpe.value?+frpe.value:null,title:nm||"Séance libre",free:true};
-    saveLogs();renderProgress();document.getElementById("f-ok").textContent="Séance ajoutée";setTimeout(()=>document.getElementById("f-ok").textContent="",1800)};
+    saveLogs();renderProgress();uploadIcs();document.getElementById("f-ok").textContent="Séance ajoutée";setTimeout(()=>document.getElementById("f-ok").textContent="",1800)};
   /* sauvegarde */
   const ta=document.getElementById("backup");
   document.getElementById("b-export").onclick=()=>{const data=JSON.stringify({v:1,logs,weights,check:store.json("check",{}),nutri:NI});ta.value=data;ta.select();
