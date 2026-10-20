@@ -231,6 +231,8 @@ function maybeAutoSync(){const last=+store.get("gLast","0");if(store.get("appKey
 function renderReglages(){
   const k=document.getElementById("g-key");k.value=store.get("appKey","");
   document.getElementById("g-status").textContent=store.get("gStatus","Pas encore synchronisé.");
+  document.getElementById("ics-status").textContent=store.get("icsStatus","Calendrier pas encore envoyé.");
+  document.getElementById("ics-send").onclick=()=>{document.getElementById("ics-status").textContent="Envoi…";uploadIcs()};
   document.getElementById("g-form").onsubmit=e=>{e.preventDefault();store.set("appKey",k.value.trim());document.getElementById("g-status").textContent="Clé enregistrée.";garminSync(true)};
   document.getElementById("g-sync").onclick=()=>garminSync(true);
   if(typeof IS_PWA==="undefined"||!IS_PWA)document.getElementById("g-status").textContent="La synchro marche seulement dans l'appli en ligne (Netlify).";
@@ -370,7 +372,11 @@ function buildIcs(){
 let icsTimer=null;
 function uploadIcs(){clearTimeout(icsTimer);icsTimer=setTimeout(async()=>{
   const key=store.get("appKey","");if(typeof IS_PWA==="undefined"||!IS_PWA||!key)return;
-  try{await loadMeteo();const r=await fetch("/api/ics",{method:"POST",headers:{"content-type":"text/calendar","x-app-key":key},body:buildIcs()});store.set("icsAt",r.ok?String(Date.now()):"err")}catch(e){}
+  try{await loadMeteo();const r=await fetch("/api/ics",{method:"POST",headers:{"content-type":"text/calendar","x-app-key":key},body:buildIcs()});
+    let msg="";try{msg=(await r.json()).error||""}catch(e){}
+    store.set("icsStatus",r.ok?"Calendrier envoyé le "+new Date().toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"Calendrier non envoyé : "+(msg||"erreur "+r.status))}
+  catch(e){store.set("icsStatus","Calendrier non envoyé : "+e.message)}
+  const el2=document.getElementById("ics-status");if(el2)el2.textContent=store.get("icsStatus","");
 },800)}
 
 /* ---------- Fiche séance ---------- */

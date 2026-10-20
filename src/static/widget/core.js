@@ -3,7 +3,9 @@ const MARK = "CAPIRONMAN_CORE";
 const KEY_NAME = "prepa_diag_app_key";
 const C = { bg: Color.dynamic(new Color("#f3f5f1"), new Color("#141a17")), ink: Color.dynamic(new Color("#1d2621"), new Color("#e6ece8")),
   muted: Color.dynamic(new Color("#5d6b63"), new Color("#9aa9a0")), accent: Color.dynamic(new Color("#2f6b4f"), new Color("#6fc298")),
-  warn: Color.dynamic(new Color("#b8741f"), new Color("#e0a050")), bad: Color.dynamic(new Color("#b4532a"), new Color("#e48a5f")) };
+  warn: Color.dynamic(new Color("#b8741f"), new Color("#e0a050")), bad: Color.dynamic(new Color("#b4532a"), new Color("#e48a5f")),
+  chip: Color.dynamic(new Color("#e3e8e4"), new Color("#26302b")), onColor: Color.dynamic(new Color("#ffffff"), new Color("#141a17")),
+  goodBg: Color.dynamic(new Color("#e1efe7"), new Color("#1a2a22")), warnBg: Color.dynamic(new Color("#f6ead8"), new Color("#2c241a")), badBg: Color.dynamic(new Color("#f6e1d8"), new Color("#2e1d17")) };
 
 function parisDay(offset) {
   const d = new Date(Date.now() + (offset || 0) * 864e5);
@@ -27,9 +29,11 @@ function dayInfo(evs, date) {
   const main = list.find(e => e.kind !== "gym") || list[0];
   const lines = main.desc.split("\n");
   const nutri = lines.find(l => l.startsWith("🍌 Nutrition")) || "";
-  const detail = lines.slice(1).find(l => l && !l.startsWith("🍌") && !l.startsWith("Avant") && !l.startsWith("Après")) || "";
+  const detail = lines.slice(1).find(l => l && !/^(🍌|💪|- |Avant|Après|Prévu)/.test(l)) || "";
   const gym = list.some(e => e.kind === "gym") && main.kind !== "gym";
-  return { title: main.summary, detail, nutri: nutri.replace(/^🍌 Nutrition(\s*\([^)]*\))?\s*:\s*/, "🍌 "), gym, adapted: /^(⚠️|🔴|🩹)/.test(main.summary) };
+  const exStart = lines.findIndex(l => l.startsWith("💪 Exercices"));
+  const ex = exStart >= 0 ? lines.slice(exStart + 1).filter(l => l.startsWith("- ")).map(l => l.slice(2).replace(/ : /, " ")) : [];
+  return { ex, title: main.summary.replace(/^(🏃|⚡|💪|🏁)\s*/, ""), detail, nutri: nutri.replace(/^🍌 Nutrition(\s*\([^)]*\))?\s*:\s*/, "🍌 "), gym, adapted: /^(⚠️|🔴|🩹)/.test(main.summary) };
 }
 async function getKey(ask) {
   if (Keychain.contains(KEY_NAME)) return Keychain.get(KEY_NAME);
@@ -54,38 +58,75 @@ function pill(w) {
 }
 function footer(w, info) {
   if (!w || !w.answered) return "📝 Forme du jour à remplir";
-  if (w.pain >= 2) return "🩹 Douleur : pas de course aujourd'hui";
-  if (w.level === "rouge") return "🔴 Séance remplacée : très facile ou repos";
+  if (w.pain >= 2) return "🩹 Douleur : pas de course";
+  if (w.level === "rouge") return "🔴 Séance remplacée";
   if (w.level === "orange") return "⚠️ Séance allégée";
-  return info ? "✅ Séance comme prévue" : "✅ Bonne forme";
+  return info ? "✅ Comme prévu" : "✅ Bonne forme";
 }
+function levelColor(w) { return !w ? C.muted : w.level === "rouge" ? C.bad : w.level === "orange" ? C.warn : C.accent; }
 function addText(st, t, size, color, bold, lines) {
-  const x = st.addText(t); x.font = bold ? Font.boldSystemFont(size) : Font.systemFont(size); x.textColor = color; if (lines) x.lineLimit = lines; return x;
+  const x = st.addText(t); x.font = bold ? Font.boldSystemFont(size) : Font.systemFont(size); x.textColor = color; if (lines) x.lineLimit = lines; x.minimumScaleFactor = 0.8; return x;
 }
-function addDay(w, info, label, small) {
-  if (label) addText(w, label, 10, C.muted, true, 1);
-  if (!info) { addText(w, "Repos", small ? 13 : 15, C.ink, true, 1); return; }
-  addText(w, info.title, small ? 13 : 15, C.ink, true, 2);
-  if (!small && info.detail) addText(w, info.detail, 11, C.muted, false, 2);
-  if (info.gym) addText(w, "💪 + salle", 11, C.ink, false, 1);
-  if (info.nutri) addText(w, info.nutri, 11, C.accent, false, small ? 2 : 2);
+function split(info) {
+  if (!info) return { name: "Repos", dur: "" };
+  const m = info.title.match(/^(.*?)\s*\(([^)]*)\)\s*$/);
+  return m ? { name: m[1], dur: m[2] } : { name: info.title, dur: "" };
+}
+function chip(st, t, color) {
+  const c = st.addStack(); c.backgroundColor = C.chip; c.cornerRadius = 6; c.setPadding(2, 6, 2, 6);
+  addText(c, t, 10, color || C.ink, true, 1); return c;
+}
+function gradient(w) {
+  const g = new LinearGradient(); g.locations = [0, 1];
+  const tint = !w ? C.bg : w.level === "rouge" ? C.badBg : w.level === "orange" ? C.warnBg : C.goodBg;
+  g.colors = [tint, C.bg]; return g;
+}
+function addSession(w, info, small, showEx) {
+  const s = split(info);
+  addText(w, s.name, small ? 14 : 17, C.ink, true, small ? 3 : 2);
+  if (!info) return;
+  const row = w.addStack(); row.layoutHorizontally(); row.spacing = 4;
+  if (s.dur) chip(row, "⏱ " + s.dur);
+  if (info.gym) chip(row, "💪 + salle");
+  if (!small && info.detail) { w.addSpacer(3); addText(w, info.detail, 11, C.muted, false, 2); }
+  if (showEx && info.ex && info.ex.length) { w.addSpacer(3); info.ex.slice(0, 5).forEach(e => addText(w, "• " + e, 10, C.muted, false, 1)); }
+  if (info.nutri) { w.addSpacer(3); addText(w, info.nutri, small ? 10 : 11, C.accent, true, 2); }
 }
 async function buildWidget(base, key) {
   const fam = config.widgetFamily || "medium";
   const [{ ics, offline }, well] = await Promise.all([loadPlan(base), loadWell(base, key)]);
   const evs = ics ? parseIcs(ics) : [];
   const today = dayInfo(evs, parisDay()), tomorrow = dayInfo(evs, parisDay(1));
-  const w = new ListWidget(); w.backgroundColor = C.bg; w.url = base + "/"; w.setPadding(12, 14, 12, 14);
-  w.refreshAfterDate = new Date(Date.now() + 15 * 60 * 1000);
+  const w = new ListWidget(); w.url = base + "/"; w.refreshAfterDate = new Date(Date.now() + 15 * 60 * 1000);
+  const s = split(today);
+  /* écran verrouillé */
+  if (fam === "accessoryInline") { addText(w, pill(well) + " · " + s.name + (s.dur ? " " + s.dur : ""), 12, C.ink, false, 1); return w; }
+  if (fam === "accessoryCircular") {
+    w.addAccessoryWidgetBackground = true; const st = w.addStack(); st.layoutVertically(); st.centerAlignContent();
+    addText(st, well ? String(well.score) : "–", 20, C.ink, true, 1); addText(st, "forme", 9, C.ink, false, 1); return w;
+  }
+  if (fam === "accessoryRectangular") {
+    addText(w, pill(well) + "  " + (s.dur || ""), 11, C.ink, true, 1); addText(w, s.name, 13, C.ink, true, 1);
+    if (today && today.nutri) addText(w, today.nutri, 10, C.ink, false, 1); return w;
+  }
+  /* écran d'accueil */
+  w.backgroundGradient = gradient(well); w.setPadding(12, 14, 10, 14);
   const top = w.addStack(); top.layoutHorizontally(); top.centerAlignContent();
   const df = new DateFormatter(); df.locale = "fr_FR"; df.dateFormat = fam === "small" ? "EEE d" : "EEEE d MMMM";
-  addText(top, df.string(new Date()), 11, C.muted, true, 1); top.addSpacer();
-  addText(top, pill(well), 13, well && well.level === "rouge" ? C.bad : well && well.level === "orange" ? C.warn : C.accent, true, 1);
+  addText(top, df.string(new Date()).toUpperCase(), 10, C.muted, true, 1); top.addSpacer();
+  const b = top.addStack(); b.backgroundColor = levelColor(well); b.cornerRadius = 9; b.setPadding(2, 7, 2, 7);
+  addText(b, (well ? well.score : "–") + "", 12, C.onColor, true, 1);
   w.addSpacer(6);
-  addDay(w, today, null, fam === "small");
-  if (fam === "large") { w.addSpacer(10); addDay(w, tomorrow, "DEMAIN", false); }
+  addSession(w, today, fam === "small", fam === "large");
+  if (fam === "large") {
+    w.addSpacer(10);
+    const sep = w.addStack(); sep.backgroundColor = C.chip; sep.size = new Size(0, 1); w.addSpacer(8);
+    addText(w, "DEMAIN", 10, C.muted, true, 1); w.addSpacer(2);
+    const t = split(tomorrow); addText(w, t.name + (t.dur ? " · " + t.dur : ""), 13, C.ink, true, 2);
+    if (tomorrow && tomorrow.nutri) addText(w, tomorrow.nutri, 10, C.accent, false, 1);
+  }
   w.addSpacer();
-  addText(w, footer(well, today) + (offline ? " · hors ligne" : ""), 10, well && well.level !== "vert" ? C.warn : C.muted, false, 1);
+  addText(w, footer(well, today) + (offline ? " · hors ligne" : ""), 10, levelColor(well), true, 1);
   return w;
 }
 async function ask(title, opts) {
@@ -113,5 +154,5 @@ module.exports.main = async (base) => {
   if (config.runsInWidget) { const key = await getKey(false); Script.setWidget(await buildWidget(base, key)); Script.complete(); return; }
   await questionnaire(base);
   const key = await getKey(false); const w = await buildWidget(base, key);
-  await w.presentMedium(); Script.complete();
+  await w.presentLarge(); Script.complete();
 };
