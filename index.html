@@ -1,0 +1,1938 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prépa Diag 2030</title>
+<meta name="description" content="Prépa Diagonale des Fous 2030 : planning, progression, nutrition, courses et matériel.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2f6b4f">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Prépa Diag">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>*,*::before,*::after{box-sizing:border-box}html{-webkit-text-size-adjust:100%}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout : carnet d'entraînement — barre d'onglets en haut, contenu en une colonne ; planning = calendrier + fiche du jour */
+:root{
+  --bg:#f3f5f1; --surface:#ffffff; --ink:#1d2621; --muted:#5d6b63; --line:#d9e0da;
+  --accent:#2f6b4f; --accent-soft:#e1efe7; --hard:#b4532a; --hard-soft:#f6e5dc;
+  --race:#7a3fa0; --race-soft:#efe4f6; --rest:#eef1ee; --s1:#1f7a52; --s2:#8a45b8;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a17; --surface:#1c2420; --ink:#e6ece8; --muted:#9aa9a0; --line:#2e3a34;
+  --accent:#6fc298; --accent-soft:#1f3a2d; --hard:#e48a5f; --hard-soft:#3d261b;
+  --race:#c793e8; --race-soft:#33243f; --rest:#202925; --s1:#3f9a70; --s2:#a46ccc; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a17; --surface:#1c2420; --ink:#e6ece8; --muted:#9aa9a0; --line:#2e3a34;
+  --accent:#6fc298; --accent-soft:#1f3a2d; --hard:#e48a5f; --hard-soft:#3d261b;
+  --race:#c793e8; --race-soft:#33243f; --rest:#202925; --s1:#3f9a70; --s2:#a46ccc; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:1080px;margin:0 auto;display:grid;gap:18px}
+header.top{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:10px}
+h1{font-family:var(--display);font-weight:700;font-size:2.3rem;line-height:1;margin:0;letter-spacing:.01em}
+.sub{color:var(--muted);margin:4px 0 0}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:6px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.tabs a{flex:none;text-decoration:none;color:var(--ink);font:600 .9rem var(--body);padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}
+nav.tabs a[aria-current="page"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section.view{display:grid;gap:18px}
+h2{font-family:var(--display);font-weight:600;font-size:1.7rem;line-height:1.1;margin:0;text-wrap:balance}
+h3{font-family:var(--display);font-weight:600;font-size:1.3rem;margin:0}
+p{margin:0;max-width:68ch}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:12px;min-width:0}
+.lead{font-size:1.05rem}
+.eyebrow{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+ul,ol{margin:0;padding-left:1.2em;display:grid;gap:4px;max-width:70ch}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--rest);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tr.key td{background:var(--race-soft)}
+.tag{display:inline-block;font:500 .7rem var(--mono);padding:2px 8px;border-radius:999px;background:var(--race-soft);color:var(--race);white-space:nowrap}
+.tag.ok{background:var(--accent-soft);color:var(--accent)} .tag.no{background:var(--rest);color:var(--muted)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.stat{display:grid;gap:2px}
+.stat b{font-family:var(--display);font-size:2.2rem;font-weight:700;line-height:1}
+.stat span{color:var(--muted);font-size:.85rem}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;color:var(--ink);font:600 .85rem var(--body);padding:6px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;font:600 .85rem var(--body);padding:6px 12px;cursor:pointer}
+.btn:disabled{opacity:.4;cursor:default}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:820px){.main{grid-template-columns:1fr}}
+.cal{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+.calhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.calhead h3{text-transform:capitalize;font-size:1.5rem}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.dow{font:500 .7rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:center;padding-bottom:4px}
+.day{min-height:64px;border:1px solid transparent;border-radius:8px;padding:5px;text-align:left;background:var(--rest);color:var(--ink);cursor:pointer;display:flex;flex-direction:column;gap:3px;font:inherit;min-width:0}
+.day.out{background:none;cursor:default;opacity:.35}
+.day .n{font:500 .78rem var(--mono)}
+.day .t{font-size:.72rem;line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;color:var(--muted)}
+.day.k-easy{background:var(--accent-soft)} .day.k-easy .t{color:var(--accent)}
+.day.k-hard{background:var(--hard-soft)} .day.k-hard .t{color:var(--hard)}
+.day.k-race{background:var(--race-soft)} .day.k-race .t{color:var(--race);font-weight:600}
+.day.k-gym{background:var(--surface);border-color:var(--line)}
+.day.today{border-color:var(--ink)}
+.day.sel{outline:2px solid var(--accent);outline-offset:1px}
+@media (max-width:480px){.day{min-height:46px}.day .t{display:none}}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:.78rem;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid var(--line)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:12px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 56px);min-width:0}
+@media (max-width:820px){.card{position:static}}
+.card h3{font-size:1.9rem;font-weight:700;line-height:1.05}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font:500 .75rem var(--mono);padding:3px 9px;border-radius:999px;background:var(--rest);color:var(--ink)}
+.pill.hard{background:var(--hard-soft);color:var(--hard)} .pill.race{background:var(--race-soft);color:var(--race)} .pill.easy{background:var(--accent-soft);color:var(--accent)}
+.note{font-size:.88rem;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+.weekbox{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:6px}
+.weekbox dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:.88rem}
+.weekbox dt{color:var(--muted)} .weekbox dd{margin:0}
+.small{font-size:.85rem;color:var(--muted)}
+.racelist{display:grid;gap:8px}
+.racelist div{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:8px}
+.racelist div:last-child{border-bottom:0;padding-bottom:0}
+.racelist b{font:500 .8rem var(--mono)}
+.steps{display:grid;gap:14px}
+.phase{display:grid;grid-template-columns:120px minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:560px){.phase{grid-template-columns:1fr}}
+.phase .when{font-family:var(--display);font-weight:700;font-size:1.4rem;line-height:1.05;color:var(--race)}
+.phase .when span{display:block;font:500 .72rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.sz{display:inline-block;font:500 .68rem var(--mono);padding:1px 7px;border-radius:999px;background:var(--race-soft);color:var(--race);margin-right:4px;vertical-align:1px}
+.check{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:6px 16px}
+.check label{display:flex;gap:8px;align-items:flex-start;font-size:.92rem;cursor:pointer}
+.check input{margin-top:3px;accent-color:var(--accent);width:16px;height:16px;flex:none}
+.goto{font-weight:600}
+/* --- Saisie de séance --- */
+.todaycard{display:grid;gap:12px}
+.log{display:grid;gap:10px;border-top:1px solid var(--line);padding-top:12px}
+.done{display:flex;align-items:center;gap:10px;font-weight:600;font-size:1rem;cursor:pointer}
+.done input{width:22px;height:22px;accent-color:var(--accent)}
+.saved{font:500 .75rem var(--mono);color:var(--accent);min-height:1em}
+.logrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.lbl{font-size:.85rem;color:var(--muted);font-weight:600}
+.small-seg button{padding:5px 11px;font-size:.8rem}
+.wheel{display:inline-flex;align-items:center;gap:4px;background:var(--rest);border:1px solid var(--line);border-radius:10px;padding:4px 8px}
+.wheel select{font:600 1.25rem var(--mono);font-variant-numeric:tabular-nums;border:0;background:transparent;color:var(--ink);padding:4px 2px;-webkit-appearance:none;appearance:none;text-align:center;cursor:pointer}
+.wheel .sep{font:600 1.25rem var(--mono)}
+.wheel .unit,.speed .unit{font-size:.85rem;color:var(--muted);margin-left:4px}
+details.more summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:.88rem}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end;margin-top:8px}
+.fields label{display:grid;gap:4px;font-size:.82rem;color:var(--muted);min-width:0}
+.fields input,.fields select,textarea,.urlbox,.speed input{font:500 1rem var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+textarea{font:.8rem var(--mono);resize:vertical}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--surface);text-decoration:none;display:inline-block}
+.day{position:relative}
+.day .tick{position:absolute;top:4px;right:6px;font:600 .75rem var(--body);color:var(--accent)}
+.late{display:grid;gap:6px}
+.latebtn{text-align:left;border:1px dashed var(--line);background:none;color:var(--ink);border-radius:8px;padding:7px 10px;font:inherit;cursor:pointer}
+.goto{font-weight:600}
+/* --- Tuiles, graphiques --- */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:2px;min-width:0}
+.tile b{font-family:var(--display);font-size:1.8rem;font-weight:700;line-height:1.05;font-variant-numeric:tabular-nums}
+.tile span{color:var(--muted);font-size:.82rem}
+#calc-out .tile{background:var(--rest);border-color:transparent}
+.cols2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:14px}
+.chart{position:relative;min-width:0}
+.chart svg{display:block;max-width:100%;touch-action:pan-y}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .axis{fill:var(--muted);font:11px var(--mono)}
+.chart .cross{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
+.chart .empty{border:1px dashed var(--line);border-radius:10px;padding:28px 16px;text-align:center;color:var(--muted);font-size:.9rem}
+.chart .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:8px;padding:6px 9px;font-size:.78rem;display:grid;gap:1px;white-space:nowrap;z-index:2}
+.chart .legend{margin-top:6px}
+.chart .legend i{border:0}
+.hlist{display:grid;gap:4px}
+.hrow{display:flex;gap:10px;align-items:baseline;border-bottom:1px solid var(--line);padding:6px 0;font-size:.88rem;flex-wrap:wrap}
+.hrow:last-child{border-bottom:0}
+.hrow .grow{flex:1;min-width:0;color:var(--muted)}
+.hrow .x{border:0;background:none;color:var(--muted);font-size:.78rem;text-decoration:underline;cursor:pointer;margin-left:auto}
+/* --- Calcul nutrition --- */
+.calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:18px;align-items:start}
+@media (max-width:860px){.calc{grid-template-columns:1fr}}
+#calc-form{gap:14px}
+.frow{display:grid;gap:6px}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--rest);color:var(--ink);border-radius:999px;font:600 .8rem var(--body);padding:5px 11px;cursor:pointer}
+.wrapseg{flex-wrap:wrap;border-radius:12px}
+.wrapseg button{flex:1 1 auto}
+.speed{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.speed input{max-width:120px}
+#calc-out h3{margin-top:6px}
+#calc-out table td:first-child{white-space:nowrap;font-weight:600}
+.urlbox{font:.78rem var(--mono)}
+
+#calc-out .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:1100px){#calc-out .tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
+#calc-out .tile b{font-size:1.5rem}
+
+/* --- Navigation regroupée --- */
+.navwrap{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:grid;gap:6px;padding-block:6px}
+.navwrap nav.tabs{position:static;padding-block:0}
+nav.subtabs{display:flex;gap:18px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line)}
+nav.subtabs a{flex:none;text-decoration:none;color:var(--muted);font:600 .88rem var(--body);padding:6px 0 8px;border-bottom:2px solid transparent;margin-bottom:-1px}
+nav.subtabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+.card{top:calc(env(safe-area-inset-top,0px) + 104px)}
+/* --- Courses --- */
+.races{display:grid;gap:0}
+.race{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:center;border-bottom:1px solid var(--line);padding:10px 0}
+.race:last-child{border-bottom:0}
+@media (max-width:620px){.race{grid-template-columns:56px minmax(0,1fr)}.ract{grid-column:2}}
+.race.off .rinfo b{text-decoration:line-through;color:var(--muted)}
+.race.past{opacity:.6}
+.rdate{display:grid;justify-items:center;background:var(--race-soft);color:var(--race);border-radius:10px;padding:6px 4px}
+.rdate b{font-family:var(--display);font-size:1.5rem;line-height:1}
+.rdate span{font:500 .68rem var(--mono);text-transform:uppercase}
+.rinfo{display:grid;gap:2px;min-width:0}
+.rpred{font:500 .8rem var(--mono);color:var(--accent)}
+.ract{display:flex;flex-wrap:wrap;gap:6px}
+.ract .btn{font-size:.78rem;padding:5px 9px;text-decoration:none}
+.raceform{border:1px solid var(--line);border-radius:10px;padding:12px;margin:6px 0}
+.raceform .controls{grid-column:1/-1}
+tr.past td{color:var(--muted)}
+.pred{display:grid;gap:2px;background:var(--race-soft);border-radius:10px;padding:10px 12px;margin:0}
+.pred b{font-family:var(--display);font-size:1.6rem;line-height:1;color:var(--race)}
+
+.wrap>*,section.view>*{min-width:0}
+.panel>*{min-width:0}
+
+#nav-main{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;overflow:visible}
+#nav-main a{text-align:center;padding:7px 4px;font-size:.85rem;white-space:nowrap}
+@media (max-width:420px){#nav-main a{font-size:.78rem;padding:7px 2px}}
+#v-accueil .cols{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#v-accueil .cols .panel{padding:12px}
+#v-accueil .stat b{font-size:1.6rem}
+@media (max-width:560px){#v-accueil .stat b{font-size:1.25rem}#v-accueil .stat span{font-size:.72rem}}
+
+/* --- Musculation --- */
+.gym{display:grid;gap:10px;margin-top:4px}
+.gex{display:grid;gap:6px;border-top:1px solid var(--line);padding-top:10px}
+.gname{display:grid;gap:1px}
+.gname b{font-size:.95rem}
+.gtgt{font:500 .74rem var(--mono);color:var(--accent)}
+.gtip{font-size:.74rem;color:var(--muted)}
+.gsets{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.gset{display:inline-flex;align-items:center;gap:3px;font-size:.8rem;color:var(--muted)}
+.gset .sn{font:500 .7rem var(--mono);margin-right:2px}
+.gset input{width:3.4em;font:600 .95rem var(--mono);text-align:center;padding:5px 2px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink)}
+.gset input::placeholder{color:var(--muted);opacity:.55}
+.strsel{font:500 .95rem var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 10px;max-width:100%}
+
+.strat{display:grid;gap:10px}
+.strat h3{margin-top:8px}
+.goal b{font-size:1.7rem}
+.goal-B{background:var(--race-soft)!important;border-color:transparent!important}
+.goal-B b{color:var(--race)}
+.strat .tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:480px){.strat .tiles{grid-template-columns:1fr}}
+.strat table td:first-child{font-weight:600}
+.strat .x{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:.78rem;cursor:pointer}
+
+.garmin{font:500 .8rem var(--mono);color:var(--ink);background:var(--rest);border-radius:8px;padding:8px 10px;margin:0}
+
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Prépa Diag 2030</h1>
+      <p class="sub">Mathieu · objectif Diagonale des Fous, octobre 2030 · plan établi le 18 octobre 2026</p>
+    </div>
+  </header>
+
+  <div class="navwrap">
+    <nav class="tabs" id="nav-main" aria-label="Sections"></nav>
+    <nav class="subtabs" id="nav-sub" aria-label="Sous-sections" hidden></nav>
+  </div>
+
+  <!-- ACCUEIL -->
+  <section class="view" id="v-accueil">
+    <div class="panel" id="today-panel"></div>
+    <div class="cols">
+      <div class="panel stat"><span>Prochaine course conseillée</span><b id="next-race">—</b><span id="next-race-d"></span></div>
+      <div class="panel stat"><span>Andorra Trail 80K</span><b id="cd-andorra">—</b><span>79 km · 3 900 m D+ · 10-11 juin 2027</span></div>
+      <div class="panel stat"><span>Diagonale des Fous</span><b>Oct. 2030</b><span>~180 km · ~10 200 m D+ · objectif 33 h</span></div>
+    </div>
+    <div class="panel">
+      <h2>Le plan en bref</h2>
+      <p class="lead">4 saisons, une marche par an, 7 à 9 h d'entraînement par semaine tenues sans trou.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Quand</th><th>Étape</th><th>Rôle</th></tr></thead>
+        <tbody>
+          <tr><td>Juin 2027</td><td>Andorra Trail 80K (79 km, 3 900 m D+)</td><td>Premier ultra, qualifie pour le Trail de Bourbon 2028</td></tr>
+          <tr><td>Oct. 2027</td><td>Les Templiers (80,4 km, 3 443 m D+)</td><td>Deuxième ultra, test nutrition à 80-90 g/h</td></tr>
+          <tr><td>Oct. 2028</td><td>Trail de Bourbon (106 km, 6 200 m D+), plan B GRP 120 km</td><td>Découvrir le terrain réunionnais et la nuit</td></tr>
+          <tr><td>2029</td><td>Andorra 80K (juin) + GRP Ultra 160 km (août)</td><td>Les 2 qualificatives Diag (85 points chacune)</td></tr>
+          <tr><td>Janv.-mars 2030</td><td>Inscription Diag</td><td>Package Bourbon Voyages ou tirage au sort</td></tr>
+          <tr class="key"><td>Oct. 2030</td><td>Diagonale des Fous</td><td>Objectif top 100, environ 33 h</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- PLANNING -->
+  <section class="view" id="v-planning" hidden>
+    <div class="panel">
+      <div class="controls">
+        <div class="seg" role="group" aria-label="Version du planning">
+          <button id="mode-base" aria-pressed="false">Plan de base</button>
+          <button id="mode-race" aria-pressed="true">Avec mes courses</button>
+        </div>
+        <div class="seg" role="group" aria-label="Site d'alternance">
+          <button id="site-t" aria-pressed="true">Tarbes</button>
+          <button id="site-p" aria-pressed="false">Périgueux</button>
+        </div>
+        <button class="btn" id="today-btn">Aujourd'hui</button>
+      </div>
+      <p class="small" id="mode-desc"></p>
+    </div>
+    <div class="main">
+      <div class="cal" aria-label="Calendrier">
+        <div class="calhead">
+          <button class="btn" id="prev" aria-label="Mois précédent">←</button>
+          <h3 id="month"></h3>
+          <button class="btn" id="next" aria-label="Mois suivant">→</button>
+        </div>
+        <div class="grid" id="grid"></div>
+        <div class="legend">
+          <span><i style="background:var(--hard-soft)"></i>Qualité</span>
+          <span><i style="background:var(--accent-soft)"></i>Endurance / sortie longue</span>
+          <span><i style="background:var(--surface)"></i>Salle</span>
+          <span><i style="background:var(--race-soft)"></i>Course</span>
+          <span><i style="background:var(--rest)"></i>Repos</span>
+        </div>
+      </div>
+      <aside class="card" id="card" aria-live="polite"></aside>
+    </div>
+    <div class="panel">
+      <h3>Les courses du planning « Avec mes courses »</h3>
+      <div class="racelist" id="racelist"></div>
+      <p class="small">Les dates marquées « estimée » reprennent le mois de l'édition 2026 : je les ai placées sur un week-end plausible. Vérifie la date officielle avant de t'inscrire.</p>
+    </div>
+    <div class="panel">
+      <h3>Dans le calendrier de ton iPhone</h3>
+      <p class="small">Abonne-toi une fois : les séances apparaissent dans l'app Calendrier, et elles se mettent à jour quand le planning change.</p>
+      <div id="ics-box"></div>
+    </div>
+  </section>
+
+  <!-- COURSES -->
+  <section class="view" id="v-courses" hidden>
+    <div class="panel">
+      <h2>Une course toutes les 2 semaines</h2>
+      <p>Pour chaque date, il y a une option côté Pyrénées et une option côté Périgueux / Limousin : tu choisis selon ton bloc d'alternance. Celles que je te conseille sont surlignées. Ce sont les mêmes que dans le planning « Avec mes courses ».</p>
+      <ul>
+        <li><b>UTMB Index</b> : ta cote de performance. Elle compte sur toute course publiée sur utmb.world. Pour les courses « à vérifier », contrôle sur <a href="https://utmb.world" target="_blank" rel="noopener">utmb.world</a> avant de t'inscrire.</li>
+        <li><b>Running Stones</b> : seulement les courses « by UTMB ». Dans ta zone, ce sont Andorra et Val d'Aran (Stones doublées).</li>
+        <li><b>Points Grand Raid</b> : km + D+/100, utiles à partir de 75 points (Trail de Bourbon).</li>
+      </ul>
+      <h3>Les règles pour choisir</h3>
+      <ol>
+        <li>Une course remplace la sortie longue de la semaine ; le lendemain se fait en Z1 ou repos.</li>
+        <li>Pas plus d'une course de plus de 40 km toutes les 6 semaines, Andorra comprise.</li>
+        <li>Rien de plus long que 25 km dans les 4 semaines avant Andorra, ni dans les 3 semaines après.</li>
+        <li>Avant mars, une course courte se court en Z3 au maximum : c'est de l'entraînement.</li>
+      </ol>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Date</th><th>Option Pyrénées / Occitanie / Espagne</th><th>Option Périgueux / Limousin</th><th>UTMB Index</th><th>Stones</th><th>Points GR</th></tr></thead>
+      <tbody id="course-rows"></tbody>
+    </table></div>
+    <p class="small">Sources : calendriers <a href="https://fr.milesrepublic.com/trail/hautes-pyrenees" target="_blank" rel="noopener">Miles Republic</a> (Hautes-Pyrénées, Pyrénées-Atlantiques, Occitanie, Dordogne, Haute-Vienne), <a href="https://utmb.world/open-registrations" target="_blank" rel="noopener">UTMB World Series</a>, <a href="https://gotrail.run/fr/evenement/val-daran-by-utmb" target="_blank" rel="noopener">Val d'Aran</a>, <a href="https://gotrail.run/en/event/festival-des-templiers" target="_blank" rel="noopener">Templiers</a>, <a href="https://gotrail.run/en/event/grand-raid-des-pyrenees" target="_blank" rel="noopener">Grand Raid des Pyrénées</a>. Relevé le 18 octobre 2026.</p>
+  </section>
+
+  <!-- MATERIEL -->
+  <section class="view" id="v-materiel" hidden>
+    <div class="panel">
+      <h2>Trois packages, un conseillé</h2>
+      <p>Je recommande le package <b>Rapport qualité-prix</b> (~720 €). Il couvre tout le matériel d'Andorra et servira encore pour la Diag, en changeant les chaussures entre-temps.</p>
+      <div class="seg" role="group" aria-label="Package">
+        <button data-pk="ess" aria-pressed="false">Essentiel ~455 €</button>
+        <button data-pk="qp" aria-pressed="true">Qualité-prix ~720 €</button>
+        <button data-pk="hg" aria-pressed="false">Haut de gamme ~1 175 €</button>
+      </div>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Élément</th><th>Modèle</th><th>Prix</th><th>Pourquoi</th></tr></thead>
+      <tbody id="pk-rows"></tbody>
+    </table></div>
+    <div class="panel">
+      <h3>Dans quel ordre acheter</h3>
+      <ol>
+        <li><b>Maintenant</b> : chaussures et frontale, pour les sorties d'hiver.</li>
+        <li><b>Janvier</b> : bâtons, pour s'habituer dès le bloc de base trail.</li>
+        <li><b>Février-mars</b> : sac et veste, rodés sur toutes les sorties longues du printemps.</li>
+        <li><b>Avril</b> : couverture de survie, gobelet, gants, bonnet.</li>
+      </ol>
+      <p class="small">Prix relevés le 18 octobre 2026. Ceux notés « environ » n'ont pas pu être vérifiés sur une page produit française. La liste obligatoire officielle d'Andorra prime sur cette liste.</p>
+    </div>
+  </section>
+
+
+
+  <!-- PROGRESSION -->
+  <section class="view" id="v-progres" hidden>
+    <div class="tiles" id="prog-tiles"></div>
+    <div class="cols2">
+      <div class="panel"><h3>Allure sur route</h3><p class="small">Plus haut = plus rapide. Une séance validée avec sa vitesse = un point.</p><div id="ch-route"></div></div>
+      <div class="panel"><h3>Vitesse en trail</h3><p class="small">Le km-effort/h (km + D+/100) permet de comparer des sorties de profils différents : saisis la distance et le D+ pour l'avoir.</p><div id="ch-trail"></div></div>
+      <div class="panel"><h3>Volume de course par semaine</h3><p class="small">Kilomètres courus, séances du plan et activités hors plan comprises.</p><div id="ch-vol"></div></div>
+      <div class="panel"><h3>Régularité par semaine</h3><p class="small">Part des séances prévues (hors repos) que tu as validées.</p><div id="ch-reg"></div></div>
+      <div class="panel"><h3>Musculation</h3><label class="small" for="str-ex">Exercice</label><select id="str-ex" class="strsel"></select><p class="small" id="str-note"></p><div id="ch-str"></div></div>
+      <div class="panel"><h3>Poids</h3><p class="small" id="bmi"></p><div id="ch-weight"></div></div>
+    </div>
+    <div class="cols2">
+      <div class="panel">
+        <h3>Ajouter une pesée</h3>
+        <form id="w-form" class="fields">
+          <label for="w-date"><span>Date</span><input type="date" id="w-date" required></label>
+          <label for="w-kg"><span>Poids (kg)</span><input type="number" id="w-kg" inputmode="decimal" step="0.1" min="30" max="250" required></label>
+          <button class="btn primary" type="submit">Enregistrer</button>
+        </form>
+        <p class="small">Pèse-toi le matin, au réveil, dans les mêmes conditions : la tendance compte plus qu'une pesée isolée. Ton dernier poids sert au calcul nutrition.</p>
+        <div id="w-list" class="hlist"></div>
+      </div>
+      <div class="panel">
+        <h3>Ajouter une séance ou une course passée</h3>
+        <p class="small">Une course ou un test à fond (ressenti 8-10) avec sa distance sert de référence pour tes temps théoriques.</p>
+        <form id="f-form" class="fields">
+          <label for="f-name"><span>Nom (facultatif)</span><input type="text" id="f-name" placeholder="ex. 10 km de Tarbes"></label>
+          <label for="f-date"><span>Date</span><input type="date" id="f-date" required></label>
+          <label for="f-sport"><span>Terrain</span><select id="f-sport"><option value="route">Route</option><option value="trail">Trail</option></select></label>
+          <label><span>Allure (min/km)</span><span class="wheel"><select id="f-min" aria-label="Minutes"></select><span class="sep">'</span><select id="f-sec" aria-label="Secondes"></select><span class="unit">/km</span></span></label>
+          <label for="f-dist"><span>Distance (km)</span><input type="number" id="f-dist" inputmode="decimal" step="0.01" min="0"></label>
+          <label for="f-dplus"><span>D+ (m)</span><input type="number" id="f-dplus" inputmode="numeric" step="10" min="0"></label>
+          <label for="f-rpe"><span>Ressenti (1-10)</span><select id="f-rpe"></select></label>
+          <button class="btn primary" type="submit">Ajouter</button>
+        </form>
+        <p class="small" id="f-ok" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Dernières séances validées</h3>
+      <div id="hist" class="hlist"></div>
+    </div>
+    <div class="panel">
+      <h3>Sauvegarde</h3>
+      <p class="small">Tes données restent sur cet appareil : le téléphone et le PC ne se synchronisent pas. Exporte une sauvegarde de temps en temps. Pour passer d'un appareil à l'autre : exporte d'un côté, colle le texte de l'autre, puis importe.</p>
+      <div class="controls"><button class="btn" type="button" id="b-export">Exporter</button><button class="btn" type="button" id="b-import">Importer le texte collé</button><span class="small" id="b-msg" aria-live="polite"></span></div>
+      <textarea id="backup" rows="3" aria-label="Texte de sauvegarde" placeholder="Le texte de sauvegarde apparaît ici, ou colle-le ici pour importer."></textarea>
+    </div>
+  </section>
+
+  <!-- CALCUL NUTRITION -->
+  <section class="view" id="v-calcul" hidden>
+    <div class="panel">
+      <h2>Calcul nutrition</h2>
+      <p>Remplis ton effort : la durée, la dépense, les glucides, l'eau, le sel et le moment de chaque prise se calculent tout seuls. Les règles viennent des recommandations scientifiques actuelles en nutrition du sport.</p>
+    </div>
+    <div class="calc">
+      <div class="panel" id="calc-form"></div>
+      <div class="panel" id="calc-out" aria-live="polite"></div>
+    </div>
+    <p class="small">Sources : <a href="https://www.mysportscience.com/post/2015/05/27/recommendations-for-carb-intake-during-exercise" target="_blank" rel="noopener">Jeukendrup, glucides selon la durée</a> · <a href="https://www.gssiweb.org/sports-science-exchange/article/dietary-carbohydrate-and-the-endurance-athlete-contemporary-perspectives" target="_blank" rel="noopener">GSSI, charge glucidique, repas d'avant et récupération</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6839090" target="_blank" rel="noopener">ISSN 2019, ultra-trail</a> · <a href="https://jissn.biomedcentral.com/articles/10.1186/s12970-020-00383-4" target="_blank" rel="noopener">ISSN 2021, caféine</a> · <a href="https://iris.unibs.it/retrieve/ddc633e4-3c03-4e2e-e053-3705fe0a4c80/Minetti%20JAP%202002.pdf" target="_blank" rel="noopener">Minetti 2002, coût énergétique en pente</a>.</p>
+  </section>
+
+  <!-- MES COURSES -->
+  <section class="view" id="v-mescourses" hidden>
+    <div class="panel">
+      <h2>Mes courses</h2>
+      <p>Les courses conseillées et celles que tu ajoutes. Elles apparaissent dans le planning (la sortie longue de la semaine est remplacée, la veille est allégée), avec leur temps théorique et un lien vers le calcul nutrition.</p>
+      <div id="mc-list" class="races"></div>
+    </div>
+    <div class="panel">
+      <h3>Ajouter une course</h3>
+      <div id="mc-add"></div>
+      <p class="small" id="mc-msg" aria-live="polite"></p>
+      <p class="small">Les courses ajoutées sont enregistrées sur cet appareil. Elles apparaissent dans le planning de l'appli, mais pas dans le calendrier iPhone abonné, qui reprend seulement le plan commun.</p>
+    </div>
+  </section>
+
+  <!-- TEMPS THEORIQUES -->
+  <section class="view" id="v-temps" hidden>
+    <div class="panel">
+      <h2>Temps théoriques</h2>
+      <div id="t-ref"></div>
+    </div>
+    <div class="panel"><h3>Sur route</h3><div id="t-std"></div></div>
+    <div class="panel"><h3>Tes courses</h3><p class="small">Distance + dénivelé convertis en km-effort, puis corrigés selon le terrain. Les courses passées sont grisées.</p><div id="t-races"></div></div>
+    <div class="panel"><h3>Et si je courais…</h3><div id="t-whatif"></div></div>
+    <div class="panel">
+      <h3>Comment c'est calculé</h3>
+      <ul>
+        <li>Ta meilleure performance récente sur route (moins de 5 mois) est convertie en équivalent 10 km avec la formule de Riegel (temps × (distance / distance)^1,06). Une séance qui n'était pas à fond est corrigée selon ton ressenti.</li>
+        <li>Une course avec du dénivelé est convertie en km-effort : 100 m de D+ comptent comme 1 km.</li>
+        <li>Au-delà de 42 km-effort, la fatigue pèse plus : exposant 1,15 sur route, 1,20 en trail.</li>
+        <li>Facteur de terrain : route ×1,00, trail roulant ×1,03, trail montagne ×1,15, trail très technique ×1,25.</li>
+        <li>La fourchette est de ±5 % jusqu'au semi, ±8 % jusqu'au marathon, ±12 % au-delà. Sur un premier ultra, vise plutôt le haut de la fourchette : le calcul suppose une endurance déjà construite.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- STRATEGIE -->
+  <section class="view" id="v-strategie" hidden>
+    <div class="panel">
+      <h2>Stratégie de course</h2>
+      <label class="small" for="st-race">Course</label>
+      <select id="st-race" class="strsel"></select>
+      <div id="st-body" class="strat"></div>
+    </div>
+  </section>
+
+  <!-- REGLAGES GARMIN -->
+  <section class="view" id="v-reglages" hidden>
+    <div class="panel">
+      <h2>Montre Garmin</h2>
+      <p>Tes activités Garmin arrivent via intervals.icu. Chaque activité est associée à la séance prévue du même jour : la séance est cochée, et l'allure, la distance, la durée, la FC et le D+ sont enregistrés. Les autres activités sont gardées comme « hors plan » et comptent dans le volume et les graphiques.</p>
+      <form id="g-form" class="fields">
+        <label for="g-key"><span>Clé de l'appli</span><input type="password" id="g-key" autocomplete="current-password" placeholder="le mot de passe APP_KEY"></label>
+        <button class="btn primary" type="submit">OK</button>
+        <button class="btn" type="button" id="g-sync">Synchroniser</button>
+      </form>
+      <p class="garmin" id="g-status" aria-live="polite"></p>
+      <p class="small">La synchro se fait aussi toute seule à l'ouverture de l'appli (si la dernière date de plus de 30 min) et quand tu reviens dessus.</p>
+    </div>
+  </section>
+
+  <!-- ROUTINE COURSE -->
+  <section class="view" id="v-routine" hidden>
+    <div class="panel">
+      <h2>La routine avant et pendant chaque course</h2>
+      <p>Tu suis la même routine à chaque course, pour que le jour d'Andorra ou des Templiers rien ne soit nouveau. Les points marqués <span class="sz">ultra</span> concernent les courses de plus de 40 km ; les autres valent pour toutes.</p>
+    </div>
+    <div class="panel steps">
+      <div class="phase">
+        <div class="when">J-7 à J-2<span>La semaine avant</span></div>
+        <ul>
+          <li>Le volume baisse déjà dans le planning : tu ne rajoutes rien, même si tu te sens en forme.</li>
+          <li>Une seule séance avec de l'intensité, courte (le rappel d'allure du mardi).</li>
+          <li>Dernière séance de salle au plus tard à J-6, en version légère, sans excentrique lourd.</li>
+          <li>Sommeil de 8 h : la nuit de J-2 compte plus que celle de la veille.</li>
+          <li>Rien de nouveau : ni chaussures, ni produits, ni vêtements.</li>
+          <li>Tu lis le règlement : matériel obligatoire, barrières horaires, ravitos, navettes, retrait des dossards.</li>
+          <li>Tu écris ton plan de course : sections entre ravitos, temps de passage visés, ce que tu manges sur chaque section.</li>
+          <li><span class="sz">ultra</span> J-3 : batteries chargées (frontale, montre, téléphone), ongles coupés, trace GPS chargée dans la montre.</li>
+          <li><span class="sz">ultra</span> J-2 et J-1 : plus de glucides à chaque repas (voir Nutrition). Pas d'alcool de la semaine.</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="when">J-1<span>La veille</span></div>
+        <ul>
+          <li>20-30 min en Z1 avec 4 lignes droites de 20 s. Si tu voyages longtemps, une marche de 20 min suffit.</li>
+          <li>Retrait du dossard, et repérage du départ et du parking.</li>
+          <li>Le soir : tu prépares le sac et la tenue avec la checklist ci-dessous, et tu poses tout au même endroit.</li>
+          <li>Repas du soir habituel et riche en glucides, pauvre en fibres et en gras, au moins 3 h avant le coucher.</li>
+          <li>Deux réveils réglés. Coucher tôt ; si tu dors mal, ce n'est pas grave, c'est la nuit de J-2 qui compte.</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="when">Jour J<span>Avant le départ</span></div>
+        <ul>
+          <li>Réveil 3 h avant le départ. Petit-déjeuner testé à l'entraînement, terminé 2 h 30-3 h avant.</li>
+          <li>Crème anti-frottements (pieds, cuisses, aisselles), pansements préventifs là où tu as déjà eu des ampoules.</li>
+          <li>Sur place 45 min avant. Toilettes tôt, avant la file d'attente.</li>
+          <li>Échauffement : 15 min en Z1 + 3 accélérations pour une course courte ; <span class="sz">ultra</span> 5-10 min de marche et de trot léger seulement.</li>
+          <li>Dernières gorgées d'eau, et un gel 15 min avant le départ pour un ultra.</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="when">Jour J<span>Pendant la course</span></div>
+        <ul>
+          <li>Les 30 premières minutes plus lentement que prévu. <span class="sz">ultra</span> Toutes les premières montées en Z2 strict, en marchant dès que ça monte fort.</li>
+          <li>Tu manges et bois toutes les 20-30 min dès la première heure, selon le plan de l'onglet Nutrition.</li>
+          <li>Chaque heure, un point rapide : j'ai mangé ? j'ai bu ? j'ai une douleur ou un frottement ? Tu règles tout de suite ce qui ne va pas.</li>
+          <li>Aux ravitos, tu sais avant d'arriver ce que tu vas faire : remplir les flasques, manger salé, repartir. Pas plus de 5 min hors ultra.</li>
+          <li><span class="sz">ultra</span> Avant la nuit ou le froid : frontale sortie et couche chaude enfilée avant d'en avoir besoin.</li>
+          <li><span class="sz">ultra</span> Coup de mou : manger, ralentir 20 min, puis juger. Une crise passe presque toujours.</li>
+          <li><b>Abandon</b> : jamais décidé à chaud. Tu t'assois 10 min et tu manges d'abord. Tu arrêtes si tu boites, en cas de douleur dans la poitrine, de malaise, de confusion, ou si tu ne peux plus rien avaler ni boire.</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="when">Arrivée<span>Et les jours suivants</span></div>
+        <ul>
+          <li>Tu te couvres tout de suite, tu marches 10 min, puis boisson de récup ou repas complet dans l'heure.</li>
+          <li>Le soir : repas normal, beaucoup d'eau. Tu notes dans ton bilan ce qui a marché et ce qui n'a pas marché (nutrition en g/h, matériel, allure).</li>
+          <li>Course courte : 1 à 2 jours en Z1 ou repos, puis le planning normal.</li>
+          <li><span class="sz">ultra</span> 1 semaine sans course, puis une reprise progressive : c'est déjà prévu dans le planning.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="controls" style="justify-content:space-between">
+        <h3>Checklist du sac</h3>
+        <button class="btn" id="check-reset">Tout décocher</button>
+      </div>
+      <p class="small">Tes coches sont gardées sur cet appareil. Pour une course courte, prends seulement les éléments marqués « toutes ».</p>
+      <div class="check" id="checklist"></div>
+      <p class="small">La liste de matériel obligatoire de chaque course prime sur cette checklist.</p>
+    </div>
+  </section>
+
+  <!-- NUTRITION -->
+  <section class="view" id="v-nutrition" hidden>
+    <div class="panel">
+      <h2>Entraîner l'estomac jusqu'à la Diag</h2>
+      <p><a href="#calcul">Calcule ta nutrition pour n'importe quel effort dans l'onglet Calcul nutrition →</a></p>
+      <p>Sur la Diag, il faudra tenir 80-90 g de glucides par heure pendant plus de 30 h. Chaque course d'ici là fait monter l'estomac d'une marche.</p>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Période</th><th>Courses</th><th>Glucides/h</th><th>Eau/h</th><th>Sodium/h</th><th>Ce qu'on travaille</th></tr></thead>
+      <tbody>
+        <tr><td>Nov.-févr.</td><td>Trails de 15-30 km</td><td>30-40 g</td><td>400-500 ml</td><td>200-300 mg</td><td>Trouver les produits qui passent</td></tr>
+        <tr><td>Mars-avril</td><td>Trails de 30-45 km, prépa</td><td>50-60 g</td><td>500-600 ml</td><td>300-500 mg</td><td>Manger en courant, en montée</td></tr>
+        <tr><td>Juin 2027</td><td>Andorra 80K</td><td>60-90 g</td><td>500-750 ml</td><td>400-700 mg</td><td>Tenir 15 h, salé aux ravitos</td></tr>
+        <tr><td>Oct. 2027</td><td>Templiers</td><td>80-90 g</td><td>500-750 ml</td><td>400-700 mg</td><td>Haut de la fourchette</td></tr>
+        <tr><td>2028-2030</td><td>Bourbon, GRP, Diag</td><td>80-90 g</td><td>500-750 ml</td><td>500-800 mg</td><td>Nuit, caféine, vraie nourriture</td></tr>
+      </tbody>
+    </table></div>
+    <div class="cols">
+      <div class="panel"><h3>10 km du 6 décembre</h3><ul><li>Veille : repas habituel, un peu plus de féculents.</li><li>Petit-déjeuner riche en glucides 3 h avant.</li><li>Pendant : rien, quelques gorgées d'eau.</li></ul></div>
+      <div class="panel"><h3>Trails courts de l'hiver</h3><ul><li>Un gel ou une pâte de fruits toutes les 40-45 min dès la 1re heure.</li><li>500 ml de boisson d'effort + eau aux ravitos.</li><li>Noter ce qui passe et ce qui écœure.</li></ul></div>
+      <div class="panel"><h3>Prépa du 18 avril</h3><ul><li>Répétition générale d'Andorra : mêmes produits, même sac.</li><li>Une prise toutes les 20 min, cible 60 g/h.</li><li>1 pastille de sel par heure s'il fait chaud.</li></ul></div>
+    </div>
+    <div class="panel">
+      <h3>Andorra Trail 80K (14-16 h)</h3>
+      <div class="tbl"><table><tbody>
+        <tr><td>J-2 et J-1</td><td>Repas riches en glucides, peu de fibres et de gras la veille au soir</td></tr>
+        <tr><td>Matin</td><td>Petit-déjeuner testé à l'entraînement, 3 h avant le départ</td></tr>
+        <tr><td>Chaque heure</td><td>1 flasque de boisson (~40 g) + 1 gel (~25 g) + 1 pâte de fruits ou demi-barre (15-20 g) = 80-85 g</td></tr>
+        <tr><td>Chaque ravito</td><td>Remplir les 2 flasques, manger salé (soupe, chips, fromage, pommes de terre)</td></tr>
+        <tr><td>Après 8 h</td><td>Caféine, environ 50 mg toutes les 2-3 h</td></tr>
+        <tr><td>Nausée</td><td>Ralentir, eau, salé 20-30 min, puis reprendre doucement</td></tr>
+        <tr><td>Arrivée</td><td>Boisson de récup ou repas complet dans l'heure</td></tr>
+      </tbody></table></div>
+      <p class="small">Total : environ 1 100-1 400 g de glucides. Val d'Aran : même rythme qu'en prépa, à 60-70 g/h. Templiers : plan d'Andorra en visant 80-90 g/h, c'est le test de la Diag. Ces valeurs sont des ordres de grandeur courants en ultra, à ajuster à tes sensations ; en cas de troubles digestifs répétés, consulte un diététicien du sport.</p>
+    </div>
+  </section>
+
+  <!-- OBJECTIFS -->
+  <section class="view" id="v-objectifs" hidden>
+    <div class="panel">
+      <h2>Viser environ 33 h sur la Diag</h2>
+      <p>Le temps du 100e n'est publié dans aucune source consultée. Je l'estime entre 32 et 35 h à partir de ces repères : vainqueur 2026 en 22 h 54, 10e homme 2025 en 28 h 48, 10e femme 2025 en 36 h 45, médiane autour de 48 h. Les colonnes « top 100 » traduisent ce niveau sur chaque course, en km-effort (km + D+/100).</p>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Course</th><th>Format</th><th>km-effort</th><th>Objectif réaliste</th><th>Niveau top 100 Diag</th></tr></thead>
+      <tbody>
+        <tr><td>10 km, 6 déc. 2026</td><td>10 km route</td><td>—</td><td>41'30-42'30</td><td>37-38 min d'ici 2029</td></tr>
+        <tr><td>Prépa, avril 2027</td><td>30-40 km</td><td>45-65</td><td>4 h 30-6 h</td><td>12,5 km-e/h</td></tr>
+        <tr class="key"><td>Andorra 80K, juin 2027</td><td>79 km, 3 900 m</td><td>118</td><td>14-16 h</td><td>11 h-11 h 30</td></tr>
+        <tr><td>Val d'Aran EXP, juil. 2027</td><td>32 km, 2 100 m</td><td>53</td><td>5 h-5 h 30</td><td>4 h 15</td></tr>
+        <tr class="key"><td>Templiers, oct. 2027</td><td>80,4 km, 3 443 m</td><td>114</td><td>12-13 h</td><td>10 h 30</td></tr>
+        <tr><td>Trail de Bourbon, oct. 2028</td><td>106 km, 6 200 m</td><td>168</td><td>19-21 h</td><td>17 h 30-18 h</td></tr>
+        <tr><td>GRP 120 km (plan B), août 2028</td><td>120 km, 7 000 m</td><td>190</td><td>22-24 h</td><td>20 h</td></tr>
+        <tr><td>Andorra 80K, juin 2029</td><td>79 km, 3 900 m</td><td>118</td><td>11 h 30-12 h 30</td><td>11 h-11 h 30</td></tr>
+        <tr><td>GRP Ultra, août 2029</td><td>160 km, 10 000 m</td><td>260</td><td>33-36 h</td><td>31 h</td></tr>
+        <tr class="key"><td>Diagonale, oct. 2030</td><td>~180 km, ~10 200 m</td><td>282</td><td>33 h</td><td>33 h</td></tr>
+      </tbody>
+    </table></div>
+    <div class="panel">
+      <p>Les temps « top 100 » de 2027-2028 ne sont pas des objectifs de course : ils montrent l'écart à combler. Le vrai test, c'est 2029. Si tu es proche de la colonne de droite sur Andorra et le GRP Ultra, le top 100 de 2030 est réaliste. Sinon, l'objectif 2030 devient de finir, et le top 100 se vise sur une édition suivante.</p>
+      <p class="small">Sources : <a href="https://reference-trail.fr/resultats-diagonale-des-fous-2026-hugo-deck-lemporte-en-22h54/" target="_blank" rel="noopener">Reference Trail 2026</a>, <a href="https://utmb.world/utmb-index/races/61.legrandraiddelareunionladiagonaledesfous.2025" target="_blank" rel="noopener">UTMB 2025</a>, <a href="https://thepostrace.com/blog/resultats-et-classements-de-la-diagonale-des-fous-2025/" target="_blank" rel="noopener">The Post Race</a>, <a href="https://reference-trail.fr/quel-est-le-temps-moyen-pour-faire-la-diagonale-des-fous/" target="_blank" rel="noopener">temps médian</a>. Estimations, pas des chiffres officiels.</p>
+    </div>
+  </section>
+
+  <!-- PLAN ET REGLES -->
+  <section class="view" id="v-plan" hidden>
+    <div class="panel">
+      <h2>Accès à la Diagonale (règlement 2026)</h2>
+      <ul>
+        <li>2 trails d'au moins 85 points chacun (1 km = 1 point, 100 m D+ = 1 point), sans addition entre courses.</li>
+        <li>Fenêtre 2026 : du 1er janvier 2025 au 31 juillet 2026. Pour 2030, ce serait probablement janvier 2029-juillet 2030 : <b>Andorra 2027 ne comptera pas</b>, tes qualificatives se courent en 2029.</li>
+        <li>Pré-inscriptions de fin janvier à début mars, tirage mi-mars. Pour la métropole : 300 places au tirage, 950 en package Bourbon Voyages (sans tirage).</li>
+        <li>Certificat médical type du Grand Raid + PPS de la FFA, entre mai et août.</li>
+      </ul>
+      <p class="small">Source : <a href="https://www.grandraid-reunion.com/fr/inscriptions/modalites-des-inscriptions/modalites-d-inscriptions" target="_blank" rel="noopener">modalités d'inscription 2026</a>. À revérifier chaque année.</p>
+    </div>
+    <div class="panel">
+      <h2>Allures et zones</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>Zone</th><th>Allure plat</th><th>RPE</th><th>Repère</th><th>Usage</th></tr></thead>
+        <tbody>
+          <tr><td>Z1 Récup</td><td>&gt; 5'50/km</td><td>2-3</td><td>Respiration nasale</td><td>Décrassage</td></tr>
+          <tr><td>Z2 Endurance</td><td>5'15-5'50</td><td>3-4</td><td>Phrases complètes</td><td>80 % du volume, SL</td></tr>
+          <tr><td>Z3 Tempo</td><td>4'35-4'50</td><td>6</td><td>Phrases courtes</td><td>Blocs de 15-30 min</td></tr>
+          <tr><td>Z4 Seuil</td><td>4'20-4'25</td><td>7</td><td>Quelques mots</td><td>2-4 × 8-15 min</td></tr>
+          <tr><td>Z5 VMA</td><td>3'50-3'55</td><td>9</td><td>Impossible de parler</td><td>30 s à 3 min</td></tr>
+        </tbody>
+      </table></div>
+      <p class="small">En montagne, on pilote à l'effort : tu marches dès qu'une montée te fait sortir de Z2. Allures à mettre à jour après le 10 km du 6 décembre.</p>
+    </div>
+    <div class="cols">
+      <div class="panel"><h3>Salle A, mercredi</h3><ul><li>Squat 4 × 6-8, descente en 3 s</li><li>Fente bulgare 3 × 8 par jambe</li><li>Step-up lesté 3 × 10 par jambe</li><li>Soulevé de terre roumain 3 × 8</li><li>Descente de marche excentrique 3 × 10, 4 s</li><li>Mollets genou tendu puis fléchi, 3 × 12</li></ul></div>
+      <div class="panel"><h3>Salle B, vendredi</h3><ul><li>Planche 3 × 45-60 s</li><li>Planche latérale 3 × 30-45 s</li><li>Dead bug 3 × 10</li><li>Rowing haltère 3 × 10</li><li>Pompes 3 × max propre</li><li>Pont fessier une jambe 3 × 12</li><li>Mobilité 10 min</li></ul></div>
+    </div>
+    <div class="panel">
+      <h2>Santé et douleur</h2>
+      <div class="tbl"><table><tbody>
+        <tr><td>Raideur qui part en 10 min</td><td>Tu continues</td></tr>
+        <tr><td>Douleur stable ≤ 3/10, sans boiter</td><td>Tu finis en Z2, tu surveilles le lendemain</td></tr>
+        <tr><td>Douleur qui monte ou &gt; 3/10</td><td>Stop, 2-3 jours sans course</td></tr>
+        <tr><td>Plus de 5-7 jours, ou au repos</td><td>Médecin du sport ou kiné</td></tr>
+        <tr><td>Douleur poitrine, malaise</td><td>Tout arrêter, consulter rapidement</td></tr>
+      </tbody></table></div>
+      <p class="small">Visite chez un médecin du sport avant le premier ultra. Sommeil 7 h 30-8 h : pendant les partiels, réduis le volume plutôt que le sommeil.</p>
+    </div>
+    <div class="panel">
+      <h2>Régularité</h2>
+      <p><b>Semaine minimum (3 h 30)</b> quand ça se complique : la qualité du mardi (45 min), la sortie longue à 60 %, une séance A courte de 25 min. Jamais plus de 7 jours sans séance clé.</p>
+      <ul>
+        <li>Séance ratée en semaine : on ne la rattrape pas.</li>
+        <li>1 semaine sans rien : reprendre 1 semaine en arrière.</li>
+        <li>2 semaines ou plus : 1 semaine allégée, puis reprendre 2 semaines en arrière.</li>
+        <li>Deux semaines de suite ratées : le plan est trop chargé, on le revoit ensemble.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script>const IS_PWA=true;</script>
+<script>
+const PLAN=(function(){
+const BASE=[
+[1,"2026-10-19","Base + 10 km",7,800,"5 × 1 km à 4'20, récup 1'30","SL 1 h 45","1 h Z2"],
+[2,"2026-10-26","Base + 10 km",7.5,900,"10 × 400 m à 3'50, récup 1'","SL 2 h","1 h Z2"],
+[3,"2026-11-02","Base + 10 km",8,1000,"3 × 2 km à 4'15-4'20, récup 2'","SL 2 h","1 h 15 Z2"],
+[4,"2026-11-09","Allégée",5.5,600,"8 × 300 m vifs, récup 1'","SL 1 h 30","45 min Z2"],
+[5,"2026-11-16","Base + 10 km",8,1000,"3 × 3 km à 4'20, récup 2'","SL 2 h 15","1 h 15 Z2"],
+[6,"2026-11-23","Base + 10 km",8,900,"6 × 1 km à 4'00, récup 1'30","SL 2 h","1 h Z2"],
+[7,"2026-11-30","Affûtage 10 km",6,500,"4 × 1 km à 4'00, récup 2'","40 min Z2 + 4 lignes droites","RACE:10 km route|Objectif 41'30-42'30, départ à 4'12-4'15 sur les 3 premiers km."],
+[8,"2026-12-07","Récup",5,400,"EASY:Footing 45 min Z2, pas de qualité","SL 1 h 30 Z2","Repos"],
+[9,"2026-12-14","Récup",6,700,"8 × 30 s en côte","SL 1 h 45","1 h Z2"],
+[10,"2026-12-21","Base trail",7,900,"10 × 45 s en côte, descente trottinée","SL 2 h","1 h Z2"],
+[11,"2026-12-28","Base trail",7.5,1000,"3 × 8 min seuil, récup 2'","SL 2 h 15","1 h Z2"],
+[12,"2027-01-04","Base trail",8,1200,"5 × 3 min en côte, récup en descente","SL 2 h 30","1 h 15 Z2"],
+[13,"2027-01-11","Allégée",6,700,"6 × 1 min vif","SL 1 h 45","45 min Z2"],
+[14,"2027-01-18","Base trail",8,1300,"3 × 10 min seuil, récup 2'","SL 2 h 45","1 h Z2"],
+[15,"2027-01-25","Base trail",8.5,1400,"6 × 3 min en côte","SL 3 h","1 h 15 Z2"],
+[16,"2027-02-01","Base trail",8.5,1500,"3 × 10 min seuil en montée","SL 3 h","1 h 30 Z2 (premier enchaînement)"],
+[17,"2027-02-08","Allégée",6,800,"8 × 1 min en côte","SL 2 h","1 h Z2"],
+[18,"2027-02-15","Développement",8.5,1600,"4 × 8 min seuil, récup 2'","SL 3 h 15","1 h 15 Z2"],
+[19,"2027-02-22","Développement",9,1800,"6 × 4 min en côte","SL 3 h 30","1 h 30 Z2"],
+[20,"2027-03-01","Développement",9,2000,"2 × 15 min tempo en montée, récup 4'","SL 3 h 45","1 h Z2"],
+[21,"2027-03-08","Allégée",6.5,1000,"6 × 2 min en côte","SL 2 h 15","1 h Z2"],
+[22,"2027-03-15","Développement",9,2000,"5 × 5 min en côte","SL 4 h","1 h Z2"],
+[23,"2027-03-22","Développement",9,2200,"2 × 15 min seuil","SL 3 h","2 h Z2 (enchaînement)"],
+[24,"2027-03-29","Développement",8.5,1800,"10 × 1 min VMA en côte","SL 3 h 30","1 h Z2"],
+[25,"2027-04-05","Développement",8,1600,"4 × 5 min en côte","SL 3 h","1 h Z2"],
+[26,"2027-04-12","Allégée + course",5,800,"3 × 5 min à allure course","30 min Z1 + 3 lignes droites","RACE:Trail de prépa 30-45 km|Répétition générale : matériel, nutrition à 60 g/h, rythme d'Andorra."],
+[27,"2027-04-19","Récup",5.5,600,"EASY:Footing 45 min Z2, pas de qualité","SL 1 h 30 Z2","45 min Z2"],
+[28,"2027-04-26","Spécifique",9,2500,"3 × 12 min seuil en montée","SL 4 h 30","1 h Z2"],
+[29,"2027-05-03","Spécifique (choc)",9.5,3000,"5 × 6 min en côte","SL 5 h","2 h Z2"],
+[30,"2027-05-10","Allégée",6.5,1200,"4 × 4 min en côte","SL 2 h 30","1 h Z2"],
+[31,"2027-05-17","Spécifique (répétition générale)",9.5,3200,"2 × 20 min tempo en montée","SL 5 h avec tout le matériel et la nutrition de course","1 h 30 Z2"],
+[32,"2027-05-24","Affûtage",7,1500,"3 × 8 min seuil","SL 3 h","1 h Z2"],
+[33,"2027-05-31","Affûtage",5.5,800,"4 × 4 min à allure course","SL 2 h","45 min Z2"],
+[34,"2027-06-07","Course",3,300,"3 × 3 min de rappel (court)","Récup après course","Récup après course"],
+[35,"2027-06-14","Récup après Andorra",2,0,"EASY:Marche ou vélo léger 45 min","Marche en montagne libre","Repos"],
+[36,"2027-06-21","Reprise",3,200,"EASY:Footing 30-40 min Z1-Z2","Footing 40 min Z2","Repos"]
+];
+/* Prolongation jusqu'aux Templiers (plan avec courses uniquement) */
+const EXT=[
+[37,"2027-06-28","Reprise",6,800,"EASY:Footing 50 min Z2 + 6 lignes droites","SL 2 h Z2","1 h Z2"],
+[38,"2027-07-05","Course",6,900,"4 × 3 min en côte (court)","RACE:Val d'Aran by UTMB, EXP 32 km|32 km, 2 100 m D+, Running Stones doublées. Objectif 5 h-5 h 30, nutrition 60-70 g/h. Date estimée au samedi 10 juillet : l'événement a lieu du 7 au 11 juillet, vérifie le jour de l'EXP.","Repos"],
+[39,"2027-07-12","Récup",5,600,"EASY:Footing 45 min Z2","SL 1 h 45 Z2","45 min Z2"],
+[40,"2027-07-19","Base été",8,1500,"5 × 3 min en côte","SL 3 h","1 h Z2"],
+[41,"2027-07-26","Base été",8.5,1800,"3 × 10 min seuil en montée","SL 3 h 30","1 h 15 Z2"],
+[42,"2027-08-02","Développement",9,2000,"6 × 4 min en côte","SL 4 h","1 h Z2"],
+[43,"2027-08-09","Allégée",6,900,"6 × 2 min en côte","SL 2 h 15","1 h Z2"],
+[44,"2027-08-16","Développement",9,2200,"2 × 15 min tempo en montée","SL 4 h 30","1 h Z2"],
+[45,"2027-08-23","Spécifique",9,2500,"3 × 12 min seuil en montée","SL 4 h 30","1 h 30 Z2"],
+[46,"2027-08-30","Spécifique (choc)",9.5,2800,"5 × 6 min en côte","SL 5 h","2 h Z2"],
+[47,"2027-09-06","Allégée",6.5,1200,"4 × 4 min en côte","SL 2 h 30","1 h Z2"],
+[48,"2027-09-13","Spécifique (répétition générale)",9.5,3000,"2 × 20 min tempo en montée","SL 5 h avec matériel et nutrition à 80-90 g/h","1 h 30 Z2"],
+[49,"2027-09-20","Affûtage",8,2000,"3 × 8 min seuil","SL 3 h 30","1 h Z2"],
+[50,"2027-09-27","Affûtage",7,1500,"3 × 6 min allure course","SL 2 h 30","1 h Z2"],
+[51,"2027-10-04","Affûtage",5.5,800,"4 × 4 min allure course","SL 2 h","45 min Z2"],
+[52,"2027-10-11","Course",3,300,"3 × 3 min de rappel (court)","30 min Z1 + 3 lignes droites","RACE:Les Templiers, Grand Trail 80,4 km|80,4 km, 3 443 m D+. Objectif 12-13 h, nutrition 80-90 g/h : c'est le test de la Diag. Date estimée au dimanche 17 octobre, à confirmer."],
+[53,"2027-10-18","Récup après Templiers",2,0,"EASY:Marche ou vélo léger 45 min","Marche libre","Repos"],
+[54,"2027-10-25","Reprise",3,200,"EASY:Footing 30-40 min Z1-Z2","Footing 40 min Z2","Repos"]
+];
+/* Courses conseillées ajoutées au plan avec courses : date ISO, nom, détail, long (>=30 km) */
+const RACES=[
+["2026-11-08","Le Montagrier Trail, 30 km","Montagrier (24). En Z2-Z3, c'est une sortie longue en compétition. Si tu es à Tarbes ce week-end-là : sortie longue normale à la place.",true,false],
+["2026-12-06","10 km route","Objectif 41'30-42'30, départ à 4'12-4'15.",false,false],
+["2027-01-24","Trail de Pécharmant ou Trail des neiges","Creysse (24), 32 km, ou Beaucens (65), 20 km, selon ton site. Z3 maximum.",true,true],
+["2027-02-21","Trail des Grands Couteliers, 33,5 km","Nontron (24). Z3 maximum, test des produits de nutrition.",true,true],
+["2027-03-21","Trail des costalats, 42 km","Mazères-Lezons (64). Premier vrai test longue distance, 50-60 g/h.",true,true],
+["2027-04-18","Trail des gypaètes, 31 km (course de prépa)","Lourdes (65). Répétition générale d'Andorra : matériel, nutrition, rythme.",true,true],
+["2027-06-10","Andorra Trail 80K","79 km, 3 900 m D+. Objectif 14-16 h, nutrition 70-90 g/h. Départ le 10 ou le 11 juin, à confirmer.",true,false],
+["2027-07-10","Val d'Aran by UTMB, EXP 32 km","32 km, 2 100 m D+, Running Stones doublées.",true,true],
+["2027-10-17","Les Templiers, Grand Trail 80,4 km","80,4 km, 3 443 m D+. Objectif 12-13 h.",true,true]
+];
+const COURSES=[
+["6-8 nov. 2026","Backyard de Loudenvielle (65), boucle de 6,7 km","<b>Le Montagrier Trail (24), 30 km, 8 nov.</b>","À vérifier","Non","&lt; 75",1],
+["21-22 nov. 2026","Korrikei, Saint-Pée (64), 22 km","Foulées de Coursac (24), 23 km","À vérifier","Non","&lt; 75",0],
+["6 déc. 2026","<b>10 km route (repère prévu)</b>","<b>10 km route</b>","Non","Non","—",1],
+["20 déc. 2026","Corrida de Lourdes (65), 9,5 km, 12 déc.","Trail du Père Noël, Le Lardin (24), 17 km","À vérifier","Non","&lt; 75",0],
+["Janv. 2027 (1)","Trail blanc du Pont d'Espagne, Cauterets (65), 20 km","Trail de Pécharmant, Creysse (24), 32 km","À vérifier","Non","&lt; 75",0],
+["Janv. 2027 (2)","<b>Trail des neiges, Beaucens (65), 20 km</b>","<b>ou Roc'trail, Paussac (24), 31,5 km / Pécharmant</b>","À vérifier","Non","&lt; 75",1],
+["Févr. 2027 (1)","Nocturne du Béout, Omex (65), 24 km","<b>Trail des Grands Couteliers, Nontron (24), 33,5 km</b>","À vérifier","Non","&lt; 75",1],
+["Févr. 2027 (2)","Chap'trail, Haut-de-Bosdarros (64), 31 km","Trail des mouflons, Cherveix-Cubas (24), 44 km","À vérifier","Non","&lt; 75",0],
+["Mars 2027 (1)","<b>Trail des costalats, Mazères-Lezons (64), 42 km</b>","Marathon trail des forts du Périgord, Les Eyzies (24), 42 km","À vérifier","Non","42 + D+ ?",1],
+["Mars 2027 (2)","Senpereko Trail, Saint-Pée (64), 42 km","Trail des gorges de l'Auvézère (24), 35 ou 51 km","À vérifier","Non","42-51 + D+ ?",0],
+["18 avril 2027","<b>Trail des gypaètes, Lourdes (65), 31 km</b> ou Trail des Citadelles (09), 40 km","Trail à la noix, Salignac (24), 42 km","À vérifier","Non","&lt; 75",1],
+["Début mai 2027","Pyrénées Vallée des Gaves Trail (65), 27 km","La Sarladaise, Sarlat (24), 28 km","À vérifier","Non","&lt; 75",0],
+["Fin mai 2027","Trail du Hautacam, 24 km seulement","Le Miaulétou (87), 22 km","Oui","Non","&lt; 75",0],
+["10-11 juin 2027","<b>Andorra by UTMB, Trail 80K, 79 km, 3 900 m D+</b>","—","Oui","Oui","118",1],
+["Fin juin 2027","Récupération","Récupération","—","—","—",0],
+["7-11 juil. 2027","<b>Val d'Aran by UTMB, EXP 32 km, 2 100 m D+</b>","—","Oui","Doublées","53",1],
+["Fin juil. 2027","Gabizos Trail (65), 30 km, ou Skyrunning Tour HRP (65), 42 km","Tour du lac de Vassivière (87), 26 km","Oui (HRP)","Non","&lt; 75",0],
+["Début août 2027","Trail du Louron, Génos (65), 27 km","Auzette Nature, Panazol (87), 20 km","À vérifier","Non","&lt; 75",0],
+["Mi-août 2027","Grand Raid des Pyrénées : Néouvielle 40 km ou Bastan 50 km","—","Oui","Non","64 ou 80",0],
+["Début sept. 2027","Sorties montagne libres","Course nature des 7 clochers, Le Dorat (87), 25 km","À vérifier","Non","&lt; 75",0],
+["Mi-sept. 2027","Sortie montagne longue","Alefpa Trail, Eymoutiers (87), 48 km","À vérifier","Non","48 + D+ ?",0],
+["Fin sept. 2027","Repos ou course courte locale","Repos ou course courte locale","—","—","—",0],
+["Mi-oct. 2027","<b>Les Templiers, Millau (12), 80,4 km, 3 443 m D+</b>","—","Oui","Non","114",1],
+["Fin oct. 2027","Récupération","Trail du PNR Périgord-Limousin (87), 25,5 km","À vérifier","Non","&lt; 75",0]
+];
+const PACKS={
+ess:[["Chaussures","Kiprun MT Cushion 2","environ 60 €","282 g, drop 4 mm, amortie"],["Sac","Kiprun Bag 900 10 L","79,99 €","240 g, poche à eau 1 L incluse"],["2 flasques 500 ml","Kiprun","environ 25 €","Non fournies avec ce sac"],["Bâtons","Kiprun aluminium 500","environ 75 €","Robustes pour apprendre"],["Frontale","Kiprun Ontrail 900","60 €","900 lumens, 139 g"],["Veste imperméable","Kiprun Run 900","99,99 €","2,5 couches, 20 000 Schmerber, 182 g"],["Couche chaude, bonnet, gants","Kiprun / Decathlon","environ 45 €","Obligatoires en altitude"],["Survie + gobelet","Decathlon","environ 10 €","Obligatoires"],["Total","","~455 €",""]],
+qp:[["Chaussures de course","Hoka Speedgoat 7","99,99 à 164,99 €","Accroche Vibram, référence en ultra"],["Chaussures d'entraînement","Kiprun MT Cushion 2","environ 60 €","Alterner les paires"],["Sac","Salomon ADV Skin 12","96 à 140 €","2 flasques incluses, très stable"],["Bâtons","Kiprun carbone 3 brins","99,99 €","Carbone à moitié prix"],["Frontale","Nitecore HC60 UHE","80 €","1 600 lumens, 140 g"],["Batterie de secours","Nitecore","environ 20 €","Pour une nuit complète"],["Veste imperméable","Kiprun Run 900","99,99 €","Même imper que des vestes 2× plus chères"],["Couche chaude, bonnet, gants","Kiprun / Decathlon","environ 50 €","Obligatoires"],["Survie + gobelet","Decathlon","environ 10 €","Obligatoires"],["Total","","~720 €","~655 € avec les Speedgoat à 99,99 €"]],
+hg:[["Chaussures de course","Salomon S/Lab Ultra Glide 2","250 €","292 g, drop 6 mm, pour plus de 60 km"],["Chaussures d'entraînement","Hoka Speedgoat 7","164,99 €","Terrains techniques"],["Sac","Salomon ADV Skin 12","140 €","Le meilleur de sa catégorie"],["Bâtons","Black Diamond Distance Carbon Z","160 €","256-296 g la paire"],["Frontale","Petzl Nao RL","160 €","1 500 lumens, éclairage réactif"],["Veste imperméable","Salomon Bonatti Trail","162 €","Pertex Shield 20K/20K"],["Couche mérinos, bonnet, gants","Au choix","environ 90 €","Plus chaude à poids égal"],["Survie + gobelet","Decathlon","environ 10 €","Obligatoires"],["Total","","~1 175 €","Alternative frontale : Petzl Swift RL à 93,90 €"]]
+};
+
+const CHECK=[["Dossard + épingles ou porte-dossard","toutes"],["Puce de chronométrage si fournie à part","toutes"],["Chaussures de course rodées","toutes"],["Chaussettes testées","toutes"],["Crème anti-frottements","toutes"],["Montre chargée + trace GPS","toutes"],["Flasques remplies","toutes"],["Nutrition comptée pour la course","toutes"],["Téléphone chargé","toutes"],["Pièce d'identité + carte bancaire","toutes"],["Sac de trail réglé","ultra"],["Frontale + batterie de secours","ultra"],["Veste imperméable","ultra"],["Couche chaude","ultra"],["Bonnet + gants","ultra"],["Couverture de survie","ultra"],["Gobelet souple","ultra"],["Sifflet","ultra"],["Bâtons","ultra"],["Pansements ampoules","ultra"],["Pastilles de sel","ultra"],["Vêtements secs pour l'arrivée","ultra"],["Plan de course écrit (sections, temps, nutrition)","ultra"]];
+
+/* ---------- Logique du planning (pure, sans DOM : utilisée par l'appli et par le générateur de calendrier) ---------- */
+const parse=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(Date.UTC(y,m-1,d))};
+const iso=d=>d.toISOString().slice(0,10);
+const addDays=(d,n)=>new Date(d.getTime()+n*864e5);
+const MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+const DAYS=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
+const SITE={t:"Tarbes",p:"Périgueux"};
+const durOf=v=>(v.match(/(\d+ h(?: \d+)?|\d+ min)/)||["—"])[0];
+const S=(kind,title,dur,text,note,short)=>({kind,title,dur,text,note:note||"",short:short||title});
+
+function weeksFor(mode){return mode==="race"?BASE.concat(EXT):BASE}
+/* Courses actives : conseillées (mode « avec courses », sauf masquées) + courses ajoutées par l'utilisateur (tous modes) */
+function activeRaces(ctx){const h=ctx.hidden||[];const rec=ctx.mode==="race"?RACES.filter(r=>!h.includes(r[0])):[];return rec.concat(ctx.extra||[]).sort((a,b)=>a[0]<b[0]?-1:1)}
+function raceOn(d,ctx){const k=iso(d);return activeRaces(ctx).find(r=>r[0]===k)||null}
+function raceInWeek(w,ctx){const s=parse(w[1]);return activeRaces(ctx).find(r=>{const x=(parse(r[0])-s)/864e5;return x>=0&&x<7})||null}
+
+function baseSession(w,dow,site){
+  const [n,,phase,h,dp,tue,sat,sun]=w;
+  const light=/Allégée|Récup|Affûtage|Course|Reprise/.test(phase);
+  const P=site==="p";
+  if(n===34){
+    if(dow===0) return S("rest","Repos","—","Repos complet. Prépare le sac et vérifie la liste du matériel obligatoire.");
+    if(dow===1) return S("hard","Rappel d'allure","40 min","15 min Z1, puis "+tue+", retour au calme 10 min.","","Rappel d'allure · "+tue);
+    if(dow===2) return S("easy","Footing court","30 min","30 min Z1 très facile. Voyage vers Andorre si besoin.");
+    if(dow===3) return S("race","Andorra Trail 80K","14-16 h","79 km, 3 900 m D+. Objectif : finir en 14-16 h, nutrition selon l'onglet Calcul nutrition.","Date exacte du départ (10 ou 11 juin) à confirmer sur le site officiel.","COURSE · Andorra Trail 80K");
+    if(dow===4) return S("race","Andorra (si départ le 11)","—","Si ton départ est le 11 juin, c'est le jour de course. Sinon, repos.","","Andorra (si départ le 11)");
+    return S("rest","Récupération","—","Marche tranquille, sommeil, repas complets.");
+  }
+  if(dow===0) return S("rest","Repos","—","Repos. Option : 15 min de mobilité chevilles et hanches.");
+  if(dow===1){
+    if(tue.startsWith("EASY:")) return S("easy","Footing facile","45 min",tue.slice(5));
+    return S("hard","Séance de qualité","1 h","Échauffement 20 min Z1-Z2, puis "+tue+", retour au calme 10 min. "+(P?"Sur le plat ou sur ta plus longue côte de Périgueux.":"En montée si la séance le dit, sinon sur le plat."),"Si les jambes ne sont pas revenues de la sortie longue, fais 45 min Z2 à la place.","Qualité · "+tue);
+  }
+  if(dow===2){
+    if(h<=3) return S("rest","Repos","—","Repos ou marche.");
+    return S("gym","Salle A + footing",light?"45 min":"1 h 15",(light?"Séance A à 60 % de la charge (squat, step-ups, mollets). ":"Séance A complète : squat, fente bulgare, step-up lesté, soulevé de terre roumain, descente excentrique, mollets. ")+(P?"Puis 20 min de tapis incliné à 12-15 %.":"Puis 20 min de footing Z1."));
+  }
+  if(dow===3){
+    if(h<=3) return S("easy","Footing libre","30 min","Au ressenti, Z1-Z2.");
+    return S("easy","Endurance fondamentale",h<=6?"45 min":"1 h","Z2, aisance respiratoire. "+(P?"Ajoute 6-8 lignes droites de 20 s.":"Parcours vallonné."),"Toujours facile, même si tu te sens bien.","Endurance Z2 · "+(h<=6?"45 min":"1 h"));
+  }
+  if(dow===4){
+    if(light||h<=3) return S("rest","Repos","—","Repos (semaine allégée : une seule séance de salle).");
+    return S("gym","Salle B","45 min","Planche, planche latérale, dead bug, rowing haltère, pompes, pont fessier une jambe, 10 min de mobilité.");
+  }
+  const val=dow===5?sat:sun;
+  if(val.startsWith("RACE:")){const [t,txt]=val.slice(5).split("|");return S("race",t,"Course",txt||t,"La veille : repas riche en glucides. Le lendemain : Z1 ou repos.","COURSE · "+t)}
+  if(val==="Repos") return S("rest","Repos","—","Repos.");
+  const dplus=P?Math.round(dp/2/100)*100:dp;
+  if(dow===5){
+    const isSL=val.startsWith("SL");
+    return S("easy",isSL?"Sortie longue":"Sortie",durOf(val),val.replace(/^SL /,"Sortie longue de ")+". "+(dp>0?(P?"Parcours le plus vallonné, avec des répétitions de côtes, pour viser ~"+dplus+" m D+ sur la semaine.":"En montagne : vise ~"+dplus+" m D+ sur la semaine, marche dès que tu sors de Z2."):""),h>=8?"Mange dès la 1re heure : la cible est dans l'onglet Calcul nutrition.":"",(isSL?"Sortie longue ":"Sortie ")+durOf(val));
+  }
+  return S("easy","Sortie moyenne",durOf(val),val+(P?", sur parcours vallonné.":", en montagne sur jambes fatiguées."),"","Sortie moyenne · "+val);
+}
+function lookup(d,mode){
+  for(const w of weeksFor(mode)){const diff=Math.round((d-parse(w[1]))/864e5);if(diff>=0&&diff<7)return{w,dow:diff}}
+  return null;
+}
+function range(mode){const W=weeksFor(mode);return[parse(W[0][1]),addDays(parse(W.at(-1)[1]),6)]}
+
+/* Séance d'un jour donné. ctx = {mode:"race"|"base", site:"t"|"p"} */
+function sessionFor(date,ctx){
+  const L=lookup(date,ctx.mode);if(!L)return null;
+  const w=L.w,dow=L.dow;let s=null;
+  const r=raceOn(date,ctx);
+  if(r){ s=S("race",r[1],"Course",r[2],"La veille : repas riche en glucides. Le lendemain : Z1 ou repos.","COURSE · "+r[1]); s.raceDate=r[0]; }
+  if(!s){
+    const wr=raceInWeek(w,ctx);
+    if(wr && !/^RACE:/.test(w[6]+w[7]) && w[0]!==34){
+      const rd=(parse(wr[0])-parse(w[1]))/864e5;
+      if(dow===5 && rd===6) s=S("easy","Veille de course","40 min","40 min Z1 + 4 lignes droites de 20 s. Prépare ton sac et ta nutrition.","","Veille de course · 40 min Z1");
+      else if(dow===6 && rd===5) s=S("rest","Lendemain de course","—","Repos ou 30 min Z1 très facile.");
+    }
+  }
+  if(!s && dow===1){
+    const pr=raceOn(addDays(date,-2),ctx)||raceOn(addDays(date,-3),ctx);
+    if(pr && pr[3] && pr[1]!=="10 km route") s=S("easy","Footing de récupération","45 min","Lendemain de course longue : 45 min Z1-Z2 à la place de la qualité.","On reprend la séance de qualité la semaine suivante.","Récup · footing 45 min");
+  }
+  if(!s) s=baseSession(w,dow,ctx.site);
+  s.week=w;s.dow=dow;
+  s.run=(s.kind==="easy"||s.kind==="hard"||s.kind==="race") && s.dur!=="—";
+  /* sport par défaut pour la saisie de vitesse */
+  if(s.kind==="race") s.sport=/10 km route/.test(s.title)?"route":"trail";
+  else if(s.kind==="hard") s.sport="route";
+  else if(/Sortie/.test(s.title)) s.sport=ctx.site==="t"?"trail":"route";
+  else s.sport="route";
+  /* allure de référence (s/km) pour pré-remplir la molette */
+  s.refPace=s.kind==="race"?(s.sport==="route"?252:540):s.kind==="hard"?260:(s.sport==="trail"?420:330);
+  s.routineLink=s.kind==="race"||/Veille de course/.test(s.title)||w[0]===34||/Affûtage|Course/.test(w[2])||!!raceInWeek(w,ctx);
+  return s;
+}
+/* Nombre de séances (hors repos) prévues sur une semaine */
+function plannedInWeek(w,ctx){let n=0;for(let i=0;i<7;i++){const s=sessionFor(addDays(parse(w[1]),i),ctx);if(s&&s.kind!=="rest")n++}return n}
+
+return {activeRaces,BASE,EXT,RACES,COURSES,PACKS,CHECK,parse,iso,addDays,MONTHS,DAYS,SITE,weeksFor,raceOn,raceInWeek,lookup,range,sessionFor,plannedInWeek};
+
+})();
+if(typeof module!=="undefined"&&module.exports)module.exports=PLAN;
+
+</script>
+<script>
+/* ---------- Calcul nutrition (pur, testable) ----------
+Références : Jeukendrup (mysportscience, glucides par durée), ACSM/AND/DC 2016 et GSSI (charge glucidique, repas d'avant, récup),
+ISSN 2019 ultra (eau 450-750 ml/h, sodium 500-700 mg/L, protéines 5-10 g/h, 150-400 kcal/h), ISSN 2021 caféine (3-6 mg/kg, 60 min avant),
+Minetti 2002 (coût énergétique en pente), Compendium des activités physiques (natation). */
+const NUTRI=(function(){
+  const SPORTS={trail:"Trail",route:"Course sur route",velo:"Vélo",natation:"Natation"};
+  const EFFORTS={facile:"Facile (Z1-Z2)",endurance:"Endurance (Z2)",tempo:"Soutenu (Z3)",competition:"Compétition (à fond sur la distance)"};
+  const TEMPS={frais:"Frais (< 10 °C)",doux:"Doux (10-20 °C)",chaud:"Chaud (20-27 °C)",tres_chaud:"Très chaud (> 27 °C)"};
+  const r5=x=>Math.round(x/5)*5, r10=x=>Math.round(x/10)*10;
+  const hm=min=>{min=Math.round(min);const h=Math.floor(min/60),m=min%60;return h+":"+String(m).padStart(2,"0")};
+
+  function energy(i){
+    const W=i.weight, h=i.durH;
+    if(i.sport==="route"||i.sport==="trail"){
+      /* ~0,95 kcal/kg/km sur le plat (ISSN : 0,86-0,88 ; règle usuelle ~1), +10 % de terrain en trail,
+         ~0,6 kcal/kg par 100 m de D+ (Minetti 2002), descentes non déduites (freinage, terrain technique). */
+      const terrain=i.sport==="trail"?1.10:1.0;
+      const inten={facile:1.0,endurance:1.0,tempo:1.03,competition:1.05}[i.effort]||1;
+      return W*(0.95*i.dist*terrain+0.6*i.dplus/100)*inten;
+    }
+    if(i.sport==="velo"){
+      /* Physique : roulement + air + montée, rendement brut 22 %. Vélo 9 kg, Crr 0,005, CdA 0,32, air 1,2 kg/m3. */
+      const m=W+9,v=i.speedKmh/3.6,d=i.dist*1000;
+      const work=(m*9.81*0.005+0.5*1.2*0.32*v*v)*d+m*9.81*i.dplus;
+      return work/0.22/4184;
+    }
+    /* Natation : MET selon l'allure au 100 m (Compendium) */
+    const p=360/i.speedKmh; /* secondes par 100 m */
+    const met=p>150?5.8:p>120?8.3:p>100?10.0:11.0;
+    return met*W*h;
+  }
+  function carbFraction(i){
+    if(i.effort==="facile")return .40;
+    if(i.effort==="endurance")return .55;
+    if(i.effort==="tempo")return .75;
+    /* « Compétition » : l'intensité réellement tenable baisse avec la durée */
+    return i.durH<1.5?.88:i.durH<3?.78:i.durH<6?.68:.60;
+  }
+  function fluidRange(i){
+    if(i.sweat>0){const lo=Math.min(1000,i.sweat*600),hi=Math.min(1000,i.sweat*800);return[r10(lo),r10(hi)]}
+    const t={frais:[400,500],doux:[450,650],chaud:[600,800],tres_chaud:[700,900]}[i.temp]||[450,650];
+    return t;
+  }
+
+  function compute(inp){
+    const i=Object.assign({},inp);
+    i.durH=i.dist/i.speedKmh; const durMin=i.durH*60;
+    const kmEffort=(i.sport==="route"||i.sport==="trail")?i.dist+i.dplus/100:null;
+    const kcal=energy(i); const kcalH=kcal/i.durH;
+    const frac=carbFraction(i); const carbUseH=kcalH*frac/4;
+    const loaded=i.context==="course"&&i.durH>=1.5;
+    const stores=i.weight*(loaded?8:6); /* glycogène musculaire + hépatique, ordre de grandeur */
+    const autonomyH=stores*0.8/carbUseH;
+    const W=i.weight, trained=i.gut==="entraine";
+    const out={durH:i.durH,durTxt:hm(durMin),kmEffort,kmEffortH:kmEffort?kmEffort/i.durH:null,kcal:Math.round(kcal),kcalH:Math.round(kcalH),
+      frac,carbUseH:Math.round(carbUseH),carbUsedTotal:Math.round(carbUseH*i.durH),stores:Math.round(stores),autonomyH,loaded,notes:[]};
+
+    /* ---- Glucides pendant l'effort ---- */
+    let lo=0,hi=0,start=null,tier;
+    const swim=i.sport==="natation";
+    if(swim){
+      if(i.durH<1.5){tier="none"}else{tier="swim";lo=30;hi=60;start=30}
+    }else if(i.durH<0.75){tier="none"}
+    else if(i.durH<1.25){tier="rinse"}
+    else if(i.durH<2){tier="30";lo=30;hi=i.effort==="competition"||i.effort==="tempo"?45:30;start=durMin<95?30:25}
+    else if(i.durH<2.5){tier="60";lo=45;hi=60;start=20}
+    else if(i.durH<6){tier="90";lo=trained?60:45;hi=trained?90:60;start=20}
+    else{tier="ultra";lo=trained?60:40;hi=trained?80:60;start=20}
+    if(i.effort==="facile"&&tier!=="none"&&tier!=="rinse"&&i.context!=="course"){out.notes.push("En séance facile, tu peux viser le bas de la fourchette. Mais c'est aussi le bon moment pour habituer ton estomac aux doses de course.")}
+    const target=tier==="none"||tier==="rinse"?0:r5((lo+hi)/2);
+    out.carb={tier,lo,hi,target,start};
+
+    /* ---- Eau et sodium ---- */
+    let [flo,fhi]=fluidRange(i);
+    let fluidNeeded=true;
+    if(swim){fluidNeeded=i.durH>=1.5; if(fluidNeeded){flo=200;fhi=400}}
+    else if(i.durH<0.75){fluidNeeded=i.temp==="chaud"||i.temp==="tres_chaud"; if(fluidNeeded){flo=150;fhi=300}}
+    else if(i.durH<1.25&&(i.temp==="frais"||i.temp==="doux")){fluidNeeded=false}
+    out.fluid={needed:fluidNeeded,lo:flo,hi:fhi,mid:r10((flo+fhi)/2)};
+    const sodiumNeeded=fluidNeeded&&(i.durH>=2||((i.temp==="chaud"||i.temp==="tres_chaud")&&i.durH>=1));
+    out.sodium={needed:sodiumNeeded,lo:r10(flo/1000*500),hi:r10(fhi/1000*700)};
+
+    /* ---- Protéines (ultra) ---- */
+    out.protein=i.durH>=6?{lo:5,hi:10}:null;
+
+    /* ---- Caféine ---- */
+    const caf=[];
+    if(i.context==="course"||i.effort==="competition"||i.effort==="tempo"){
+      if(i.durH<6) caf.push({when:"45-60 min avant le départ",dose:r10(W*2)+"-"+r10(W*3)+" mg (2-3 mg/kg)"});
+      else{caf.push({when:"45-60 min avant le départ",dose:r10(W*1)+"-"+r10(W*2)+" mg (1-2 mg/kg)"});
+           caf.push({when:"Après 6 h de course, puis toutes les 2-3 h (surtout la nuit)",dose:"environ "+r10(W*1)+" mg (1 mg/kg), par exemple 1 gel caféiné"});}
+    }
+    out.caffeine=caf;
+
+    /* ---- Avant ---- */
+    const pre=[];
+    if(i.context==="course"&&i.durH>=1.5) pre.push({when:"J-2 et J-1 (36-48 h)",what:"Charge glucidique : "+r10(W*8)+"-"+r10(W*10)+" g de glucides par jour (8-10 g/kg), pauvre en fibres la veille."});
+    else pre.push({when:"La veille",what:"Repas habituel, riche en féculents. Pas besoin de charge glucidique pour un effort de moins de 90 min."});
+    if(i.durH>=1.5) pre.push({when:"3-4 h avant",what:"Repas de "+r10(W*2)+"-"+r10(W*3)+" g de glucides (2-3 g/kg), peu de fibres et de gras. Par exemple : pain, confiture, banane, riz au lait."});
+    else pre.push({when:"2-3 h avant",what:"Repas de "+r10(W*1)+"-"+r10(W*1.5)+" g de glucides (1-1,5 g/kg), déjà testé à l'entraînement."});
+    pre.push({when:"2-4 h avant",what:"Boire "+r10(W*5)+"-"+r10(W*7)+" ml (5-7 ml/kg), puis de petites gorgées jusqu'au départ."});
+    if(i.durH>=1.25&&!swim) pre.push({when:"10-15 min avant",what:"1 gel (20-25 g de glucides) avec quelques gorgées d'eau."});
+    out.pre=pre;
+
+    /* ---- Après ---- */
+    const post=[];
+    if(i.durH>=1.5||i.effort==="competition"||i.effort==="tempo"){
+      post.push({when:"Dans l'heure",what:r10(W*1)+"-"+r10(W*1.2)+" g de glucides et "+r5(W*0.3)+" g de protéines (0,3 g/kg). Par exemple : un repas complet, ou une boisson de récup et une banane."});
+      if(i.durH>=3) post.push({when:"Les 4 h suivantes",what:"Continue à environ "+r10(W*1)+" g de glucides par heure si tu as une autre séance dans les 24 h."});
+    }else post.push({when:"Après",what:"Ton repas suivant normal suffit."});
+    post.push({when:"Hydratation",what:"Pèse-toi avant et après : bois environ 1,5 L par kg perdu, sur les heures qui suivent."});
+    out.post=post;
+
+    /* ---- Plan de prises ---- */
+    const sched=[];
+    const items={gel:0,pate:0,salé:0,cafeine:0};
+    let drinkLiters=0,drinkCarbs=0;
+    if(target>0){
+      const interval=swim?30:20;
+      const conc=60; /* g/L de boisson d'effort */
+      const fluidH=out.fluid.needed?out.fluid.mid:0;
+      const drinkCarbsH=Math.min(target,fluidH/1000*conc);
+      const foodH=Math.max(0,target-drinkCarbsH);
+      let acc=0;
+      const ultra=tier==="ultra";
+      const end=durMin-(i.durH>3?10:15);
+      const where=i.sport==="trail"?"de préférence dans une montée, en marchant":i.sport==="route"?"sur une portion plate, juste avant un ravito si possible":i.sport==="velo"?"sur le plat, jamais en descente":"pendant une pause de ravitaillement";
+      for(let t=start;t<=end;t+=interval){
+        const hr=t/60; const row={t,clock:hm(t),drink:fluidH?r10(fluidH*interval/60):0,food:[]};
+        acc+=foodH*interval/60;
+        const solidSlot=ultra&&hr>=3&&t%60===0;
+        if(swim){row.food.push("boisson d'effort ou gel liquide (~"+r5(target*interval/60)+" g)");acc=0;items.gel+=0}
+        else if(solidSlot&&acc>=15){row.food.push("solide salé (~30 g de glucides : pomme de terre, sandwich, barre salée)");acc-=30;items.salé++}
+        else if(acc>=18){
+          const useGel=(sched.length%2===0)||i.sport==="route";
+          if(useGel){row.food.push("1 gel (25 g)");acc-=25;items.gel++}else{row.food.push("1 pâte de fruits ou ½ barre (20 g)");acc-=20;items.pate++}
+        }
+        if(ultra&&hr>=6&&(t-360)%150===0){row.food.push("+ caféine (gel caféiné)");items.cafeine++}
+        if(out.protein&&t%180===0&&hr>=3){row.food.push("+ 10-20 g de protéines (barre, boisson, fromage au ravito)")}
+        if(!row.food.length&&row.drink===0)continue;
+        sched.push(row);
+      }
+      drinkLiters=fluidH*i.durH/1000; drinkCarbs=Math.round(drinkCarbsH*i.durH);
+      out.where=where;
+      out.drinkConc=conc;
+      out.drinkCarbsH=Math.round(drinkCarbsH);
+    }else if(out.fluid.needed){
+      out.where="";
+    }
+    out.schedule=sched;
+    out.shopping={gel:items.gel,pate:items.pate,sale:items.salé,cafeine:items.cafeine,drinkLiters:Math.round(drinkLiters*10)/10,drinkCarbs,
+      powder:Math.round(drinkCarbs/0.95)};
+    out.intakeKcalH=Math.round(target*4);
+    out.coverPct=target?Math.round(target*4/kcalH*100):0;
+
+    /* ---- Explication automatique ---- */
+    let why;
+    if(tier==="none") why="Ton effort dure "+hm(durMin)+". Tu utilises environ "+out.carbUsedTotal+" g de glucides, alors que tes réserves sont d'environ "+out.stores+" g. Manger pendant l'effort n'apporte rien : un bon repas avant suffit.";
+    else if(tier==="rinse") why="Effort de "+hm(durMin)+" : tes réserves (~"+out.stores+" g) couvrent largement les ~"+out.carbUsedTotal+" g utilisés. Tu n'as pas besoin de manger. À fond, rincer ta bouche avec une boisson sucrée, ou boire quelques gorgées, peut aider un peu.";
+    else if(tier==="swim") why="Nage longue : tu ne peux t'alimenter qu'aux pauses. Une prise liquide toutes les 30 min suffit.";
+    else why="Tu brûles environ "+out.carbUseH+" g de glucides par heure. Tes réserves (~"+out.stores+" g"+(loaded?" après la charge glucidique":"")+") tiennent environ "+(autonomyH<10?autonomyH.toFixed(1).replace(".",","):Math.round(autonomyH))+" h. Ton effort dure "+hm(durMin)+" : manger "+target+" g/h retarde le coup de barre"+(autonomyH>i.durH?" et garde ton allure jusqu'au bout.":", qui arriverait sinon avant l'arrivée.");
+    out.why=why;
+    if(target>60) out.notes.push("Au-delà de 60 g/h, il faut un mélange glucose + fructose : la plupart des gels et boissons « 2:1 » ou « 1:0,8 » le sont.");
+    if(tier==="ultra") out.notes.push("Sur plus de 6 h, l'ISSN considère que 30-50 g/h est souvent ce qui passe réellement. Vise ta cible si tu l'as testée à l'entraînement, sinon reste dans le bas de la fourchette. Au-delà de 3 h, ajoute du salé et du solide.");
+    if(i.effort==="competition"&&i.durH>3) out.notes.push("Sur cette durée, « à fond » veut dire Z2-Z3 en réalité. Le calcul en tient compte.");
+    if(!trained&&target>=60) out.notes.push("Estomac pas encore entraîné : monte progressivement les doses sur tes sorties longues.");
+    if(out.fluid.needed&&out.fluid.hi>=900) out.notes.push("Ne dépasse pas environ 1 L/h, et ne prends pas de poids pendant l'effort : trop boire sans sel expose à l'hyponatrémie.");
+    return out;
+  }
+
+  /* Conversions de vitesse */
+  const conv={
+    toKmh(unit,a,b){ if(unit==="kmh")return +a; const sec=(+a)*60+(+b); if(!sec)return 0; return unit==="minkm"?3600/sec:360/sec; },
+    fmtPace(sec){sec=Math.round(sec);return Math.floor(sec/60)+"'"+String(sec%60).padStart(2,"0")},
+    all(kmh){return{kmh:kmh.toFixed(1).replace(".",","),minkm:conv.fmtPace(3600/kmh),min100:conv.fmtPace(360/kmh)}}
+  };
+  return{compute,conv,SPORTS,EFFORTS,TEMPS,hm};
+})();
+if(typeof module!=="undefined"&&module.exports)module.exports=NUTRI;
+
+/* ---------- Temps théoriques (pur, testable) ----------
+Méthode : équivalent 10 km tiré de tes efforts de référence (formule de Riegel, exposant 1,06),
+puis projection sur la course en km-effort (km + D+/100). Au-delà d'un marathon : exposant 1,15 (route) ou 1,20 (trail),
+puis un facteur de terrain. */
+const PREDICT=(function(){
+  const TERRAINS={route:{name:"Route",f:1.00},roulant:{name:"Trail roulant",f:1.03},montagne:{name:"Trail montagne",f:1.15},technique:{name:"Trail très technique",f:1.25}};
+  /* Coefficient pour ramener une allure d'entraînement à un effort « à fond » sur la même distance */
+  function effortFactor(ref){
+    if(ref.rpe>=8)return 1.0; if(ref.rpe===7)return 0.96; if(ref.rpe>=5)return 0.90; if(ref.rpe>=1)return 0.82;
+    return null; /* sans ressenti : pas utilisé comme référence */
+  }
+  const riegel=(t,d1,d2,e)=>t*Math.pow(d2/d1,e);
+  /* refs : [{key,date,dist,sec,rpe,title}] sur route uniquement */
+  function tenKm(refs,today){
+    const out=[];
+    for(const r of refs){
+      const f=effortFactor(r);if(!f||!(r.dist>=3)||!(r.sec>0))continue;
+      const age=(today-r.date)/864e5; if(age>150)continue;
+      const raceSec=r.sec*f;
+      const t10=r.dist<=42.195?riegel(raceSec,r.dist,10,1.06):riegel(riegel(raceSec,r.dist,42.195,1.15),42.195,10,1.06);
+      out.push(Object.assign({},r,{t10,f,reliable:r.rpe>=8}));
+    }
+    out.sort((a,b)=>a.t10-b.t10);
+    return out; /* meilleure en premier */
+  }
+  function timeFor(t10,dist,dplus,terrain){
+    const ke=dist+(dplus||0)/100;
+    const tr=TERRAINS[terrain]||TERRAINS.route;
+    let t;
+    if(ke<=42.195)t=riegel(t10,10,ke,1.06);
+    else t=riegel(riegel(t10,10,42.195,1.06),42.195,ke,terrain==="route"?1.15:1.20);
+    t*=tr.f;
+    const spread=ke<=21.1?0.05:ke<=42.195?0.08:0.12;
+    return{sec:t,lo:t*(1-spread),hi:t*(1+spread),ke,kmh:dist/(t/3600),pace:t/dist,keh:ke/(t/3600)};
+  }
+  const fmt=sec=>{sec=Math.round(sec);const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return h?h+" h "+String(m).padStart(2,"0"):m+":"+String(s).padStart(2,"0")};
+  const fmtLong=sec=>{sec=Math.round(sec);const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return h?h+":"+String(m).padStart(2,"0")+":"+String(s).padStart(2,"0"):m+":"+String(s).padStart(2,"0")};
+  /* Ralentissement prévu entre le début et la fin (part de l'allure) selon la longueur en km-effort */
+  const fade=ke=>ke<=12?0:ke<=25?0.03:ke<=45?0.06:ke<=100?0.15:0.25;
+  /* Temps écoulé quand une fraction x (0-1) du km-effort est faite, avec ralentissement linéaire */
+  const elapsed=(T,ke,x)=>{const a=fade(ke);return T*((1-a/2)*x+a*x*x/2)};
+  return{TERRAINS,tenKm,timeFor,fmt,fmtLong,effortFactor,fade,elapsed};
+})();
+if(typeof module!=="undefined"&&module.exports)module.exports=PREDICT;
+
+</script>
+<script>
+/* ---------- Appli : état, stockage ---------- */
+const {parse,iso,addDays,MONTHS,DAYS,SITE,RACES,COURSES,PACKS,CHECK}=PLAN;
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},
+  json(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},setJson(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let site=store.get("site","t")==="p"?"p":"t";
+let mode=store.get("mode","race")==="base"?"base":"race";
+let logs=store.json("logs",{});
+let weights=store.json("weights",[]);
+const HEIGHT=1.79;
+if(store.get("seeded","")!=="2"){
+  if(logs["2026-10-18"]&&logs["2026-10-18"].free){delete logs["2026-10-18"]}
+  if(!logs["2026-10-18~odos"]) logs["2026-10-18~odos"]={done:true,sport:"trail",pace:306,dist:13.04,dplus:256,free:true,title:"Odos (sortie libre)"};
+  if(!logs["2026-10-18~aureilhan"]) logs["2026-10-18~aureilhan"]={done:true,sport:"route",pace:250,dist:5.81,dplus:2,rpe:9,free:true,title:"Aureilhan 5,8 km (date à vérifier)"};
+  if(!logs["2026-10-03~10k"]) logs["2026-10-03~10k"]={done:true,sport:"route",pace:276,dist:10,dplus:0,rpe:9,free:true,title:"10 km en 46 min (début octobre, date approximative)"};
+  if(!weights.length) weights=[{d:"2026-10-20",kg:86}];
+  store.setJson("logs",logs);store.setJson("weights",weights);store.set("seeded","2");
+}
+const kd=k=>parse(k.slice(0,10));
+/* ---------- Courses : conseillées (modifiables) + ajoutées ---------- */
+const RACE_INFO={"2026-11-08":{dist:30,dplus:900,terrain:"roulant",est:true},"2026-12-06":{dist:10,dplus:0,terrain:"route"},"2027-01-24":{dist:32,dplus:900,terrain:"roulant",est:true},
+ "2027-02-21":{dist:33.5,dplus:1000,terrain:"roulant",est:true},"2027-03-21":{dist:42,dplus:1600,terrain:"roulant",est:true},"2027-04-18":{dist:31,dplus:1500,terrain:"montagne",est:true},
+ "2027-06-10":{dist:79,dplus:3900,terrain:"montagne"},"2027-07-10":{dist:32,dplus:2100,terrain:"montagne"},"2027-10-17":{dist:80.4,dplus:3443,terrain:"montagne"}};
+let raceEdits=store.json("raceEdits",{});
+let userRaces=store.json("userRaces",[]);
+const saveRaces=()=>{store.setJson("raceEdits",raceEdits);store.setJson("userRaces",userRaces)};
+function raceInfo(date){const u=userRaces.find(r=>r.date===date);if(u)return Object.assign({user:true},u);
+  const r=RACES.find(x=>x[0]===date);if(!r)return null;return Object.assign({date,name:r[1],est:false},RACE_INFO[date]||{dist:null,dplus:0,terrain:"roulant"},raceEdits[date]||{})}
+function allRaceInfos(){return RACES.map(r=>raceInfo(r[0])).concat(userRaces.map(u=>Object.assign({user:true},u))).sort((a,b)=>a.date<b.date?-1:1)}
+const saveLogs=()=>store.setJson("logs",logs);
+const saveWeights=()=>store.setJson("weights",weights);
+const ctx=()=>({mode,site,hidden:Object.keys(raceEdits).filter(k=>raceEdits[k].hidden),
+  extra:userRaces.map(u=>[u.date,u.name,(u.dist?String(u.dist).replace(".",",")+" km"+(u.dplus?", "+u.dplus+" m D+":""):"")+" · "+PREDICT.TERRAINS[u.terrain||"roulant"].name+". Ta course ajoutée.",(u.dist||0)>=30,false])});
+const now=new Date();const TODAY=new Date(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate()));
+const fmtDate=d=>DAYS[(d.getUTCDay()+6)%7]+" "+d.getUTCDate()+" "+MONTHS[d.getUTCMonth()]+" "+d.getUTCFullYear();
+const MABR=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
+const shortDate=d=>d.getUTCDate()+" "+MABR[d.getUTCMonth()];
+const fmtPace=sec=>{sec=Math.round(sec);return Math.floor(sec/60)+"'"+String(sec%60).padStart(2,"0")};
+const fr=(x,d=1)=>x.toFixed(d).replace(".",",");
+const el=(tag,attrs={},...kids)=>{const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs)){if(k==="class")e.className=v;else if(k==="text")e.textContent=v;else if(k.startsWith("on"))e[k]=v;else if(v!==false&&v!=null)e.setAttribute(k,v)}for(const c of kids)if(c!=null)e.append(c);return e};
+const latestWeight=()=>{const w=[...weights].sort((a,b)=>a.d<b.d?-1:1);return w.length?w.at(-1).kg:86};
+
+/* ---------- Saisie d'une séance : case + molette de vitesse ---------- */
+function opts(sel,from,to,step,fmt,val){sel.innerHTML="";for(let v=from;v<=to+1e-9;v+=step){const o=el("option",{value:String(v),text:fmt(v)});sel.append(o)}sel.value=String(val)}
+function lastPace(sport){const ks=Object.keys(logs).filter(k=>!k.includes("~")).filter(k=>logs[k].sport===sport&&logs[k].pace).sort();return ks.length?logs[ks.at(-1)].pace:null}
+function logWidget(date,s){
+  const k=iso(date);const isRun=s.run;const isGym=s.kind==="gym";
+  if(!isRun&&!isGym)return null;
+  const cur=logs[k]||{};
+  const box=el("div",{class:"log"});
+  const status=el("span",{class:"saved","aria-live":"polite"});
+  const flash=t=>{status.textContent=t;clearTimeout(status._t);status._t=setTimeout(()=>status.textContent="",1800)};
+  const save=(patch,msg)=>{logs[k]=Object.assign({},logs[k]||{title:s.title},patch);saveLogs();flash(msg||"Enregistré");};
+  const cb=el("input",{type:"checkbox",id:"done-"+k});cb.checked=!!cur.done;
+  cb.onchange=()=>{save({done:cb.checked,title:s.title},cb.checked?"Séance validée":"Validation retirée");if(cb.checked&&isRun&&!logs[k].pace)save({pace:wheelPace(),sport:sport},"Séance validée")};
+  box.append(el("label",{class:"done",for:"done-"+k},cb,el("span",{text:"Séance faite"})),status);
+  if(isGym){box.append(gymWidget(k,s,()=>{cb.checked=!!(logs[k]&&logs[k].done);flash("Enregistré")}));return box}
+  if(!isRun)return box;
+  let sport=cur.sport||s.sport, unit=store.get("unit-"+sport,"minkm");
+  let pace=cur.pace||lastPace(sport)||s.refPace;
+  const sportSeg=el("div",{class:"seg small-seg",role:"group","aria-label":"Type de terrain"});
+  const unitSeg=el("div",{class:"seg small-seg",role:"group","aria-label":"Unité de vitesse"});
+  const a=el("select",{"aria-label":"Minutes ou km/h"}),b=el("select",{"aria-label":"Secondes ou dixièmes"});
+  const suffix=el("span",{class:"unit"});
+  const wheel=el("div",{class:"wheel"},a,el("span",{class:"sep"}),b,suffix);
+  const eq=el("span",{class:"small"});
+  function wheelPace(){if(unit==="minkm")return (+a.value)*60+(+b.value);const kmh=(+a.value)+(+b.value)/10;return kmh?3600/kmh:pace}
+  function drawWheel(){
+    if(unit==="minkm"){opts(a,2,15,1,v=>String(v),Math.min(15,Math.max(2,Math.floor(pace/60))));opts(b,0,59,1,v=>String(v).padStart(2,"0"),Math.round(pace%60)%60);wheel.querySelector(".sep").textContent="'";suffix.textContent="/km"}
+    else{const kmh=3600/pace;opts(a,2,25,1,v=>String(v),Math.min(25,Math.max(2,Math.floor(kmh))));opts(b,0,9,1,v=>String(v),Math.round((kmh%1)*10)%10);wheel.querySelector(".sep").textContent=",";suffix.textContent="km/h"}
+    eq.textContent="= "+(unit==="minkm"?fr(3600/pace)+" km/h":fmtPace(pace)+"/km");
+    [...sportSeg.children].forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===sport));
+    [...unitSeg.children].forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===unit));
+  }
+  [["route","Route"],["trail","Trail"]].forEach(([v,t])=>sportSeg.append(el("button",{type:"button","data-v":v,text:t,onclick:()=>{sport=v;unit=store.get("unit-"+sport,"minkm");drawWheel();if(logs[k]&&logs[k].done)save({sport})}})));
+  [["minkm","min/km"],["kmh","km/h"]].forEach(([v,t])=>unitSeg.append(el("button",{type:"button","data-v":v,text:t,onclick:()=>{unit=v;store.set("unit-"+sport,v);drawWheel()}})));
+  const onWheel=()=>{pace=wheelPace();cb.checked=true;save({pace:Math.round(pace),sport,done:true,title:s.title},"Vitesse enregistrée");drawWheel()};
+  a.onchange=onWheel;b.onchange=onWheel;
+  const dist=el("input",{type:"number",inputmode:"decimal",step:"0.01",min:"0",placeholder:"km",id:"dist-"+k,value:cur.dist??""});
+  const dplus=el("input",{type:"number",inputmode:"numeric",step:"10",min:"0",placeholder:"m",id:"dplus-"+k,value:cur.dplus??""});
+  const rpe=el("select",{id:"rpe-"+k});rpe.append(el("option",{value:"",text:"—"}));for(let i=1;i<=10;i++)rpe.append(el("option",{value:String(i),text:String(i)}));rpe.value=cur.rpe?String(cur.rpe):"";
+  const num=v=>v===""?null:+v;
+  dist.onchange=()=>save({dist:num(dist.value)});dplus.onchange=()=>save({dplus:num(dplus.value)});rpe.onchange=()=>save({rpe:num(rpe.value)});
+  const det=el("details",{class:"more"},el("summary",{text:"Distance, D+ et ressenti (facultatif)"}),
+    el("div",{class:"fields"},
+      el("label",{for:"dist-"+k},el("span",{text:"Distance (km)"}),dist),
+      el("label",{for:"dplus-"+k},el("span",{text:"D+ (m)"}),dplus),
+      el("label",{for:"rpe-"+k},el("span",{text:"Ressenti (1-10)"}),rpe)),
+    el("p",{class:"small",text:"Ressenti 8 à 10 = effort à fond : avec la distance, la séance sert de référence pour tes temps théoriques."}));
+  box.append(el("div",{class:"logrow"},el("span",{class:"lbl",text:"Vitesse moyenne"}),sportSeg,unitSeg),el("div",{class:"logrow"},wheel,eq),det);
+  drawWheel();
+  return box;
+}
+
+
+/* ---------- Musculation : exercices, cibles et saisie ---------- */
+const GYM={
+  A:[{id:"squat",name:"Squat (barre ou goblet)",sets:4,lo:6,hi:8,unit:"rép",start:40,inc:2.5,tip:"Descente en 3 s"},
+     {id:"bulgare",name:"Fente bulgare",sets:3,lo:8,hi:8,unit:"rép/jambe",start:16,inc:2,tip:"Charge = total des 2 haltères"},
+     {id:"stepup",name:"Step-up lesté",sets:3,lo:10,hi:10,unit:"rép/jambe",start:16,inc:2,tip:"Box à hauteur du genou, total des 2 haltères"},
+     {id:"sdtr",name:"Soulevé de terre roumain",sets:3,lo:8,hi:8,unit:"rép",start:40,inc:2.5,tip:"Dos plat"},
+     {id:"excentrique",name:"Descente de marche excentrique",sets:3,lo:10,hi:10,unit:"rép/jambe",start:0,inc:2,tip:"4 s pour descendre ; 0 kg = poids du corps"},
+     {id:"mollets",name:"Mollets à une jambe (tendue + fléchie)",sets:3,lo:12,hi:15,unit:"rép/jambe",start:0,inc:2,tip:"0 kg = poids du corps"}],
+  B:[{id:"planche",name:"Planche ventrale",sets:3,lo:45,hi:60,unit:"s",start:0,inc:0,tip:"Bassin neutre"},
+     {id:"planchelat",name:"Planche latérale",sets:3,lo:30,hi:45,unit:"s/côté",start:0,inc:0,tip:"Hanche haute"},
+     {id:"deadbug",name:"Dead bug",sets:3,lo:10,hi:10,unit:"rép/côté",start:0,inc:0,tip:"Lombaires collées au sol"},
+     {id:"rowing",name:"Rowing haltère",sets:3,lo:10,hi:12,unit:"rép/bras",start:16,inc:2,tip:"Charge d'un haltère"},
+     {id:"pompes",name:"Pompes",sets:3,lo:8,hi:20,unit:"rép",start:0,inc:0,tip:"Max propre"},
+     {id:"pont",name:"Pont fessier à une jambe",sets:3,lo:12,hi:12,unit:"rép/jambe",start:0,inc:0,tip:"Fessier, pas les lombaires"}]
+};
+const GYM_ALL=[...GYM.A,...GYM.B];
+const LIGHT_A=["squat","stepup","mollets"];
+function gymPlan(s){const type=/Salle B/.test(s.title)?"B":"A";const light=/60 %/.test(s.text);
+  let ex=GYM[type];if(light&&type==="A")ex=ex.filter(e=>LIGHT_A.includes(e.id));return{type,light,ex}}
+function lastGym(id,beforeKey){const ks=Object.keys(logs).filter(k=>k<beforeKey&&logs[k].gym&&logs[k].gym[id]&&logs[k].gym[id].some(x=>x&&x.r)).sort();
+  if(!ks.length)return null;return{key:ks.at(-1),sets:logs[ks.at(-1)].gym[id].filter(x=>x&&x.r)}}
+const r25=x=>Math.round(x/2.5)*2.5;
+function gymTarget(e,key,light){
+  const last=lastGym(e.id,key);let kg=e.start,lo=e.lo,hi=e.hi,sets=e.sets,first=!last,up=false;
+  if(last){const maxKg=Math.max(...last.sets.map(x=>+x.kg||0));kg=maxKg;
+    const allHi=last.sets.length>=e.sets&&last.sets.every(x=>(+x.r||0)>=e.hi&&(+x.kg||0)>=maxKg);
+    if(allHi){if(e.inc>0){kg=maxKg+e.inc;up=true}else{const best=Math.max(...last.sets.map(x=>+x.r||0));lo=hi=best+(e.unit.startsWith("s")?5:1);up=true}}}
+  if(light){kg=e.inc>0&&kg>0?r25(kg*0.6):kg;sets=Math.max(2,sets-1)}
+  return{sets,lo,hi,kg,first,up};
+}
+const fmtKg=x=>(Math.round(x*10)/10).toString().replace(".",",");
+function gymWidget(k,s,onAny,preview){
+  const {ex,light,type}=gymPlan(s);
+  const wrap=el("div",{class:"gym"},el("div",{class:"eyebrow",text:"Séance "+type+(light?" allégée (60 % de la charge)":"")+(preview?" · aperçu, à remplir le jour J":" · noter tes séries")}));
+  ex.forEach(e=>{
+    const t=gymTarget(e,k,light);
+    const reps=t.lo===t.hi?String(t.lo):t.lo+"-"+t.hi;
+    const tgt=t.sets+" × "+reps+" "+e.unit+(t.kg>0?" · "+fmtKg(t.kg)+" kg":e.inc>0?" · poids du corps":"");
+    const row=el("div",{class:"gex"});
+    row.append(el("div",{class:"gname"},el("b",{text:e.name}),el("span",{class:"gtgt",text:"Visé : "+tgt+(t.up?" ↑":"")+(t.first&&e.inc>0?" (1re fois : ajuste la charge)":"")}),el("span",{class:"gtip",text:e.tip})));
+    const cur=(logs[k]&&logs[k].gym&&logs[k].gym[e.id])||[];
+    const setsBox=el("div",{class:"gsets"});const inputs=[];
+    for(let i=0;i<t.sets;i++){
+      const r=el("input",{type:"number",inputmode:"numeric",min:"0",step:"1",placeholder:String(t.hi),"aria-label":e.name+" série "+(i+1)+" "+e.unit,value:cur[i]&&cur[i].r!=null?cur[i].r:""});
+      const w=el("input",{type:"number",inputmode:"decimal",min:"0",step:"0.5",placeholder:fmtKg(t.kg).replace(",","."),"aria-label":e.name+" série "+(i+1)+" kg",value:cur[i]&&cur[i].kg!=null?cur[i].kg:""});
+      const save=()=>{logs[k]=logs[k]||{title:s.title};logs[k].gym=logs[k].gym||{};const arr=logs[k].gym[e.id]||[];
+        arr[i]={r:r.value===""?null:+r.value,kg:w.value===""?(r.value===""?null:t.kg):+String(w.value).replace(",",".")};logs[k].gym[e.id]=arr;
+        if(r.value!=="")logs[k].done=true;saveLogs();onAny()};
+      r.onchange=save;w.onchange=save;inputs.push([r,w]);if(preview){r.disabled=true;w.disabled=true}
+      setsBox.append(el("label",{class:"gset"},el("span",{class:"sn",text:"S"+(i+1)}),r,el("span",{class:"x",text:"×"}),w,el("span",{class:"u",text:"kg"})));
+    }
+    const fill=el("button",{type:"button",class:"chip",text:"= visé",title:"Remplir avec la cible"});
+    fill.onclick=()=>{inputs.forEach(([r,w],i)=>{if(r.value==="")r.value=t.hi;if(w.value==="")w.value=t.kg;r.dispatchEvent(new Event("change"))})};
+    if(!preview)setsBox.append(fill);
+    row.append(setsBox);wrap.append(row);
+  });
+  wrap.append(el("p",{class:"small",text:"La cible monte quand tu as fait toutes les séries au haut de la fourchette : +2,5 kg à la barre, +2 kg aux haltères, +1 rép ou +5 s au poids du corps. En semaine allégée : 60 % de la charge et une série de moins."}));
+  return wrap;
+}
+
+
+/* ---------- Montre Garmin (via intervals.icu et la fonction Netlify /api/sync) ---------- */
+const RUN_T=new Set(["Run","TrailRun","VirtualRun"]),BIKE_T=new Set(["Ride","VirtualRide","GravelRide","MountainBikeRide","EBikeRide"]),SWIM_T=new Set(["Swim","OpenWaterSwim"]);
+const PLAN_START="2026-10-19";
+let garminMap=store.json("garminMap",{});
+function actSport(a){if(RUN_T.has(a.type)){const km=a.dist/1000;return a.type==="TrailRun"||(km>0&&(a.dplus||0)/km>=20)?"trail":"route"}if(BIKE_T.has(a.type))return"velo";if(SWIM_T.has(a.type))return"natation";return null}
+const isRunSport=s=>s==="route"||s==="trail";
+/* Allure de séance de fractionné : intervalles « work », sinon tours proches de l'allure prévue, sinon moyenne */
+function targetPaceOf(s){const m=(s.text||"").match(/(\d)'(\d{2})/);return m?(+m[1])*60+(+m[2]):null}
+function qualityPace(a,s){
+  const laps=(a.laps||[]).filter(l=>l&&l.dist>0&&l.time>0);
+  const work=laps.filter(l=>l.work);
+  const sum=L=>{const d=L.reduce((x,l)=>x+l.dist,0),t=L.reduce((x,l)=>x+l.time,0);return d>0?t/(d/1000):null};
+  if(work.length)return{pace:sum(work),how:"intervalles"};
+  const tp=targetPaceOf(s);
+  if(tp&&laps.length){const near=laps.filter(l=>{const p=l.time/(l.dist/1000);return Math.abs(p-tp)/tp<=0.08});if(near.length)return{pace:sum(near),how:"tours proches de l'allure prévue"}}
+  return{pace:a.time/(a.dist/1000),how:"moyenne"};
+}
+const REF_RE=/\btest\b|\brace\b|compétition|competition|\bsemi\b|marathon/i;
+function recordFrom(a,sport){
+  const km=a.dist/1000;const r={done:true,sport,dist:Math.round(km*100)/100,dplus:Math.round(a.dplus||0),time:Math.round(a.time||0),hr:a.hr?Math.round(a.hr):null,garmin:{id:a.id,name:a.name}};
+  if(isRunSport(sport))r.pace=Math.round(a.time/km);
+  if(sport==="velo")r.kmh=Math.round(km/(a.time/3600)*10)/10;
+  if(sport==="natation")r.p100=Math.round(a.time/(a.dist/100));
+  return r;
+}
+function applyActivities(acts){
+  let read=acts.length,upd=0,off=0;
+  const byDay={};acts.forEach(a=>{if(!a||!a.date)return;const d=a.date.slice(0,10);(byDay[d]=byDay[d]||[]).push(a)});
+  for(const day of Object.keys(byDay).sort()){
+    const list=byDay[day].filter(a=>actSport(a)).sort((x,y)=>x.date<y.date?-1:1);
+    const s=PLAN.sessionFor(parse(day),ctx());
+    /* activité déjà associée : elle garde sa séance */
+    const todo=[];
+    for(const a of list){const k=garminMap[a.id];if(k&&logs[k]){const sp=actSport(a);const keep={rpe:logs[k].rpe,title:logs[k].title,gym:logs[k].gym,free:logs[k].free};logs[k]=Object.assign({},logs[k],recordFrom(a,sp),keep);if(!logs[k].free)fixPace(logs[k],a,s);k.includes("~")?off++:upd++}else todo.push(a)}
+    const slotFree=s&&s.run&&!(logs[day]&&logs[day].garmin&&garminMap[logs[day].garmin.id]===day);
+    let pick=null;
+    if(slotFree){const runs=todo.filter(a=>isRunSport(actSport(a)));
+      if(runs.length){pick=/Sortie longue/.test(s.title)?(runs.find(a=>a.dist>15000)||runs[0]):runs[0]}}
+    for(const a of todo){
+      const sp=actSport(a);
+      if(a===pick){const prev=logs[day]||{};logs[day]=Object.assign({},prev,recordFrom(a,sp),{title:s.title,rpe:prev.rpe||(s.kind==="race"||REF_RE.test(a.name||"")?9:null)});fixPace(logs[day],a,s);garminMap[a.id]=day;upd++}
+      else{const k=day+"~g"+a.id;const prev=logs[k]||{};logs[k]=Object.assign({},prev,recordFrom(a,sp),{free:true,title:a.name||"Activité",rpe:prev.rpe||(REF_RE.test(a.name||"")?9:null)});garminMap[a.id]=k;off++}
+    }
+  }
+  saveLogs();store.setJson("garminMap",garminMap);
+  return{read,upd,off};
+}
+function fixPace(rec,a,s){if(s&&s.kind==="hard"&&isRunSport(rec.sport)){const q=qualityPace(a,s);rec.pace=Math.round(q.pace);rec.paceHow=q.how;rec.avgPace=Math.round(a.time/(a.dist/1000))}}
+const fmtDur=sec=>{sec=Math.round(sec||0);const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60);return h?h+" h "+String(m).padStart(2,"0"):m+" min"};
+function garminLine(rec,s){
+  if(!rec||!rec.garmin)return null;
+  const parts=[rec.garmin.name,rec.dist?fr(rec.dist,2)+" km":"",rec.time?fmtDur(rec.time):"",rec.hr?"FC "+rec.hr:"",rec.dplus?rec.dplus+" m D+":""];
+  if(rec.pace&&isRunSport(rec.sport))parts.push(fmtPace(rec.pace)+"/km"+(rec.paceHow&&rec.paceHow!=="moyenne"?" ("+rec.paceHow+")":""));
+  if(rec.kmh)parts.push(fr(rec.kmh)+" km/h");if(rec.p100)parts.push(fmtPace(rec.p100)+"/100 m");
+  if(s)parts.push("prévu "+(s.dur&&s.dur!=="—"?s.dur:s.title));
+  return el("p",{class:"garmin",text:"⌚ Garmin : "+parts.filter(Boolean).join(" · ")});
+}
+let syncing=false;
+async function garminSync(manual){
+  const st=document.getElementById("g-status");
+  const say=t=>{if(st)st.textContent=t;store.set("gStatus",t)};
+  const key=store.get("appKey","");
+  if(typeof IS_PWA==="undefined"||!IS_PWA){if(manual)say("La synchro marche seulement dans l'appli en ligne (Netlify).");return}
+  if(!key){if(manual)say("Entre d'abord la clé de l'appli.");return}
+  if(syncing)return;syncing=true;if(manual)say("Synchronisation…");
+  const last=+store.get("gLast","0");
+  const after=last?Math.floor(last/1000)-3*86400:Math.floor(Date.parse(PLAN_START+"T00:00:00Z")/1000);
+  try{
+    const r=await fetch("/api/sync",{method:"POST",headers:{"content-type":"application/json","x-app-key":key},body:JSON.stringify({after})});
+    let d={};try{d=await r.json()}catch(e){}
+    if(!r.ok)throw new Error(d.error||("Erreur "+r.status));
+    const res=applyActivities(d.activities||[]);
+    store.set("gLast",String(Date.now()));
+    const nowS=new Date().toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+    say("Synchro du "+nowS+" : "+res.read+" activité"+(res.read>1?"s":"")+" lue"+(res.read>1?"s":"")+", "+res.upd+" séance"+(res.upd>1?"s":"")+" mise"+(res.upd>1?"s":"")+" à jour, "+res.off+" hors plan."+(res.read===0?" Si tu attendais des activités, vérifie qu'elles sont bien dans le calendrier d'intervals.icu.":""));
+    show();
+  }catch(e){say("Échec de la synchro : "+e.message)}
+  finally{syncing=false}
+}
+function maybeAutoSync(){const last=+store.get("gLast","0");if(store.get("appKey","")&&Date.now()-last>30*60*1000)garminSync(false)}
+function renderReglages(){
+  const k=document.getElementById("g-key");k.value=store.get("appKey","");
+  document.getElementById("g-status").textContent=store.get("gStatus","Pas encore synchronisé.");
+  document.getElementById("g-form").onsubmit=e=>{e.preventDefault();store.set("appKey",k.value.trim());document.getElementById("g-status").textContent="Clé enregistrée.";garminSync(true)};
+  document.getElementById("g-sync").onclick=()=>garminSync(true);
+  if(typeof IS_PWA==="undefined"||!IS_PWA)document.getElementById("g-status").textContent="La synchro marche seulement dans l'appli en ligne (Netlify).";
+}
+
+/* ---------- Fiche séance ---------- */
+function fillCard(c,date,withWeek){
+  c.innerHTML="";
+  const s=PLAN.sessionFor(date,ctx());
+  if(!s){c.append(el("p",{text:"Pas de séance prévue ce jour-là dans cette version du plan."}));return}
+  const w=s.week;
+  c.append(el("div",{},el("div",{class:"eyebrow",text:fmtDate(date)+" · semaine "+w[0]}),el("h3",{text:s.title})));
+  const pills=el("div",{class:"pills"});const cls={hard:"hard",race:"race",easy:"easy"}[s.kind]||"";
+  [[s.dur,cls],[SITE[site],""],[w[2],""]].forEach(([t,k])=>{if(t&&t!=="—")pills.append(el("span",{class:"pill "+k,text:t}))});
+  c.append(pills,el("p",{text:s.text}));
+  if(s.note)c.append(el("p",{class:"note",text:s.note}));
+  {const gl=garminLine(logs[iso(date)],s);if(gl)c.append(gl)}
+  if(s.routineLink)c.append(el("a",{href:"#routine",class:"goto",text:s.kind==="race"?"Routine du jour de course →":(/Veille/.test(s.title)?"Routine de la veille →":"Routine de la semaine avant course →")}));
+  if(s.kind==="race"&&s.raceDate){const ri=raceInfo(s.raceDate);const pr=ri&&predictRace(ri);
+    if(pr)c.append(el("p",{class:"pred"},el("span",{class:"eyebrow",text:"Temps théorique"}),el("b",{text:PREDICT.fmt(pr.sec)}),el("span",{class:"small",text:"fourchette "+PREDICT.fmt(pr.lo)+" à "+PREDICT.fmt(pr.hi)})));
+    c.append(el("a",{href:"#strategie",class:"goto",text:"Stratégie de course →",onclick:()=>{stratRace=s.raceDate;store.set("stratRace",s.raceDate)}}),el("a",{href:"#calcul",class:"goto",text:"Calculer la nutrition de cette course →",onclick:()=>presetFromRace(s.raceDate)}))}
+  const lw=logWidget(date,s);if(lw&&date<=TODAY)c.append(lw);
+  else if(lw&&s.kind==="gym")c.append(gymWidget(iso(date),s,()=>{},true));
+  else if(lw)c.append(el("p",{class:"small",text:"Tu pourras valider cette séance et saisir ta vitesse le jour J."}));
+  if(withWeek){
+    const dp=site==="p"?Math.round(w[4]/2/100)*100:w[4];
+    const hrs=Number.isInteger(w[3])?w[3]+" h":Math.floor(w[3])+" h 30";
+    c.append(el("div",{class:"weekbox"},el("div",{class:"eyebrow",text:"La semaine"}),
+      el("dl",{},el("dt",{text:"Phase"}),el("dd",{text:w[2]}),el("dt",{text:"Volume"}),el("dd",{text:hrs+(w[3]>9?" (option)":"")}),el("dt",{text:"D+ cible"}),el("dd",{text:dp+" m"+(site==="p"?" (version Périgueux)":"")}))));
+  }
+}
+
+/* ---------- Planning ---------- */
+let [FIRST,LAST]=PLAN.range(mode);
+let selected=(TODAY>=FIRST&&TODAY<=LAST)?TODAY:FIRST;
+let view={y:selected.getUTCFullYear(),m:selected.getUTCMonth()};
+function renderPlanning(){
+  [FIRST,LAST]=PLAN.range(mode);
+  if(selected>LAST)selected=LAST;
+  document.getElementById("mode-base").setAttribute("aria-pressed",mode==="base");
+  document.getElementById("mode-race").setAttribute("aria-pressed",mode==="race");
+  document.getElementById("site-t").setAttribute("aria-pressed",site==="t");
+  document.getElementById("site-p").setAttribute("aria-pressed",site==="p");
+  document.getElementById("mode-desc").textContent=mode==="race"
+    ?"Avec mes courses : les 9 courses conseillées remplacent la sortie longue de leur semaine, et le plan continue jusqu'aux Templiers (oct. 2027)."
+    :"Plan de base : seulement le 10 km, la course de prépa et Andorra. Il s'arrête fin juin 2027.";
+  document.getElementById("month").textContent=MONTHS[view.m]+" "+view.y;
+  const g=document.getElementById("grid");g.innerHTML="";
+  ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].forEach(x=>g.append(el("div",{class:"dow",text:x})));
+  const first=new Date(Date.UTC(view.y,view.m,1));const off=(first.getUTCDay()+6)%7;
+  const days=new Date(Date.UTC(view.y,view.m+1,0)).getUTCDate();
+  for(let i=0;i<off;i++)g.append(el("div"));
+  for(let d=1;d<=days;d++){
+    const date=new Date(Date.UTC(view.y,view.m,d));const s=PLAN.sessionFor(date,ctx());
+    const b=el("button",{type:"button"},el("span",{class:"n",text:String(d)}));
+    if(s){b.className="day k-"+s.kind;b.append(el("span",{class:"t",text:s.title}));
+      const lg=logs[iso(date)];if(lg&&lg.done)b.append(el("span",{class:"tick","aria-label":"faite",text:"✓"}));
+      b.setAttribute("aria-label",d+" "+MONTHS[view.m]+" : "+s.title+(lg&&lg.done?", faite":""));b.onclick=()=>{selected=date;renderPlanning()};}
+    else{b.className="day out";b.disabled=true}
+    if(iso(date)===iso(TODAY))b.classList.add("today");
+    if(iso(date)===iso(selected))b.classList.add("sel");
+    g.append(b);
+  }
+  document.getElementById("prev").disabled=!(first>FIRST);
+  document.getElementById("next").disabled=!(new Date(Date.UTC(view.y,view.m+1,1))<=LAST);
+  fillCard(document.getElementById("card"),selected,true);
+  const rl=document.getElementById("racelist");rl.innerHTML="";
+  PLAN.activeRaces(ctx()).forEach(r=>{const d=parse(r[0]);rl.append(el("div",{},el("b",{text:shortDate(d)+" "+d.getUTCFullYear()}),el("span",{text:r[1]+(r[4]?" (date estimée)":"")})))});
+  renderIcs();
+}
+function renderIcs(){
+  const box=document.getElementById("ics-box");if(!box)return;box.innerHTML="";
+  const file=mode==="race"?"calendrier-courses.ics":"calendrier-base.ics";
+  if(typeof IS_PWA==="undefined"||!IS_PWA||location.protocol!=="https:"){
+    box.append(el("p",{class:"small",text:"Disponible dans l'appli installée (mise en ligne sur Netlify) : le lien d'abonnement apparaîtra ici."}));return}
+  const dir=location.pathname.replace(/[^/]*$/,"");
+  const https=location.origin+dir+file, webcal="webcal://"+location.host+dir+file;
+  const copy=el("button",{class:"btn",type:"button",text:"Copier le lien"});
+  copy.onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(https).then(()=>copy.textContent="Lien copié",()=>{inp.select()})};
+  const inp=el("input",{type:"text",readonly:"readonly",value:https,class:"urlbox","aria-label":"Lien du calendrier"});
+  box.append(el("div",{class:"controls"},el("a",{class:"btn primary",href:webcal,text:"S'abonner sur iPhone"}),copy),inp,
+    el("p",{class:"small",text:"Calendrier « "+(mode==="race"?"avec mes courses":"plan de base")+" ». Chaque séance indique la version Tarbes et la version Périgueux. Il se met à jour tout seul quand tu redéploies l'appli au même endroit sur Netlify."}));
+}
+
+/* ---------- Accueil ---------- */
+function renderHome(){
+  const tp=document.getElementById("today-panel");tp.innerHTML="";
+  tp.append(el("h2",{text:"Séance du jour"}));
+  const [f,l]=PLAN.range(mode);
+  const d=TODAY<f?f:TODAY;
+  if(d>l){tp.append(el("p",{text:"Le plan détaillé est terminé : on prépare la saison suivante ensemble."}))}
+  else{
+    if(d.getTime()!==TODAY.getTime())tp.append(el("p",{class:"small",text:"Le plan commence plus tard. Voici la première séance :"}));
+    const box=el("div",{class:"todaycard"});fillCard(box,d,false);tp.append(box);
+    const late=[];for(let i=1;i<=6&&late.length<3;i++){const dd=addDays(TODAY,-i);const s=PLAN.sessionFor(dd,ctx());if(s&&(s.run||s.kind==="gym")&&!(logs[iso(dd)]&&logs[iso(dd)].done))late.push([dd,s])}
+    if(late.length){const ul=el("div",{class:"late"},el("div",{class:"eyebrow",text:"Pas encore validées"}));
+      late.forEach(([dd,s])=>ul.append(el("button",{type:"button",class:"latebtn",text:fmtDate(dd).replace(/ \d{4}$/,"")+" · "+s.title,onclick:()=>{selected=dd;view={y:dd.getUTCFullYear(),m:dd.getUTCMonth()};location.hash="#planning"}})));
+      tp.append(ul)}
+    tp.append(el("a",{href:"#planning",text:"Voir tout le planning →"}));
+  }
+  const nr=PLAN.activeRaces(ctx()).find(r=>parse(r[0])>=TODAY);
+  if(nr){const d2=parse(nr[0]);const days=Math.round((d2-TODAY)/864e5);
+    document.getElementById("next-race").textContent=days===0?"Aujourd'hui":"J-"+days;
+    document.getElementById("next-race-d").textContent=nr[1]+" · "+d2.getUTCDate()+" "+MONTHS[d2.getUTCMonth()]+(nr[4]?" (date estimée)":"");}
+  const da=Math.round((parse("2027-06-10")-TODAY)/864e5);
+  document.getElementById("cd-andorra").textContent=da>0?"J-"+da:"Courue";
+}
+
+/* ---------- Courses, matériel, checklist ---------- */
+function renderCourses(){
+  const tb=document.getElementById("course-rows");tb.innerHTML="";
+  COURSES.forEach(c=>{const tr=document.createElement("tr");if(c[6])tr.className="key";
+    c.slice(0,6).forEach((v,i)=>{const td=document.createElement("td");
+      if(i===3||i===4){const t=document.createElement("span");t.className="tag "+(/^Oui|Doubl/.test(v)?"ok":/^Non|—/.test(v)?"no":"");t.innerHTML=v;td.appendChild(t)}else td.innerHTML=v;
+      tr.appendChild(td)});tb.appendChild(tr)});
+}
+let pk=store.get("pk","qp");if(!PACKS[pk])pk="qp";
+function renderPack(){
+  document.querySelectorAll("[data-pk]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.pk===pk));
+  const tb=document.getElementById("pk-rows");tb.innerHTML="";
+  PACKS[pk].forEach(r=>{const tr=el("tr",{class:r[0]==="Total"?"key":""});r.forEach(v=>tr.append(el("td",{text:v,style:r[0]==="Total"?"font-weight:600":null})));tb.append(tr)});
+}
+function renderChecklist(){
+  const box=document.getElementById("checklist");box.innerHTML="";
+  const st=store.json("check",{})||{};
+  CHECK.forEach(([t,k],i)=>{const id="chk-"+i;const inp=el("input",{type:"checkbox",id});inp.checked=!!st[i];
+    inp.onchange=()=>{st[i]=inp.checked;store.setJson("check",st)};
+    box.append(el("label",{for:id},inp,el("span",{},t+" ",el("span",{class:"sz",text:k}))))});
+}
+
+/* ---------- Calcul nutrition ---------- */
+const PRESETS=[
+  ["10 km",{sport:"route",dist:10,dplus:0,pace:252,effort:"competition",context:"course"}],
+  ["Semi",{sport:"route",dist:21.1,dplus:0,pace:270,effort:"competition",context:"course"}],
+  ["Marathon",{sport:"route",dist:42.195,dplus:0,pace:300,effort:"competition",context:"course"}],
+  ["SL trail 3 h",{sport:"trail",dist:24,dplus:1200,pace:450,effort:"endurance",context:"entrainement"}],
+  ["Andorra 80K",{sport:"trail",dist:79,dplus:3900,pace:679,effort:"competition",context:"course"}],
+  ["Templiers",{sport:"trail",dist:80.4,dplus:3443,pace:560,effort:"competition",context:"course"}],
+  ["Diagonale",{sport:"trail",dist:180,dplus:10200,pace:660,effort:"competition",context:"course"}],
+  ["Vélo 2 h",{sport:"velo",dist:60,dplus:600,pace:120,effort:"endurance",context:"entrainement"}],
+  ["Natation 2 km",{sport:"natation",dist:2,dplus:0,pace:1200,effort:"endurance",context:"entrainement"}]
+];
+const RACE_PRESET={"2026-11-08":{sport:"trail",dist:30,dplus:900,pace:420},"2026-12-06":{sport:"route",dist:10,dplus:0,pace:252},"2027-01-24":{sport:"trail",dist:32,dplus:900,pace:420},
+ "2027-02-21":{sport:"trail",dist:33.5,dplus:1000,pace:430},"2027-03-21":{sport:"trail",dist:42,dplus:1600,pace:480},"2027-04-18":{sport:"trail",dist:31,dplus:1500,pace:500},
+ "2027-06-10":{sport:"trail",dist:79,dplus:3900,pace:679},"2027-07-10":{sport:"trail",dist:32,dplus:2100,pace:580},"2027-10-17":{sport:"trail",dist:80.4,dplus:3443,pace:560}};
+let NI=Object.assign({sport:"trail",dist:24,dplus:1200,pace:450,effort:"endurance",temp:"doux",context:"entrainement",gut:"debutant",sweat:"",unit:"minkm",weight:null},store.json("nutri",{}));
+function presetFromRace(k){const ri=raceInfo(k);if(!ri||!ri.dist)return;const pr=predictRace(ri);
+  Object.assign(NI,{sport:ri.terrain==="route"?"route":"trail",dist:ri.dist,dplus:ri.dplus||0,pace:pr?pr.pace:(RACE_PRESET[k]||{}).pace||420,effort:"competition",context:"course",unit:"minkm"});store.setJson("nutri",NI)}
+function defaultUnit(sp){return sp==="velo"?"kmh":sp==="natation"?"min100":"minkm"}
+function renderCalc(){
+  const f=document.getElementById("calc-form");f.innerHTML="";
+  const pre=el("div",{class:"presets"});PRESETS.forEach(([n,p])=>pre.append(el("button",{type:"button",class:"chip",text:n,onclick:()=>{Object.assign(NI,p,{unit:defaultUnit(p.sport)});store.setJson("nutri",NI);renderCalc()}})));
+  f.append(el("div",{class:"eyebrow",text:"Exemples à charger"}),pre);
+  const seg=(name,obj,key,onSet)=>{const s=el("div",{class:"seg wrapseg",role:"group","aria-label":name});Object.entries(obj).forEach(([v,t])=>s.append(el("button",{type:"button","aria-pressed":String(NI[key]===v),text:t,onclick:()=>{NI[key]=v;if(onSet)onSet(v);store.setJson("nutri",NI);renderCalc()}})));return s};
+  f.append(el("div",{class:"frow"},el("span",{class:"lbl",text:"Sport"}),seg("Sport",NUTRI.SPORTS,"sport",v=>{NI.unit=defaultUnit(v);if(v==="natation"&&NI.dist>10)NI.dist=2})));
+  const sw=NI.sport==="natation";
+  const dist=el("input",{type:"number",inputmode:"decimal",step:"0.1",min:"0",id:"c-dist",value:sw?Math.round(NI.dist*1000):NI.dist});
+  dist.onchange=()=>{NI.dist=sw?(+dist.value)/1000:+dist.value;store.setJson("nutri",NI);renderCalc()};
+  const dp=el("input",{type:"number",inputmode:"numeric",step:"10",min:"0",id:"c-dplus",value:NI.dplus});
+  dp.onchange=()=>{NI.dplus=+dp.value;store.setJson("nutri",NI);renderCalc()};
+  const fields=el("div",{class:"fields"},el("label",{for:"c-dist"},el("span",{text:sw?"Distance (m)":"Distance (km)"}),dist));
+  if(!sw)fields.append(el("label",{for:"c-dplus"},el("span",{text:"Dénivelé positif (m)"}),dp));
+  f.append(fields);
+  /* vitesse */
+  const units=sw?{min100:"min/100 m",kmh:"km/h"}:NI.sport==="velo"?{kmh:"km/h",minkm:"min/km"}:{minkm:"min/km",kmh:"km/h",min100:"min/100 m"};
+  if(!units[NI.unit])NI.unit=Object.keys(units)[0];
+  const kmh0=3600/NI.pace;
+  const spWrap=el("div",{class:"speed"});
+  if(NI.unit==="kmh"){const inp=el("input",{type:"number",inputmode:"decimal",step:"0.1",min:"0.5",id:"c-kmh",value:fr(kmh0).replace(",",".")});
+    inp.onchange=()=>{const v=+inp.value;if(v>0){NI.pace=3600/v;store.setJson("nutri",NI);renderCalc()}};spWrap.append(inp,el("span",{class:"unit",text:"km/h"}))}
+  else{const per=NI.unit==="minkm"?NI.pace:NI.pace/10;const m=el("select",{"aria-label":"Minutes"}),s=el("select",{"aria-label":"Secondes"});
+    opts(m,0,NI.unit==="minkm"?20:6,1,v=>String(v),Math.floor(per/60));opts(s,0,59,1,v=>String(v).padStart(2,"0"),Math.round(per%60)%60);
+    const upd=()=>{const sec=(+m.value)*60+(+s.value);if(sec>0){NI.pace=NI.unit==="minkm"?sec:sec*10;store.setJson("nutri",NI);renderCalc()}};m.onchange=upd;s.onchange=upd;
+    spWrap.append(el("div",{class:"wheel"},m,el("span",{class:"sep",text:"'"}),s,el("span",{class:"unit",text:NI.unit==="minkm"?"/km":"/100 m"})))}
+  const cv=NUTRI.conv.all(kmh0);
+  f.append(el("div",{class:"frow"},el("span",{class:"lbl",text:NI.sport==="trail"?"Vitesse moyenne réelle (montées comprises)":"Vitesse moyenne"}),seg("Unité",units,"unit"),spWrap,
+    el("span",{class:"small",text:"= "+cv.kmh+" km/h · "+cv.minkm+"/km · "+cv.min100+"/100 m"})));
+  f.append(el("div",{class:"frow"},el("span",{class:"lbl",text:"Effort prévu"}),seg("Effort",NUTRI.EFFORTS,"effort")));
+  f.append(el("div",{class:"frow"},el("span",{class:"lbl",text:"Météo"}),seg("Météo",NUTRI.TEMPS,"temp")));
+  f.append(el("div",{class:"frow"},el("span",{class:"lbl",text:"Contexte"}),seg("Contexte",{entrainement:"Entraînement",course:"Course (compétition)"},"context")));
+  f.append(el("div",{class:"frow"},el("span",{class:"lbl",text:"Estomac entraîné à manger en courant ?"}),seg("Estomac",{debutant:"Pas encore",entraine:"Oui, testé"},"gut")));
+  const wv=NI.weight||latestWeight();
+  const wIn=el("input",{type:"number",inputmode:"decimal",step:"0.1",min:"30",id:"c-weight",value:wv});wIn.onchange=()=>{NI.weight=+wIn.value||null;store.setJson("nutri",NI);renderCalc()};
+  const sIn=el("input",{type:"number",inputmode:"decimal",step:"0.1",min:"0",placeholder:"inconnu",id:"c-sweat",value:NI.sweat});sIn.onchange=()=>{NI.sweat=sIn.value;store.setJson("nutri",NI);renderCalc()};
+  f.append(el("div",{class:"fields"},el("label",{for:"c-weight"},el("span",{text:"Poids (kg)"}),wIn),el("label",{for:"c-sweat"},el("span",{text:"Sudation (L/h), si connue"}),sIn)));
+  f.append(el("p",{class:"small",text:"Poids repris de ton dernier relevé dans Progression. Pour mesurer ta sudation : pèse-toi avant et après 1 h de course, sans boire. Chaque kg perdu correspond à environ 1 L/h."}));
+  renderCalcResult();
+}
+function renderCalcResult(){
+  const out=document.getElementById("calc-out");out.innerHTML="";
+  const kmh=3600/NI.pace;
+  if(!(NI.dist>0)||!(kmh>0)){out.append(el("p",{text:"Indique une distance et une vitesse."}));return}
+  const r=NUTRI.compute({sport:NI.sport,dist:NI.dist,dplus:NI.sport==="natation"?0:(+NI.dplus||0),speedKmh:kmh,effort:NI.effort,temp:NI.temp,context:NI.context,gut:NI.gut,weight:NI.weight||latestWeight(),sweat:+NI.sweat||0});
+  const tiles=el("div",{class:"tiles"});
+  const tile=(v,l)=>tiles.append(el("div",{class:"tile"},el("b",{text:v}),el("span",{text:l})));
+  tile(r.durTxt.replace(":"," h "),"durée estimée");
+  tile(r.kcal.toLocaleString("fr-FR")+" kcal","dépense estimée ("+r.kcalH+"/h)");
+  tile(r.carb.target?r.carb.target+" g/h":"Rien","glucides pendant l'effort");
+  tile(r.fluid.needed?r.fluid.lo+"-"+r.fluid.hi+" ml/h":"Pas nécessaire","eau");
+  out.append(tiles,el("p",{class:"lead",text:r.why}));
+  if(r.kmEffort&&NI.sport==="trail")out.append(el("p",{class:"small",text:"Soit "+fr(r.kmEffort)+" km-effort, à "+fr(r.kmEffortH)+" km-effort/h."}));
+  const tbl=(rows,head)=>{const t=el("table");if(head)t.append(el("thead",{},el("tr",{},...head.map(h=>el("th",{text:h})))));const tb=el("tbody");rows.forEach(r=>tb.append(el("tr",{},...r.map(c=>el("td",{text:c})))));t.append(tb);return el("div",{class:"tbl"},t)};
+  /* cibles */
+  const rows=[];
+  if(r.carb.target)rows.push(["Glucides",r.carb.lo+"-"+r.carb.hi+" g/h, cible "+r.carb.target+" g/h","1re prise à "+NUTRI.hm(r.carb.start)+", puis toutes les "+(NI.sport==="natation"?30:20)+" min"]);
+  else rows.push(["Glucides",r.carb.tier==="rinse"?"Pas nécessaire (option : rinçage de bouche)":"Pas nécessaire","Repas d'avant suffisant"]);
+  rows.push(["Eau",r.fluid.needed?r.fluid.lo+"-"+r.fluid.hi+" ml/h":"Pas nécessaire",r.fluid.needed?"Petites gorgées régulières, selon ta soif":"Bois avant et après"]);
+  rows.push(["Sodium",r.sodium.needed?r.sodium.lo+"-"+r.sodium.hi+" mg/h":"Pas nécessaire",r.sodium.needed?"500-700 mg par litre bu (pastilles ou boisson salée)":""]);
+  if(r.protein)rows.push(["Protéines",r.protein.lo+"-"+r.protein.hi+" g/h","Au ravito : fromage, jambon, boisson de récup"]);
+  out.append(el("h3",{text:"Les cibles"}),tbl(rows,["","Quantité","Comment"]));
+  if(r.carb.target)out.append(el("p",{class:"small",text:"Ces "+r.carb.target+" g/h apportent environ "+r.intakeKcalH+" kcal/h, soit "+r.coverPct+" % de ta dépense. C'est normal : on ne compense jamais tout, on retarde l'épuisement des réserves."}));
+  /* plan de prises */
+  if(r.schedule.length){
+    out.append(el("h3",{text:"Quand manger et boire"}));
+    if(r.where)out.append(el("p",{class:"small",text:"Moment idéal pour une prise : "+r.where+". Boisson d'effort dosée à "+r.drinkConc+" g/L (≈ "+r.drinkCarbsH+" g/h de glucides par la boisson)."}));
+    const byH={};r.schedule.forEach(x=>{const h=Math.floor(x.t/60);(byH[h]=byH[h]||[]).push(x)});
+    const hr=Object.keys(byH).map(h=>["Heure "+(+h+1),byH[h].map(x=>x.clock+" : "+(x.drink?x.drink+" ml de boisson":"")+(x.food.length?(x.drink?" + ":"")+x.food.join(" "):"")).join("\n")]);
+    const t=tbl(hr,["","Prises"]);t.querySelectorAll("td:nth-child(2)").forEach(td=>td.style.whiteSpace="pre-line");out.append(t);
+    const sh=r.shopping,list=[];
+    if(sh.drinkLiters)list.push(fr(sh.drinkLiters)+" L de boisson d'effort (≈ "+sh.powder+" g de poudre)");
+    if(sh.gel)list.push(sh.gel+" gel"+(sh.gel>1?"s":""));if(sh.pate)list.push(sh.pate+" pâte"+(sh.pate>1?"s":"")+" de fruits ou ½ barres");
+    if(sh.sale)list.push(sh.sale+" portion"+(sh.sale>1?"s":"")+" de salé (souvent aux ravitos)");if(sh.cafeine)list.push(sh.cafeine+" gel"+(sh.cafeine>1?"s":"")+" caféiné"+(sh.cafeine>1?"s":""));
+    out.append(el("p",{},el("b",{text:"À prévoir : "}),list.join(" · ")+". Prends 1-2 gels de secours en plus."));
+  }
+  out.append(el("h3",{text:"Avant"}),tbl(r.pre.map(x=>[x.when,x.what])));
+  if(r.caffeine.length)out.append(el("h3",{text:"Caféine (facultatif)"}),tbl(r.caffeine.map(x=>[x.when,x.dose])),el("p",{class:"small",text:"À tester à l'entraînement d'abord. Pas plus d'environ 400 mg sur la journée. Évite-la si elle te donne des troubles digestifs ou t'empêche de dormir avant la course."}));
+  out.append(el("h3",{text:"Après"}),tbl(r.post.map(x=>[x.when,x.what])));
+  if(r.notes.length){const ul=el("ul");r.notes.forEach(n=>ul.append(el("li",{text:n})));out.append(el("h3",{text:"Conseils du coach"}),ul)}
+  out.append(el("p",{class:"small",text:"Dépense : environ 0,95 kcal/kg/km sur le plat, +10 % en trail, +0,6 kcal/kg par 100 m de D+ ; physique du vélo ; MET pour la natation. Ce sont des estimations à ±10-15 %, pas des valeurs médicales."}));
+}
+
+/* ---------- Graphiques (SVG dessiné à la largeur réelle) ---------- */
+function niceTicks(lo,hi,n){const span=hi-lo||1;const step0=span/n;const mag=Math.pow(10,Math.floor(Math.log10(step0)));const step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>span/s<=n)||mag*10;const a=Math.floor(lo/step)*step,b=Math.ceil(hi/step)*step;const t=[];for(let v=a;v<=b+1e-9;v+=step)t.push(+v.toFixed(6));return t}
+const SVGNS="http://www.w3.org/2000/svg";
+const sv=(tag,attrs={})=>{const e=document.createElementNS(SVGNS,tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);return e};
+function chart(host,o){
+  /* o: {type:"line"|"bar", series:[{name,color,points:[{x:Date,y,tip}]}], yFmt, invert, empty} */
+  host.innerHTML="";host.classList.add("chart");
+  const pts=o.series.flatMap(s=>s.points);
+  if(!pts.length){host.append(el("div",{class:"empty",text:o.empty}));return}
+  const W=Math.max(280,host.clientWidth||600),H=220,m={l:46,r:16,t:14,b:28};
+  let xs=pts.map(p=>p.x.getTime()),x0=Math.min(...xs),x1=Math.max(...xs);
+  if(x1-x0<7*864e5){x0-=3.5*864e5;x1+=3.5*864e5}
+  let ys=pts.map(p=>p.y),y0=Math.min(...ys),y1=Math.max(...ys);
+  if(o.type==="bar"){y0=0;y1=Math.max(100,y1)}else{const pad=(y1-y0||Math.abs(y1)*0.1||1)*0.15;y0-=pad;y1+=pad}
+  const ticks=o.paceTicks?(()=>{const span=y1-y0;const st=[5,10,15,20,30,60,120].find(s=>span/s<=4)||300;const t=[];for(let v=Math.floor(y0/st)*st;v<=Math.ceil(y1/st)*st+1e-9;v+=st)t.push(v);return t})():niceTicks(y0,y1,4);y0=ticks[0];y1=ticks.at(-1);
+  const X=t=>m.l+(t-x0)/(x1-x0)*(W-m.l-m.r);
+  const Y=v=>o.invert?m.t+(v-y0)/(y1-y0)*(H-m.t-m.b):H-m.b-(v-y0)/(y1-y0)*(H-m.t-m.b);
+  const svg=sv("svg",{width:W,height:H,viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":o.label||""});
+  ticks.forEach(t=>{svg.append(sv("line",{x1:m.l,x2:W-m.r,y1:Y(t),y2:Y(t),class:"grid"}));const tx=sv("text",{x:m.l-8,y:Y(t)+4,"text-anchor":"end",class:"axis"});tx.textContent=o.yFmt(t);svg.append(tx)});
+  /* axe x : 2 à 5 dates */
+  const nx=Math.min(5,Math.max(2,Math.floor((W-m.l-m.r)/110)));
+  for(let i=0;i<nx;i++){const t=x0+(x1-x0)*i/(nx-1);const tx=sv("text",{x:X(t),y:H-8,"text-anchor":i===0?"start":i===nx-1?"end":"middle",class:"axis"});tx.textContent=shortDate(new Date(t));svg.append(tx)}
+  const marks=[];
+  o.series.forEach((s,si)=>{
+    const P=[...s.points].sort((a,b)=>a.x-b.x);
+    if(o.type==="bar"){const bw=Math.max(6,Math.min(26,(W-m.l-m.r)/Math.max(P.length,1)*0.6));
+      P.forEach(p=>{const x=X(p.x.getTime()),y=Y(p.y),h=Math.max(0,Y(0)-y);const r=sv("rect",{x:x-bw/2,y:y,width:bw,height:h,rx:Math.min(4,bw/2),fill:s.color});svg.append(r);marks.push({x,y,p,s})})}
+    else{
+      if(P.length>1){const d=P.map((p,i)=>(i?"L":"M")+X(p.x.getTime()).toFixed(1)+" "+Y(p.y).toFixed(1)).join(" ");svg.append(sv("path",{d,fill:"none",stroke:s.color,"stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"}))}
+      P.forEach(p=>{const x=X(p.x.getTime()),y=Y(p.y);svg.append(sv("circle",{cx:x,cy:y,r:4,fill:s.color,stroke:"var(--surface)","stroke-width":2}));marks.push({x,y,p,s})});
+    }
+  });
+  const cross=sv("line",{y1:m.t,y2:H-m.b,class:"cross",visibility:"hidden"});svg.append(cross);
+  const ring=sv("circle",{r:6,fill:"none","stroke-width":2,visibility:"hidden"});svg.append(ring);
+  host.append(svg);
+  const tip=el("div",{class:"tip",hidden:true});host.append(tip);
+  const showAt=cx=>{let best=null,bd=1e9;marks.forEach(mk=>{const d=Math.abs(mk.x-cx);if(d<bd){bd=d;best=mk}});if(!best||bd>40){hide();return}
+    cross.setAttribute("x1",best.x);cross.setAttribute("x2",best.x);cross.setAttribute("visibility","visible");
+    ring.setAttribute("cx",best.x);ring.setAttribute("cy",best.y);ring.setAttribute("stroke",best.s.color);ring.setAttribute("visibility",o.type==="bar"?"hidden":"visible");
+    tip.hidden=false;tip.innerHTML="";tip.append(el("b",{text:fmtDate(best.p.x).replace(/^\S+ /,"")}),el("span",{text:(o.series.length>1?best.s.name+" : ":"")+best.p.tip}));
+    const tw=tip.offsetWidth;tip.style.left=Math.min(W-tw-4,Math.max(4,best.x-tw/2))+"px";tip.style.top=Math.max(0,best.y-58)+"px"};
+  const hide=()=>{cross.setAttribute("visibility","hidden");ring.setAttribute("visibility","hidden");tip.hidden=true};
+  svg.addEventListener("pointermove",e=>{const r=svg.getBoundingClientRect();showAt(e.clientX-r.left)});
+  svg.addEventListener("pointerdown",e=>{const r=svg.getBoundingClientRect();showAt(e.clientX-r.left)});
+  svg.addEventListener("pointerleave",hide);
+  if(o.series.length>1){const lg=el("div",{class:"legend"});o.series.forEach(s=>lg.append(el("span",{},el("i",{style:"background:"+s.color}),s.name)));host.append(lg)}
+}
+
+/* ---------- Progression ---------- */
+function runLogs(sport){return Object.entries(logs).filter(([k,v])=>v.done&&v.pace&&v.sport===sport).map(([k,v])=>({k,v,d:kd(k)})).sort((a,b)=>a.k<b.k?-1:1)}
+function weekStats(){
+  const res=[];const W=PLAN.weeksFor(mode);
+  for(const w of W){const s0=parse(w[1]);if(s0>TODAY)break;
+    let planned=0,done=0;for(let i=0;i<7;i++){const d=addDays(s0,i);if(d>TODAY)break;const s=PLAN.sessionFor(d,ctx());if(s&&s.kind!=="rest"){planned++;if(logs[iso(d)]&&logs[iso(d)].done)done++}}
+    if(planned)res.push({w,d:s0,planned,done,pct:Math.round(done/planned*100)})}
+  return res;
+}
+function renderProgress(){
+  const css=getComputedStyle(document.documentElement);const c1=css.getPropertyValue("--s1").trim()||"#1f7a52",c2=css.getPropertyValue("--s2").trim()||"#8a45b8";
+  const route=runLogs("route"),trail=runLogs("trail");
+  const wk=weekStats();const last4=wk.slice(-4);const p4=last4.reduce((a,x)=>a+x.planned,0);const d4=last4.reduce((a,x)=>a+x.done,0);
+  const nDone=Object.values(logs).filter(v=>v.done).length;
+  const ws=[...weights].sort((a,b)=>a.d<b.d?-1:1);
+  const tiles=document.getElementById("prog-tiles");tiles.innerHTML="";
+  const t=(v,l)=>tiles.append(el("div",{class:"tile"},el("b",{text:v}),el("span",{text:l})));
+  t(String(nDone),"séances validées");
+  t(p4?Math.round(d4/p4*100)+" %":"—","régularité, 4 dernières semaines");
+  t(route.length?fmtPace(Math.min(...route.map(x=>x.v.pace)))+"/km":"—","meilleure allure sur route");
+  t(ws.length?fr(ws.at(-1).kg)+" kg":"—",ws.length>1?((ws.at(-1).kg-ws[0].kg>=0?"+":"")+fr(ws.at(-1).kg-ws[0].kg)+" kg depuis le "+shortDate(parse(ws[0].d))):"poids actuel");
+  chart(document.getElementById("ch-route"),{type:"line",invert:true,paceTicks:true,label:"Allure sur route par séance",yFmt:v=>fmtPace(v),empty:"Valide une séance sur route avec ta vitesse pour voir ta courbe d'allure.",
+    series:[{name:"Allure route",color:c1,points:route.map(x=>({x:x.d,y:x.v.pace,tip:fmtPace(x.v.pace)+"/km · "+fr(3600/x.v.pace)+" km/h"+(x.v.dist?" · "+fr(x.v.dist,2)+" km":"")}))}]});
+  const tk=trail.map(x=>({x:x.d,y:3600/x.v.pace,tip:fr(3600/x.v.pace)+" km/h · "+fmtPace(x.v.pace)+"/km"+(x.v.dplus?" · "+x.v.dplus+" m D+":"")}));
+  const te=trail.filter(x=>x.v.dist&&x.v.dplus!=null).map(x=>{const kmh=3600/x.v.pace;const ke=kmh*(1+(x.v.dplus/100)/x.v.dist);return{x:x.d,y:ke,tip:fr(ke)+" km-effort/h"}});
+  chart(document.getElementById("ch-trail"),{type:"line",label:"Vitesse en trail par séance",yFmt:v=>fr(v),empty:"Valide une séance de trail pour suivre ta vitesse.",
+    series:te.length?[{name:"Vitesse (km/h)",color:c1,points:tk},{name:"Vitesse km-effort/h (si D+ saisi)",color:c2,points:te}]:[{name:"Vitesse (km/h)",color:c1,points:tk}]});
+  {const vol={};Object.entries(logs).forEach(([k,v])=>{if(!v.done||!isRunSport(v.sport)||!v.dist)return;const d=kd(k);const mon=addDays(d,-((d.getUTCDay()+6)%7));const key=iso(mon);vol[key]=(vol[key]||0)+v.dist});
+   const pts=Object.keys(vol).sort().filter(k=>k>="2026-09-01").map(k=>({x:addDays(parse(k),3),y:Math.round(vol[k]*10)/10,tip:"Semaine du "+shortDate(parse(k))+" : "+fr(vol[k])+" km de course (séances du plan + hors plan)"}));
+   chart(document.getElementById("ch-vol"),{type:"bar",label:"Volume de course par semaine",yFmt:v=>v+" km",empty:"Le volume apparaît dès que tes séances ont une distance (saisie ou montre).",series:[{name:"km",color:c1,points:pts}]});}
+  chart(document.getElementById("ch-reg"),{type:"bar",label:"Régularité par semaine",yFmt:v=>v+" %",empty:"La régularité s'affiche dès la première semaine du plan.",
+    series:[{name:"Séances faites",color:c1,points:wk.map(x=>({x:addDays(x.d,3),y:x.pct,tip:"Semaine "+x.w[0]+" : "+x.done+"/"+x.planned+" séances ("+x.pct+" %)"}))}]});
+  chart(document.getElementById("ch-weight"),{type:"line",label:"Poids",yFmt:v=>fr(v),empty:"Ajoute une pesée pour suivre ton poids.",
+    series:[{name:"Poids",color:c1,points:ws.map(w=>({x:parse(w.d),y:w.kg,tip:fr(w.kg)+" kg · IMC "+fr(w.kg/(HEIGHT*HEIGHT))}))}]});
+  renderStrength(c1);
+  const bmi=ws.length?ws.at(-1).kg/(HEIGHT*HEIGHT):null;
+  document.getElementById("bmi").textContent=bmi?"IMC actuel : "+fr(bmi)+" (taille 1,79 m).":"";
+  renderWeightList();renderHistory();
+}
+
+let strEx=store.get("strEx","squat");
+function renderStrength(color){
+  const sel=document.getElementById("str-ex");if(!sel)return;
+  if(!sel.options.length){[["A",GYM.A],["B",GYM.B]].forEach(([t,list])=>{const g=el("optgroup",{label:"Séance "+t});list.forEach(e=>g.append(el("option",{value:e.id,text:e.name})));sel.append(g)});sel.onchange=()=>{strEx=sel.value;store.set("strEx",strEx);renderStrength(color)}}
+  if(!GYM_ALL.some(e=>e.id===strEx))strEx="squat";sel.value=strEx;
+  const e=GYM_ALL.find(x=>x.id===strEx);const weighted=e.inc>0;
+  const pts=Object.keys(logs).filter(k=>logs[k].gym&&logs[k].gym[e.id]).sort().map(k=>{const sets=logs[k].gym[e.id].filter(x=>x&&x.r);if(!sets.length)return null;
+    let best=sets[0],val=0;sets.forEach(x=>{const v=weighted&&(+x.kg>0)?(+x.kg)*(1+(+x.r)/30):(+x.r);if(v>val){val=v;best=x}});
+    const vol=sets.reduce((s,x)=>s+(+x.r)*((+x.kg)||0),0);
+    return{x:kd(k),y:Math.round(val*10)/10,tip:"Meilleure série : "+best.r+" "+e.unit+(+best.kg>0?" × "+fmtKg(+best.kg)+" kg":"")+(weighted&&(+best.kg>0)?" · 1RM estimé "+fmtKg(val)+" kg":"")+(vol?" · volume "+Math.round(vol)+" kg":"")+" · "+sets.length+" séries"}}).filter(Boolean);
+  const useKg=weighted&&pts.length&&Object.keys(logs).some(k=>logs[k].gym&&logs[k].gym[e.id]&&logs[k].gym[e.id].some(x=>x&&+x.kg>0));
+  document.getElementById("str-note").textContent=useKg?"Force estimée (1RM, formule d'Epley : charge × (1 + rép/30)) de ta meilleure série.":"Répétitions (ou secondes) de ta meilleure série.";
+  chart(document.getElementById("ch-str"),{type:"line",label:"Progression "+e.name,yFmt:v=>useKg?fmtKg(v)+" kg":String(Math.round(v)),empty:"Note tes séries sur une séance de salle pour voir ta progression sur cet exercice.",
+    series:[{name:e.name,color,points:pts}]});
+}
+function renderWeightList(){
+  const box=document.getElementById("w-list");box.innerHTML="";
+  [...weights].sort((a,b)=>a.d<b.d?1:-1).slice(0,8).forEach(w=>{
+    box.append(el("div",{class:"hrow"},el("span",{text:fmtDate(parse(w.d)).replace(/^\S+ /,"")}),el("b",{text:fr(w.kg)+" kg"}),
+      el("button",{type:"button",class:"x","aria-label":"Supprimer la pesée du "+w.d,text:"Supprimer",onclick:()=>{weights=weights.filter(x=>x!==w);saveWeights();renderProgress()}})))});
+}
+function renderHistory(){
+  const box=document.getElementById("hist");box.innerHTML="";
+  const ks=Object.keys(logs).filter(k=>logs[k].done).sort().reverse().slice(0,15);
+  if(!ks.length){box.append(el("p",{class:"small",text:"Aucune séance validée pour l'instant."}));return}
+  ks.forEach(k=>{const v=logs[k];
+    const info=[(v.garmin?"⌚ ":"")+(v.title||"Séance"),v.kmh?"vélo "+fr(v.kmh)+" km/h":"",v.p100?"natation "+fmtPace(v.p100)+"/100 m":"",v.hr?"FC "+v.hr:"",v.pace?(v.sport==="trail"?"trail ":"route ")+fmtPace(v.pace)+"/km":"",v.dist?fr(v.dist,2)+" km":"",v.dplus?v.dplus+" m D+":"",v.rpe?"ressenti "+v.rpe+"/10":"",v.gym?Object.keys(v.gym).filter(id=>v.gym[id].some(x=>x&&x.r)).length+" exercices notés":""].filter(Boolean).join(" · ");
+    box.append(el("div",{class:"hrow"},el("span",{text:fmtDate(kd(k)).replace(/^\S+ /,"").replace(/ \d{4}$/,"")}),el("span",{class:"grow",text:info}),
+      el("button",{type:"button",class:"x","aria-label":"Supprimer la séance du "+k,text:"Supprimer",onclick:()=>{delete logs[k];saveLogs();renderProgress()}})))});
+}
+function initProgressForms(){
+  const wd=document.getElementById("w-date"),wk=document.getElementById("w-kg");wd.value=iso(TODAY);wk.value=latestWeight();
+  document.getElementById("w-form").onsubmit=e=>{e.preventDefault();const kg=+String(wk.value).replace(",",".");if(!(kg>20&&kg<300))return;
+    weights=weights.filter(x=>x.d!==wd.value);weights.push({d:wd.value,kg:Math.round(kg*10)/10});saveWeights();renderProgress()};
+  /* séance libre */
+  const fd=document.getElementById("f-date");fd.value=iso(TODAY);
+  const fs=document.getElementById("f-sport"),fm=document.getElementById("f-min"),fsec=document.getElementById("f-sec");
+  opts(fm,2,15,1,v=>String(v),6);opts(fsec,0,59,1,v=>String(v).padStart(2,"0"),0);
+  const frpe=document.getElementById("f-rpe");frpe.append(el("option",{value:"",text:"—"}));for(let i=1;i<=10;i++)frpe.append(el("option",{value:String(i),text:String(i)}));
+  document.getElementById("f-form").onsubmit=e=>{e.preventDefault();if(!fd.value)return;const k=fd.value+"~"+Date.now().toString(36);
+    const dist=document.getElementById("f-dist").value,dp=document.getElementById("f-dplus").value,nm=document.getElementById("f-name").value.trim();
+    logs[k]={done:true,sport:fs.value,pace:(+fm.value)*60+(+fsec.value),dist:dist===""?null:+dist,dplus:dp===""?null:+dp,rpe:frpe.value?+frpe.value:null,title:nm||"Séance libre",free:true};
+    saveLogs();renderProgress();document.getElementById("f-ok").textContent="Séance ajoutée";setTimeout(()=>document.getElementById("f-ok").textContent="",1800)};
+  /* sauvegarde */
+  const ta=document.getElementById("backup");
+  document.getElementById("b-export").onclick=()=>{const data=JSON.stringify({v:1,logs,weights,check:store.json("check",{}),nutri:NI});ta.value=data;ta.select();
+    try{const blob=new Blob([data],{type:"application/json"});const a=el("a",{href:URL.createObjectURL(blob),download:"prepa-diag-sauvegarde-"+iso(TODAY)+".json"});document.body.append(a);a.click();a.remove()}catch(e){}
+    if(navigator.clipboard)navigator.clipboard.writeText(data).then(()=>msg("Copié dans le presse-papiers"),()=>msg("Sélectionné : copie-le à la main"))};
+  document.getElementById("b-import").onclick=()=>{try{const d=JSON.parse(ta.value);if(!d||!d.logs)throw 0;logs=d.logs;weights=d.weights||[];saveLogs();saveWeights();if(d.check)store.setJson("check",d.check);msg("Données importées");renderProgress()}catch(e){msg("Texte non reconnu : colle le contenu d'une sauvegarde")}};
+  const msg=t=>{document.getElementById("b-msg").textContent=t};
+}
+
+/* ---------- Temps théoriques ---------- */
+function routeRefs(){return Object.entries(logs).filter(([k,v])=>v.done&&v.pace&&v.sport==="route"&&v.dist).map(([k,v])=>({key:k,date:kd(k),dist:v.dist,sec:v.pace*v.dist,rpe:v.rpe||null,title:v.title||"Séance"}))}
+function bestTen(){const t=PREDICT.tenKm(routeRefs(),TODAY);return t.length?t[0]:null}
+function predictRace(ri){const b=bestTen();if(!b||!ri||!ri.dist)return null;return PREDICT.timeFor(b.t10,ri.dist,ri.dplus||0,ri.terrain||"roulant")}
+const terrainSel=(id,val)=>{const s=el("select",{id});Object.entries(PREDICT.TERRAINS).forEach(([k,t])=>s.append(el("option",{value:k,text:t.name})));s.value=val||"roulant";return s};
+function renderTemps(){
+  const refBox=document.getElementById("t-ref");refBox.innerHTML="";
+  const list=PREDICT.tenKm(routeRefs(),TODAY);const b=list[0];
+  if(!b){refBox.append(el("p",{text:"Aucune référence pour l'instant. Valide une séance sur route avec sa distance et un ressenti (8 à 10 si c'était à fond), ou ajoute une course passée dans Progression."}));
+    ["t-std","t-races"].forEach(id=>document.getElementById(id).innerHTML="");return}
+  refBox.append(el("p",{class:"lead"},"Ta référence : ",el("b",{text:b.title}),", "+fr(b.dist,2)+" km en "+PREDICT.fmtLong(b.sec)+" ("+shortDate(b.date)+(b.rpe?", ressenti "+b.rpe:"")+"). Équivalent 10 km : ",el("b",{text:PREDICT.fmtLong(b.t10)}),"."));
+  if(!b.reliable)refBox.append(el("p",{class:"small",text:"Fiabilité moyenne : cette référence n'est pas un effort à fond (ressenti < 8). Les temps sont corrigés, mais un vrai test (5 ou 10 km à fond) les rendra plus justes."}));
+  if(list.length>1)refBox.append(el("p",{class:"small",text:"Autres références prises en compte : "+list.slice(1,4).map(x=>x.title+" → 10 km en "+PREDICT.fmtLong(x.t10)).join(" · ")}));
+  const tbl=(head,rows)=>{const t=el("table");t.append(el("thead",{},el("tr",{},...head.map(h=>el("th",{text:h})))));const tb=el("tbody");rows.forEach(r=>{const tr=el("tr",{class:r.cls||""});r.cells.forEach(c=>tr.append(el("td",{},c)));tb.append(tr)});t.append(tb);return el("div",{class:"tbl"},t)};
+  const std=[["5 km",5],["10 km",10],["Semi-marathon",21.0975],["Marathon",42.195]].map(([n,d])=>{const r=PREDICT.timeFor(b.t10,d,0,"route");return{cells:[n,PREDICT.fmtLong(r.sec),fmtPace(r.pace)+"/km",PREDICT.fmt(r.lo)+" à "+PREDICT.fmt(r.hi)]}});
+  const s=document.getElementById("t-std");s.innerHTML="";s.append(tbl(["Distance","Temps théorique","Allure","Fourchette"],std));
+  const rows=allRaceInfos().filter(r=>r.dist&&!(r.hidden)).map(r=>{const p=PREDICT.timeFor(b.t10,r.dist,r.dplus||0,r.terrain||"roulant");
+    return{cls:parse(r.date)<TODAY?"past":"",cells:[r.name+(r.user?" (ajoutée)":""),shortDate(parse(r.date))+" "+r.date.slice(0,4),fr(r.dist,1)+" km · "+(r.dplus||0)+" m"+(r.est?" (D+ estimé)":""),PREDICT.TERRAINS[r.terrain||"roulant"].name,el("b",{text:PREDICT.fmt(p.sec)}),PREDICT.fmt(p.lo)+" à "+PREDICT.fmt(p.hi),fr(p.kmh)+" km/h"]}});
+  const rc=document.getElementById("t-races");rc.innerHTML="";rc.append(tbl(["Course","Date","Format","Terrain","Temps théorique","Fourchette","Vitesse"],rows));
+}
+function initWhatIf(){
+  const box=document.getElementById("t-whatif");
+  const d=el("input",{type:"number",id:"wi-dist",inputmode:"decimal",step:"0.1",min:"1",value:"42"}),dp=el("input",{type:"number",id:"wi-dplus",inputmode:"numeric",step:"10",min:"0",value:"2000"});
+  const ts=terrainSel("wi-terrain","montagne");const out=el("p",{class:"lead","aria-live":"polite"});
+  const go=()=>{const b=bestTen();if(!b){out.textContent="Il faut d'abord une référence sur route.";return}const r=PREDICT.timeFor(b.t10,+d.value||0,+dp.value||0,ts.value);
+    out.textContent="Temps théorique : "+PREDICT.fmt(r.sec)+" (fourchette "+PREDICT.fmt(r.lo)+" à "+PREDICT.fmt(r.hi)+"), soit "+fr(r.kmh)+" km/h et "+fr(r.ke)+" km-effort."};
+  [d,dp,ts].forEach(x=>x.oninput=go);
+  box.append(el("div",{class:"fields"},el("label",{for:"wi-dist"},el("span",{text:"Distance (km)"}),d),el("label",{for:"wi-dplus"},el("span",{text:"D+ (m)"}),dp),el("label",{for:"wi-terrain"},el("span",{text:"Terrain"}),ts)),out);
+  box._go=go;
+}
+
+
+/* ---------- Stratégie de course ---------- */
+let stratRace=store.get("stratRace","");
+let raceCP=store.json("raceCP",{});let raceStart=store.json("raceStart",{});
+const saveCP=()=>{store.setJson("raceCP",raceCP);store.setJson("raceStart",raceStart)};
+function raceKind(ri){const ke=ri.dist+(ri.dplus||0)/100;if(ri.terrain==="route")return ri.dist<=12?"route-court":ri.dist<=22?"route-semi":"route-long";return ke<=45?"trail-court":ke<=100?"trail-long":"ultra"}
+const STRAT={
+ "route-court":{phases:[["Départ (0-1 km)","Pars à ton allure cible, pas plus vite : au plus 3 s/km sous l'objectif. Laisse partir ceux qui s'enflamment."],["Installation (1-5 km)","Allure régulière, respiration contrôlée. Cale-toi derrière un groupe à ta vitesse."],["Le dur (5-8 km)","C'est là que la tête lâche : reste sur l'allure, coupe la course en 1 km à la fois."],["Finish (8-10 km)","Accélère progressivement à 2 km de l'arrivée, à fond sur les 500 derniers mètres."]],
+  tips:["Échauffement de 15-20 min avec 3-4 accélérations de 20 s, fini 10 min avant le départ.","Rien à manger pendant la course : le repas d'avant suffit.","Montre en allure moyenne au tour (lap) de 1 km pour éviter les variations du GPS."]},
+ "route-semi":{phases:[["0-5 km","1 à 2 % plus lent que l'allure cible. Tu dois avoir l'impression de te retenir."],["5-15 km","Allure cible, stable. Bois aux ravitos, 1 gel vers 45-50 min si l'effort dépasse 1 h 15."],["15-21 km","Si tu te sens bien à 15 km, accélère par paliers de 2-3 s/km."]],tips:["Un départ trop rapide de 10 s/km coûte souvent 2 à 3 min à la fin.","Repère les ravitos sur le plan du parcours avant la course."]},
+ "route-long":{phases:[["0-10 km","Plus lent que l'allure cible de 3-5 s/km. Commence à boire et manger dès 20 min."],["10-30 km","Allure cible, régulière. Une prise toutes les 20 min, sans en sauter une."],["30-42 km","Le marathon commence ici. Garde la foulée courte, découpe en blocs de 2 km."]],tips:["Le mur du 30e km se prépare dès le départ : partir lentement et manger tôt.","Si l'allure chute de plus de 15 s/km, ralentis volontairement 2 km et mange : on récupère souvent."]},
+ "trail-court":{phases:[["Premier quart","Pars en Z2-Z3, même si ça bouchonne : on double plus tard. Ne grimpe pas en courant ce que tu ne pourrais pas tenir 30 min."],["Milieu","Montées raides (> 15 %) en marche active, mains sur les cuisses ou bâtons. Relance dès que ça s'adoucit. Descentes relâchées, regard 3-4 m devant."],["Dernier quart","Si tu as encore de l'énergie, c'est ici que tu gagnes des places, surtout en descente et sur le plat."]],tips:["Mange à partir de 30 min si l'effort dépasse 1 h 15, de préférence en montée.","Ravitos : remplir, prendre, repartir, moins de 2 min."]},
+ "trail-long":{phases:[["0-30 %","Strictement en Z2. Tu dois pouvoir parler. Marche toutes les montées raides dès le départ, même les premières."],["30-70 %","Allure stable. Manger toutes les 20 min, boire à la soif. Point toutes les heures : manger ? boire ? douleur ? frottement ?"],["70-100 %","La vraie course commence. Relance sur le plat et en descente si les jambes le permettent ; sinon, tiens la marche active."]],tips:["Ravitos : arrive en sachant ce que tu prends, repars en mangeant. 5 min maximum.","Coup de mou : mange, ralentis 20 min, puis juge. Ne décide jamais d'abandonner à chaud.","Descentes : petits pas rapides, ne freine pas en talon pour épargner les quadriceps."]},
+ "ultra":{phases:[["0-25 %","Beaucoup plus lent que ce que tu peux faire. Z1-Z2, marche dès que ça monte. Laisse partir tout le monde."],["25-60 %","Routine : manger, boire, sel, une base de vie bien gérée. Préparer la nuit avant qu'elle tombe (frontale, couche chaude)."],["60-85 %","Le moment le plus dur : fatigue, sommeil, estomac. Avance de ravito en ravito, micro-sieste de 10-15 min si tu t'endors en marchant."],["85-100 %","Tu connais la fin : garde ta routine jusqu'à la ligne, ne relâche pas la nutrition."]],tips:["Sur 20 h et plus, le temps passé aux ravitos et bases de vie pèse lourd : prévois 3-5 min par ravito, 20-30 min par base de vie.","Change de chaussettes et soigne les pieds à mi-course.","Caféine de préférence la nuit et dans la 2e moitié."]}
+};
+function stratRaces(){return allRaceInfos().filter(r=>r.dist&&!r.hidden&&parse(r.date)>=addDays(TODAY,-1))}
+function renderStrategy(){
+  const box=document.getElementById("st-body");box.innerHTML="";
+  const sel=document.getElementById("st-race");sel.innerHTML="";
+  const races=stratRaces();
+  if(!races.length){box.append(el("p",{text:"Aucune course à venir avec une distance. Ajoute-en une dans Mes courses."}));return}
+  races.forEach(r=>sel.append(el("option",{value:r.date,text:shortDate(parse(r.date))+" "+r.date.slice(0,4)+" · "+r.name})));
+  if(!races.some(r=>r.date===stratRace))stratRace=races[0].date;sel.value=stratRace;
+  sel.onchange=()=>{stratRace=sel.value;store.set("stratRace",stratRace);renderStrategy()};
+  const ri=raceInfo(stratRace);const pr=predictRace(ri);const ke=ri.dist+(ri.dplus||0)/100;const kind=raceKind(ri);const S=STRAT[kind];
+  const tbl=(head,rows)=>{const t=el("table");if(head)t.append(el("thead",{},el("tr",{},...head.map(h=>el("th",{text:h})))));const tb=el("tbody");rows.forEach(r=>tb.append(el("tr",{},...r.map(c=>el("td",{},c)))));t.append(tb);return el("div",{class:"tbl"},t)};
+  box.append(el("p",{class:"small",text:fr(ri.dist,1)+" km · "+(ri.dplus||0)+" m D+ · "+fr(ke)+" km-effort · "+PREDICT.TERRAINS[ri.terrain||"roulant"].name}));
+  if(!pr){box.append(el("p",{text:"Ajoute une référence sur route (séance à fond avec distance) pour obtenir les objectifs de temps."}))}
+  else{
+    box.append(el("h3",{text:"Tes 3 objectifs"}));
+    const tiles=el("div",{class:"tiles"});
+    [["A",pr.lo,"Jour parfait"],["B",pr.sec,"Objectif réaliste"],["C",pr.hi,"Jour difficile : finir"]].forEach(([k,t,l])=>tiles.append(el("div",{class:"tile goal goal-"+k},el("span",{class:"eyebrow",text:"Objectif "+k}),el("b",{text:kind.startsWith("route")?PREDICT.fmtLong(t):PREDICT.fmt(t)}),el("span",{text:l+(kind.startsWith("route")?" · "+fmtPace(t/ri.dist)+"/km":" · "+fr(ri.dist/(t/3600))+" km/h")}))));
+    box.append(tiles,el("p",{class:"small",text:"Tu pars sur l'objectif B. Tu ne vises A qu'après la moitié de la course, si tout va bien. C est ta limite pour finir sans te blesser."}));
+  }
+  box.append(el("h3",{text:"Le déroulé"}),tbl(["Phase","Ce que tu fais"],S.phases));
+  /* points de passage */
+  box.append(el("h3",{text:"Temps de passage"}));
+  const st=el("input",{type:"time",id:"st-start",value:raceStart[stratRace]||(kind.startsWith("route")?"09:30":"06:00")});
+  st.onchange=()=>{raceStart[stratRace]=st.value;saveCP();renderStrategy()};
+  box.append(el("div",{class:"fields"},el("label",{for:"st-start"},el("span",{text:"Heure de départ"}),st)));
+  let cps=raceCP[stratRace];const auto=!cps||!cps.length;
+  if(auto){const step=ri.dist<=12?2:ri.dist<=25?5:ri.dist<=60?10:20;cps=[];for(let d=step;d<ri.dist-0.5;d+=step)cps.push({name:"km "+d,km:d,dplus:Math.round((ri.dplus||0)*d/ri.dist)})}
+  const all=[...cps].sort((a,b)=>a.km-b.km).concat([{name:"Arrivée",km:ri.dist,dplus:ri.dplus||0,finish:true}]);
+  const [hh,mm]=(st.value||"06:00").split(":").map(Number);const t0=hh*3600+mm*60;
+  const clock=s=>{s=Math.round(t0+s)%86400;return String(Math.floor(s/3600)).padStart(2,"0")+":"+String(Math.floor(s%3600/60)).padStart(2,"0")};
+  if(pr){
+    let prev=0,prevKm=0;
+    const rows=all.map(c=>{const x=Math.min(1,(c.km+(c.dplus||0)/100)/ke);const t=PREDICT.elapsed(pr.sec,ke,x);const seg=t-prev;const segKm=c.km-prevKm;prev=t;prevKm=c.km;
+      return[c.name,fr(c.km,1)+" km"+(ri.dplus?" · "+(c.dplus||0)+" m":""),PREDICT.fmt(t),clock(t),segKm>0?(kind.startsWith("route")?fmtPace(seg/segKm)+"/km":fr(segKm/(seg/3600))+" km/h"):"",
+        c.finish||auto?"":el("button",{type:"button",class:"x",text:"Supprimer",onclick:()=>{raceCP[stratRace]=raceCP[stratRace].filter(z=>z!==c);saveCP();renderStrategy()}})]});
+    box.append(tbl(["Point","Distance · D+ cumulé","Temps","Heure","Allure du tronçon",""],rows));
+    box.append(el("p",{class:"small",text:(auto?"Points automatiques. Ajoute les vrais ravitos (distance et D+ cumulés, sur la fiche de la course) pour un plan précis. ":"")+"Les temps intègrent un ralentissement progressif de "+Math.round(PREDICT.fade(ke)*100)+" % entre le début et la fin, normal sur cette distance."}));
+  }
+  const nm=el("input",{type:"text",id:"cp-name",placeholder:"ex. Ravito 1"}),km=el("input",{type:"number",id:"cp-km",inputmode:"decimal",step:"0.1",min:"0"}),dp=el("input",{type:"number",id:"cp-dp",inputmode:"numeric",step:"10",min:"0"});
+  const add=el("form",{class:"fields"},el("label",{for:"cp-name"},el("span",{text:"Point de passage"}),nm),el("label",{for:"cp-km"},el("span",{text:"Km"}),km),el("label",{for:"cp-dp"},el("span",{text:"D+ cumulé (m)"}),dp),el("button",{class:"btn primary",type:"submit",text:"Ajouter"}));
+  add.onsubmit=e=>{e.preventDefault();if(!(+km.value>0))return;raceCP[stratRace]=(raceCP[stratRace]||[]).concat([{name:nm.value.trim()||"Point "+km.value,km:+km.value,dplus:+dp.value||0}]);saveCP();renderStrategy()};
+  box.append(add);
+  box.append(el("h3",{text:"Les clés de cette course"}));const ul=el("ul");S.tips.forEach(t=>ul.append(el("li",{text:t})));box.append(ul);
+  if(ri.terrain!=="route"){box.append(el("h3",{text:"En montée et en descente"}));const u2=el("ul");
+    ["Marche dès que la pente dépasse environ 15 % ou que tu sors de Z2 : sur un trail long, une marche active à 5-6 km/h coûte bien moins qu'une course lente.","Bâtons : pousse avec les deux en même temps dans les raidards, range-les sur le plat.","Descente : petits appuis rapides, bras écartés pour l'équilibre, ne bloque pas les genoux.","Au sommet d'une montée, trottine 1 min pour relancer avant de dérouler la descente."].forEach(t=>u2.append(el("li",{text:t})));box.append(u2)}
+  box.append(el("p",{},el("a",{href:"#calcul",text:"Plan de nutrition de cette course →",onclick:()=>presetFromRace(stratRace)}),"  ",el("a",{href:"#routine",text:"Routine avant course →"})));
+}
+/* ---------- Mes courses ---------- */
+function renderMesCourses(){
+  const box=document.getElementById("mc-list");box.innerHTML="";
+  const races=allRaceInfos();const b=bestTen();
+  races.forEach(r=>{
+    const past=parse(r.date)<TODAY;const p=b&&r.dist?PREDICT.timeFor(b.t10,r.dist,r.dplus||0,r.terrain||"roulant"):null;
+    const row=el("div",{class:"race"+(r.hidden?" off":"")+(past?" past":"")});
+    const d=parse(r.date);
+    row.append(el("div",{class:"rdate"},el("b",{text:String(d.getUTCDate())}),el("span",{text:MABR[d.getUTCMonth()]+" "+d.getUTCFullYear()})));
+    const info=el("div",{class:"rinfo"},el("b",{text:r.name}),el("span",{class:"small",text:(r.dist?fr(r.dist,1)+" km · "+(r.dplus||0)+" m D+"+(r.est?" (D+ estimé : à corriger)":""):"distance à compléter")+" · "+PREDICT.TERRAINS[r.terrain||"roulant"].name+(r.user?" · ajoutée par toi":" · conseillée")+(r.hidden?" · retirée du planning":"")}));
+    if(p&&!r.hidden)info.append(el("span",{class:"rpred",text:"Temps théorique "+PREDICT.fmt(p.sec)+" ("+PREDICT.fmt(p.lo)+" à "+PREDICT.fmt(p.hi)+")"}));
+    row.append(info);
+    const act=el("div",{class:"ract"});
+    act.append(el("button",{type:"button",class:"btn",text:"Modifier",onclick:()=>editRace(r,row)}));
+    if(r.dist&&!r.hidden)act.append(el("a",{class:"btn",href:"#calcul",text:"Nutrition",onclick:()=>presetFromRace(r.date)}),el("a",{class:"btn",href:"#strategie",text:"Stratégie",onclick:()=>{stratRace=r.date;store.set("stratRace",r.date)}}));
+    if(r.user)act.append(el("button",{type:"button",class:"btn",text:"Supprimer",onclick:()=>{userRaces=userRaces.filter(x=>x.id!==r.id);saveRaces();renderMesCourses()}}));
+    else act.append(el("button",{type:"button",class:"btn",text:r.hidden?"Remettre":"Je ne la fais pas",onclick:()=>{raceEdits[r.date]=Object.assign({},raceEdits[r.date],{hidden:!r.hidden});saveRaces();renderMesCourses()}}));
+    row.append(act);box.append(row);
+  });
+}
+function raceForm(r,onSave,onCancel){
+  const f=el("form",{class:"fields raceform"});const id=(r&&r.id)||("u"+Date.now().toString(36));
+  const nm=el("input",{type:"text",id:"rf-name-"+id,required:"required",value:r?r.name:"",placeholder:"Nom de la course"});
+  const dt=el("input",{type:"date",id:"rf-date-"+id,required:"required",value:r?r.date:iso(addDays(TODAY,30))});
+  const di=el("input",{type:"number",id:"rf-dist-"+id,inputmode:"decimal",step:"0.1",min:"1",required:"required",value:r&&r.dist?r.dist:""});
+  const dp=el("input",{type:"number",id:"rf-dplus-"+id,inputmode:"numeric",step:"10",min:"0",value:r?(r.dplus||0):0});
+  const te=terrainSel("rf-ter-"+id,r?r.terrain:"roulant");
+  const rec=r&&!r.user;
+  if(rec){nm.disabled=true;dt.disabled=true}
+  f.append(el("label",{for:nm.id},el("span",{text:"Nom"}),nm),el("label",{for:dt.id},el("span",{text:"Date"}),dt),el("label",{for:di.id},el("span",{text:"Distance (km)"}),di),
+    el("label",{for:dp.id},el("span",{text:"D+ (m)"}),dp),el("label",{for:te.id},el("span",{text:"Terrain"}),te),
+    el("div",{class:"controls"},el("button",{class:"btn primary",type:"submit",text:r?"Enregistrer":"Ajouter la course"}),onCancel?el("button",{class:"btn",type:"button",text:"Annuler",onclick:onCancel}):null));
+  f.onsubmit=e=>{e.preventDefault();onSave({id,name:nm.value.trim(),date:dt.value,dist:+di.value,dplus:+dp.value||0,terrain:te.value})};
+  return f;
+}
+function editRace(r,row){
+  const f=raceForm(r,v=>{if(r.user){userRaces=userRaces.map(x=>x.id===r.id?v:x)}else{raceEdits[r.date]=Object.assign({},raceEdits[r.date],{dist:v.dist,dplus:v.dplus,terrain:v.terrain,est:false})}saveRaces();renderMesCourses()},()=>renderMesCourses());
+  row.replaceWith(f);
+}
+function initAddRace(){
+  const box=document.getElementById("mc-add");box.innerHTML="";
+  box.append(raceForm(null,v=>{userRaces.push(v);saveRaces();initAddRace();renderMesCourses();document.getElementById("mc-msg").textContent=v.name+" ajoutée : elle apparaît dans le planning et dans les temps théoriques."}));
+}
+
+/* ---------- Navigation (onglets regroupés) ---------- */
+const GROUPS=[
+  {id:"accueil",name:"Accueil",views:[["accueil","Accueil"]]},
+  {id:"entrainement",name:"Planning",views:[["planning","Calendrier"],["progres","Progression"],["routine","Routine course"]]},
+  {id:"courses",name:"Courses",views:[["mescourses","Mes courses"],["temps","Temps théoriques"],["strategie","Stratégie de course"],["courses","Calendrier des courses"],["objectifs","Objectifs Diag"]]},
+  {id:"nutrition",name:"Nutrition",views:[["calcul","Calcul nutrition"],["nutrition","Guide nutrition"]]},
+  {id:"infos",name:"Infos",views:[["reglages","Montre Garmin"],["materiel","Matériel"],["plan","Plan et règles"]]}
+];
+const VIEWS=GROUPS.flatMap(g=>g.views.map(v=>v[0]));
+const groupOf=v=>GROUPS.find(g=>g.views.some(x=>x[0]===v));
+let curView="accueil";
+function buildNav(){
+  const nav=document.getElementById("nav-main");nav.innerHTML="";
+  GROUPS.forEach(g=>nav.append(el("a",{href:"#"+g.views[0][0],"data-g":g.id,text:g.name})));
+}
+function show(){
+  let v=(location.hash||"").slice(1);if(!VIEWS.includes(v))v="accueil";curView=v;
+  const g=groupOf(v);
+  VIEWS.forEach(x=>{document.getElementById("v-"+x).hidden=x!==v});
+  document.querySelectorAll("#nav-main a").forEach(a=>{if(a.dataset.g===g.id){a.setAttribute("aria-current","page");a.scrollIntoView({block:"nearest",inline:"nearest"})}else a.removeAttribute("aria-current")});
+  const sub=document.getElementById("nav-sub");sub.innerHTML="";sub.hidden=g.views.length<2;
+  g.views.forEach(([id,name])=>{const a=el("a",{href:"#"+id,text:name});if(id===v)a.setAttribute("aria-current","page");sub.append(a)});
+  if(v==="planning"){view={y:selected.getUTCFullYear(),m:selected.getUTCMonth()};renderPlanning()}
+  if(v==="accueil")renderHome();
+  if(v==="progres")renderProgress();
+  if(v==="calcul")renderCalc();
+  if(v==="temps"){renderTemps();document.getElementById("t-whatif")._go()}
+  if(v==="mescourses")renderMesCourses();
+  if(v==="strategie")renderStrategy();
+  if(v==="reglages")renderReglages();
+}
+window.addEventListener("hashchange",()=>{show();window.scrollTo(0,0)});
+let rz;window.addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(()=>{if(curView==="progres")renderProgress()},200)});
+document.getElementById("mode-base").onclick=()=>{mode="base";store.set("mode",mode);renderPlanning()};
+document.getElementById("mode-race").onclick=()=>{mode="race";store.set("mode",mode);renderPlanning()};
+document.getElementById("site-t").onclick=()=>{site="t";store.set("site",site);renderPlanning()};
+document.getElementById("site-p").onclick=()=>{site="p";store.set("site",site);renderPlanning()};
+document.getElementById("prev").onclick=()=>{view.m--;if(view.m<0){view.m=11;view.y--}renderPlanning()};
+document.getElementById("next").onclick=()=>{view.m++;if(view.m>11){view.m=0;view.y++}renderPlanning()};
+document.getElementById("today-btn").onclick=()=>{selected=(TODAY>=FIRST&&TODAY<=LAST)?TODAY:FIRST;view={y:selected.getUTCFullYear(),m:selected.getUTCMonth()};renderPlanning()};
+document.querySelectorAll("[data-pk]").forEach(b=>b.onclick=()=>{pk=b.dataset.pk;store.set("pk",pk);renderPack()});
+document.getElementById("check-reset").onclick=()=>{store.setJson("check",{});renderChecklist()};
+buildNav();initWhatIf();initAddRace();renderCourses();renderPack();renderChecklist();initProgressForms();show();
+maybeAutoSync();
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")maybeAutoSync()});
+
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{})})}</script>
+</body>
+</html>

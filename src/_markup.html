@@ -1,0 +1,435 @@
+<title>Prépa Diag 2030</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout : carnet d'entraînement — barre d'onglets en haut, contenu en une colonne ; planning = calendrier + fiche du jour */
+:root{
+  --bg:#f3f5f1; --surface:#ffffff; --ink:#1d2621; --muted:#5d6b63; --line:#d9e0da;
+  --accent:#2f6b4f; --accent-soft:#e1efe7; --hard:#b4532a; --hard-soft:#f6e5dc;
+  --race:#7a3fa0; --race-soft:#efe4f6; --rest:#eef1ee;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a17; --surface:#1c2420; --ink:#e6ece8; --muted:#9aa9a0; --line:#2e3a34;
+  --accent:#6fc298; --accent-soft:#1f3a2d; --hard:#e48a5f; --hard-soft:#3d261b;
+  --race:#c793e8; --race-soft:#33243f; --rest:#202925; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a17; --surface:#1c2420; --ink:#e6ece8; --muted:#9aa9a0; --line:#2e3a34;
+  --accent:#6fc298; --accent-soft:#1f3a2d; --hard:#e48a5f; --hard-soft:#3d261b;
+  --race:#c793e8; --race-soft:#33243f; --rest:#202925; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:1080px;margin:0 auto;display:grid;gap:18px}
+header.top{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:10px}
+h1{font-family:var(--display);font-weight:700;font-size:2.3rem;line-height:1;margin:0;letter-spacing:.01em}
+.sub{color:var(--muted);margin:4px 0 0}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:6px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.tabs a{flex:none;text-decoration:none;color:var(--ink);font:600 .9rem var(--body);padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}
+nav.tabs a[aria-current="page"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section.view{display:grid;gap:18px}
+h2{font-family:var(--display);font-weight:600;font-size:1.7rem;line-height:1.1;margin:0;text-wrap:balance}
+h3{font-family:var(--display);font-weight:600;font-size:1.3rem;margin:0}
+p{margin:0;max-width:68ch}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:12px;min-width:0}
+.lead{font-size:1.05rem}
+.eyebrow{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+ul,ol{margin:0;padding-left:1.2em;display:grid;gap:4px;max-width:70ch}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--rest);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tr.key td{background:var(--race-soft)}
+.tag{display:inline-block;font:500 .7rem var(--mono);padding:2px 8px;border-radius:999px;background:var(--race-soft);color:var(--race);white-space:nowrap}
+.tag.ok{background:var(--accent-soft);color:var(--accent)} .tag.no{background:var(--rest);color:var(--muted)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.stat{display:grid;gap:2px}
+.stat b{font-family:var(--display);font-size:2.2rem;font-weight:700;line-height:1}
+.stat span{color:var(--muted);font-size:.85rem}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;color:var(--ink);font:600 .85rem var(--body);padding:6px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;font:600 .85rem var(--body);padding:6px 12px;cursor:pointer}
+.btn:disabled{opacity:.4;cursor:default}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:820px){.main{grid-template-columns:1fr}}
+.cal{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+.calhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.calhead h3{text-transform:capitalize;font-size:1.5rem}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.dow{font:500 .7rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:center;padding-bottom:4px}
+.day{min-height:64px;border:1px solid transparent;border-radius:8px;padding:5px;text-align:left;background:var(--rest);color:var(--ink);cursor:pointer;display:flex;flex-direction:column;gap:3px;font:inherit;min-width:0}
+.day.out{background:none;cursor:default;opacity:.35}
+.day .n{font:500 .78rem var(--mono)}
+.day .t{font-size:.72rem;line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;color:var(--muted)}
+.day.k-easy{background:var(--accent-soft)} .day.k-easy .t{color:var(--accent)}
+.day.k-hard{background:var(--hard-soft)} .day.k-hard .t{color:var(--hard)}
+.day.k-race{background:var(--race-soft)} .day.k-race .t{color:var(--race);font-weight:600}
+.day.k-gym{background:var(--surface);border-color:var(--line)}
+.day.today{border-color:var(--ink)}
+.day.sel{outline:2px solid var(--accent);outline-offset:1px}
+@media (max-width:480px){.day{min-height:46px}.day .t{display:none}}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:.78rem;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid var(--line)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:12px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 56px);min-width:0}
+@media (max-width:820px){.card{position:static}}
+.card h3{font-size:1.9rem;font-weight:700;line-height:1.05}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font:500 .75rem var(--mono);padding:3px 9px;border-radius:999px;background:var(--rest);color:var(--ink)}
+.pill.hard{background:var(--hard-soft);color:var(--hard)} .pill.race{background:var(--race-soft);color:var(--race)} .pill.easy{background:var(--accent-soft);color:var(--accent)}
+.note{font-size:.88rem;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+.weekbox{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:6px}
+.weekbox dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:.88rem}
+.weekbox dt{color:var(--muted)} .weekbox dd{margin:0}
+.small{font-size:.85rem;color:var(--muted)}
+.racelist{display:grid;gap:8px}
+.racelist div{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:8px}
+.racelist div:last-child{border-bottom:0;padding-bottom:0}
+.racelist b{font:500 .8rem var(--mono)}
+.steps{display:grid;gap:14px}
+.phase{display:grid;grid-template-columns:120px minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:560px){.phase{grid-template-columns:1fr}}
+.phase .when{font-family:var(--display);font-weight:700;font-size:1.4rem;line-height:1.05;color:var(--race)}
+.phase .when span{display:block;font:500 .72rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.sz{display:inline-block;font:500 .68rem var(--mono);padding:1px 7px;border-radius:999px;background:var(--race-soft);color:var(--race);margin-right:4px;vertical-align:1px}
+.check{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:6px 16px}
+.check label{display:flex;gap:8px;align-items:flex-start;font-size:.92rem;cursor:pointer}
+.check input{margin-top:3px;accent-color:var(--accent);width:16px;height:16px;flex:none}
+.goto{font-weight:600}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Prépa Diag 2030</h1>
+      <p class="sub">Mathieu · objectif Diagonale des Fous, octobre 2030 · plan établi le 18 octobre 2026</p>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Sections">
+    <a href="#accueil" data-v="accueil">Accueil</a>
+    <a href="#planning" data-v="planning">Planning</a>
+    <a href="#courses" data-v="courses">Courses</a>
+    <a href="#materiel" data-v="materiel">Matériel</a>
+    <a href="#routine" data-v="routine">Routine course</a>
+    <a href="#nutrition" data-v="nutrition">Nutrition</a>
+    <a href="#objectifs" data-v="objectifs">Objectifs</a>
+    <a href="#plan" data-v="plan">Plan et règles</a>
+  </nav>
+
+  <!-- ACCUEIL -->
+  <section class="view" id="v-accueil">
+    <div class="cols">
+      <div class="panel stat"><span>Prochaine course conseillée</span><b id="next-race">—</b><span id="next-race-d"></span></div>
+      <div class="panel stat"><span>Andorra Trail 80K</span><b id="cd-andorra">—</b><span>79 km · 3 900 m D+ · 10-11 juin 2027</span></div>
+      <div class="panel stat"><span>Diagonale des Fous</span><b>Oct. 2030</b><span>~180 km · ~10 200 m D+ · objectif 33 h</span></div>
+    </div>
+    <div class="panel" id="today-panel"></div>
+    <div class="panel">
+      <h2>Le plan en bref</h2>
+      <p class="lead">4 saisons, une marche par an, 7 à 9 h d'entraînement par semaine tenues sans trou.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Quand</th><th>Étape</th><th>Rôle</th></tr></thead>
+        <tbody>
+          <tr><td>Juin 2027</td><td>Andorra Trail 80K (79 km, 3 900 m D+)</td><td>Premier ultra, qualifie pour le Trail de Bourbon 2028</td></tr>
+          <tr><td>Oct. 2027</td><td>Les Templiers (80,4 km, 3 443 m D+)</td><td>Deuxième ultra, test nutrition à 80-90 g/h</td></tr>
+          <tr><td>Oct. 2028</td><td>Trail de Bourbon (106 km, 6 200 m D+), plan B GRP 120 km</td><td>Découvrir le terrain réunionnais et la nuit</td></tr>
+          <tr><td>2029</td><td>Andorra 80K (juin) + GRP Ultra 160 km (août)</td><td>Les 2 qualificatives Diag (85 points chacune)</td></tr>
+          <tr><td>Janv.-mars 2030</td><td>Inscription Diag</td><td>Package Bourbon Voyages ou tirage au sort</td></tr>
+          <tr class="key"><td>Oct. 2030</td><td>Diagonale des Fous</td><td>Objectif top 100, environ 33 h</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- PLANNING -->
+  <section class="view" id="v-planning" hidden>
+    <div class="panel">
+      <div class="controls">
+        <div class="seg" role="group" aria-label="Version du planning">
+          <button id="mode-base" aria-pressed="false">Plan de base</button>
+          <button id="mode-race" aria-pressed="true">Avec mes courses</button>
+        </div>
+        <div class="seg" role="group" aria-label="Site d'alternance">
+          <button id="site-t" aria-pressed="true">Tarbes</button>
+          <button id="site-p" aria-pressed="false">Périgueux</button>
+        </div>
+        <button class="btn" id="today-btn">Aujourd'hui</button>
+      </div>
+      <p class="small" id="mode-desc"></p>
+    </div>
+    <div class="main">
+      <div class="cal" aria-label="Calendrier">
+        <div class="calhead">
+          <button class="btn" id="prev" aria-label="Mois précédent">←</button>
+          <h3 id="month"></h3>
+          <button class="btn" id="next" aria-label="Mois suivant">→</button>
+        </div>
+        <div class="grid" id="grid"></div>
+        <div class="legend">
+          <span><i style="background:var(--hard-soft)"></i>Qualité</span>
+          <span><i style="background:var(--accent-soft)"></i>Endurance / sortie longue</span>
+          <span><i style="background:var(--surface)"></i>Salle</span>
+          <span><i style="background:var(--race-soft)"></i>Course</span>
+          <span><i style="background:var(--rest)"></i>Repos</span>
+        </div>
+      </div>
+      <aside class="card" id="card" aria-live="polite"></aside>
+    </div>
+    <div class="panel">
+      <h3>Les courses du planning « Avec mes courses »</h3>
+      <div class="racelist" id="racelist"></div>
+      <p class="small">Les dates marquées « estimée » reprennent le mois de l'édition 2026 : je les ai placées sur un week-end plausible. Vérifie la date officielle avant de t'inscrire.</p>
+    </div>
+  </section>
+
+  <!-- COURSES -->
+  <section class="view" id="v-courses" hidden>
+    <div class="panel">
+      <h2>Une course toutes les 2 semaines</h2>
+      <p>Pour chaque date, il y a une option côté Pyrénées et une option côté Périgueux / Limousin : tu choisis selon ton bloc d'alternance. Celles que je te conseille sont surlignées. Ce sont les mêmes que dans le planning « Avec mes courses ».</p>
+      <ul>
+        <li><b>UTMB Index</b> : ta cote de performance. Elle compte sur toute course publiée sur utmb.world. Pour les courses « à vérifier », contrôle sur <a href="https://utmb.world" target="_blank" rel="noopener">utmb.world</a> avant de t'inscrire.</li>
+        <li><b>Running Stones</b> : seulement les courses « by UTMB ». Dans ta zone, ce sont Andorra et Val d'Aran (Stones doublées).</li>
+        <li><b>Points Grand Raid</b> : km + D+/100, utiles à partir de 75 points (Trail de Bourbon).</li>
+      </ul>
+      <h3>Les règles pour choisir</h3>
+      <ol>
+        <li>Une course remplace la sortie longue de la semaine ; le lendemain se fait en Z1 ou repos.</li>
+        <li>Pas plus d'une course de plus de 40 km toutes les 6 semaines, Andorra comprise.</li>
+        <li>Rien de plus long que 25 km dans les 4 semaines avant Andorra, ni dans les 3 semaines après.</li>
+        <li>Avant mars, une course courte se court en Z3 au maximum : c'est de l'entraînement.</li>
+      </ol>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Date</th><th>Option Pyrénées / Occitanie / Espagne</th><th>Option Périgueux / Limousin</th><th>UTMB Index</th><th>Stones</th><th>Points GR</th></tr></thead>
+      <tbody id="course-rows"></tbody>
+    </table></div>
+    <p class="small">Sources : calendriers <a href="https://fr.milesrepublic.com/trail/hautes-pyrenees" target="_blank" rel="noopener">Miles Republic</a> (Hautes-Pyrénées, Pyrénées-Atlantiques, Occitanie, Dordogne, Haute-Vienne), <a href="https://utmb.world/open-registrations" target="_blank" rel="noopener">UTMB World Series</a>, <a href="https://gotrail.run/fr/evenement/val-daran-by-utmb" target="_blank" rel="noopener">Val d'Aran</a>, <a href="https://gotrail.run/en/event/festival-des-templiers" target="_blank" rel="noopener">Templiers</a>, <a href="https://gotrail.run/en/event/grand-raid-des-pyrenees" target="_blank" rel="noopener">Grand Raid des Pyrénées</a>. Relevé le 18 octobre 2026.</p>
+  </section>
+
+  <!-- MATERIEL -->
+  <section class="view" id="v-materiel" hidden>
+    <div class="panel">
+      <h2>Trois packages, un conseillé</h2>
+      <p>Je recommande le package <b>Rapport qualité-prix</b> (~720 €). Il couvre tout le matériel d'Andorra et servira encore pour la Diag, en changeant les chaussures entre-temps.</p>
+      <div class="seg" role="group" aria-label="Package">
+        <button data-pk="ess" aria-pressed="false">Essentiel ~455 €</button>
+        <button data-pk="qp" aria-pressed="true">Qualité-prix ~720 €</button>
+        <button data-pk="hg" aria-pressed="false">Haut de gamme ~1 175 €</button>
+      </div>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Élément</th><th>Modèle</th><th>Prix</th><th>Pourquoi</th></tr></thead>
+      <tbody id="pk-rows"></tbody>
+    </table></div>
+    <div class="panel">
+      <h3>Dans quel ordre acheter</h3>
+      <ol>
+        <li><b>Maintenant</b> : chaussures et frontale, pour les sorties d'hiver.</li>
+        <li><b>Janvier</b> : bâtons, pour s'habituer dès le bloc de base trail.</li>
+        <li><b>Février-mars</b> : sac et veste, rodés sur toutes les sorties longues du printemps.</li>
+        <li><b>Avril</b> : couverture de survie, gobelet, gants, bonnet.</li>
+      </ol>
+      <p class="small">Prix relevés le 18 octobre 2026. Ceux notés « environ » n'ont pas pu être vérifiés sur une page produit française. La liste obligatoire officielle d'Andorra prime sur cette liste.</p>
+    </div>
+  </section>
+
+
+  <!-- ROUTINE COURSE -->
+  <section class="view" id="v-routine" hidden>
+    <div class="panel">
+      <h2>La routine avant et pendant chaque course</h2>
+      <p>Tu suis la même routine à chaque course, pour que le jour d'Andorra ou des Templiers rien ne soit nouveau. Les points marqués <span class="sz">ultra</span> concernent les courses de plus de 40 km ; les autres valent pour toutes.</p>
+    </div>
+    <div class="panel steps">
+      <div class="phase">
+        <div class="when">J-7 à J-2<span>La semaine avant</span></div>
+        <ul>
+          <li>Le volume baisse déjà dans le planning : tu ne rajoutes rien, même si tu te sens en forme.</li>
+          <li>Une seule séance avec de l'intensité, courte (le rappel d'allure du mardi).</li>
+          <li>Dernière séance de salle au plus tard à J-6, en version légère, sans excentrique lourd.</li>
+          <li>Sommeil de 8 h : la nuit de J-2 compte plus que celle de la veille.</li>
+          <li>Rien de nouveau : ni chaussures, ni produits, ni vêtements.</li>
+          <li>Tu lis le règlement : matériel obligatoire, barrières horaires, ravitos, navettes, retrait des dossards.</li>
+          <li>Tu écris ton plan de course : sections entre ravitos, temps de passage visés, ce que tu manges sur chaque section.</li>
+          <li><span class="sz">ultra</span> J-3 : batteries chargées (frontale, montre, téléphone), ongles coupés, trace GPS chargée dans la montre.</li>
+          <li><span class="sz">ultra</span> J-2 et J-1 : plus de glucides à chaque repas (voir Nutrition). Pas d'alcool de la semaine.</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="when">J-1<span>La veille</span></div>
+        <ul>
+          <li>20-30 min en Z1 avec 4 lignes droites de 20 s. Si tu voyages longtemps, une marche de 20 min suffit.</li>
+          <li>Retrait du dossard, et repérage du départ et du parking.</li>
+          <li>Le soir : tu prépares le sac et la tenue avec la checklist ci-dessous, et tu poses tout au même endroit.</li>
+          <li>Repas du soir habituel et riche en glucides, pauvre en fibres et en gras, au moins 3 h avant le coucher.</li>
+          <li>Deux réveils réglés. Coucher tôt ; si tu dors mal, ce n'est pas grave, c'est la nuit de J-2 qui compte.</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="when">Jour J<span>Avant le départ</span></div>
+        <ul>
+          <li>Réveil 3 h avant le départ. Petit-déjeuner testé à l'entraînement, terminé 2 h 30-3 h avant.</li>
+          <li>Crème anti-frottements (pieds, cuisses, aisselles), pansements préventifs là où tu as déjà eu des ampoules.</li>
+          <li>Sur place 45 min avant. Toilettes tôt, avant la file d'attente.</li>
+          <li>Échauffement : 15 min en Z1 + 3 accélérations pour une course courte ; <span class="sz">ultra</span> 5-10 min de marche et de trot léger seulement.</li>
+          <li>Dernières gorgées d'eau, et un gel 15 min avant le départ pour un ultra.</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="when">Jour J<span>Pendant la course</span></div>
+        <ul>
+          <li>Les 30 premières minutes plus lentement que prévu. <span class="sz">ultra</span> Toutes les premières montées en Z2 strict, en marchant dès que ça monte fort.</li>
+          <li>Tu manges et bois toutes les 20-30 min dès la première heure, selon le plan de l'onglet Nutrition.</li>
+          <li>Chaque heure, un point rapide : j'ai mangé ? j'ai bu ? j'ai une douleur ou un frottement ? Tu règles tout de suite ce qui ne va pas.</li>
+          <li>Aux ravitos, tu sais avant d'arriver ce que tu vas faire : remplir les flasques, manger salé, repartir. Pas plus de 5 min hors ultra.</li>
+          <li><span class="sz">ultra</span> Avant la nuit ou le froid : frontale sortie et couche chaude enfilée avant d'en avoir besoin.</li>
+          <li><span class="sz">ultra</span> Coup de mou : manger, ralentir 20 min, puis juger. Une crise passe presque toujours.</li>
+          <li><b>Abandon</b> : jamais décidé à chaud. Tu t'assois 10 min et tu manges d'abord. Tu arrêtes si tu boites, en cas de douleur dans la poitrine, de malaise, de confusion, ou si tu ne peux plus rien avaler ni boire.</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="when">Arrivée<span>Et les jours suivants</span></div>
+        <ul>
+          <li>Tu te couvres tout de suite, tu marches 10 min, puis boisson de récup ou repas complet dans l'heure.</li>
+          <li>Le soir : repas normal, beaucoup d'eau. Tu notes dans ton bilan ce qui a marché et ce qui n'a pas marché (nutrition en g/h, matériel, allure).</li>
+          <li>Course courte : 1 à 2 jours en Z1 ou repos, puis le planning normal.</li>
+          <li><span class="sz">ultra</span> 1 semaine sans course, puis une reprise progressive : c'est déjà prévu dans le planning.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="controls" style="justify-content:space-between">
+        <h3>Checklist du sac</h3>
+        <button class="btn" id="check-reset">Tout décocher</button>
+      </div>
+      <p class="small">Tes coches sont gardées sur cet appareil. Pour une course courte, prends seulement les éléments marqués « toutes ».</p>
+      <div class="check" id="checklist"></div>
+      <p class="small">La liste de matériel obligatoire de chaque course prime sur cette checklist.</p>
+    </div>
+  </section>
+
+  <!-- NUTRITION -->
+  <section class="view" id="v-nutrition" hidden>
+    <div class="panel">
+      <h2>Entraîner l'estomac jusqu'à la Diag</h2>
+      <p>Sur la Diag, il faudra tenir 80-90 g de glucides par heure pendant plus de 30 h. Chaque course d'ici là fait monter l'estomac d'une marche.</p>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Période</th><th>Courses</th><th>Glucides/h</th><th>Eau/h</th><th>Sodium/h</th><th>Ce qu'on travaille</th></tr></thead>
+      <tbody>
+        <tr><td>Nov.-févr.</td><td>Trails de 15-30 km</td><td>30-40 g</td><td>400-500 ml</td><td>200-300 mg</td><td>Trouver les produits qui passent</td></tr>
+        <tr><td>Mars-avril</td><td>Trails de 30-45 km, prépa</td><td>50-60 g</td><td>500-600 ml</td><td>300-500 mg</td><td>Manger en courant, en montée</td></tr>
+        <tr><td>Juin 2027</td><td>Andorra 80K</td><td>70-90 g</td><td>500-750 ml</td><td>400-700 mg</td><td>Tenir 15 h, salé aux ravitos</td></tr>
+        <tr><td>Oct. 2027</td><td>Templiers</td><td>80-90 g</td><td>500-750 ml</td><td>400-700 mg</td><td>Haut de la fourchette</td></tr>
+        <tr><td>2028-2030</td><td>Bourbon, GRP, Diag</td><td>80-90 g</td><td>500-750 ml</td><td>500-800 mg</td><td>Nuit, caféine, vraie nourriture</td></tr>
+      </tbody>
+    </table></div>
+    <div class="cols">
+      <div class="panel"><h3>10 km du 6 décembre</h3><ul><li>Veille : repas habituel, un peu plus de féculents.</li><li>Petit-déjeuner riche en glucides 3 h avant.</li><li>Pendant : rien, quelques gorgées d'eau.</li></ul></div>
+      <div class="panel"><h3>Trails courts de l'hiver</h3><ul><li>Un gel ou une pâte de fruits toutes les 40-45 min dès la 1re heure.</li><li>500 ml de boisson d'effort + eau aux ravitos.</li><li>Noter ce qui passe et ce qui écœure.</li></ul></div>
+      <div class="panel"><h3>Prépa du 18 avril</h3><ul><li>Répétition générale d'Andorra : mêmes produits, même sac.</li><li>Une prise toutes les 20 min, cible 60 g/h.</li><li>1 pastille de sel par heure s'il fait chaud.</li></ul></div>
+    </div>
+    <div class="panel">
+      <h3>Andorra Trail 80K (14-16 h)</h3>
+      <div class="tbl"><table><tbody>
+        <tr><td>J-2 et J-1</td><td>Repas riches en glucides, peu de fibres et de gras la veille au soir</td></tr>
+        <tr><td>Matin</td><td>Petit-déjeuner testé à l'entraînement, 3 h avant le départ</td></tr>
+        <tr><td>Chaque heure</td><td>1 flasque de boisson (~40 g) + 1 gel (~25 g) + 1 pâte de fruits ou demi-barre (15-20 g) = 80-85 g</td></tr>
+        <tr><td>Chaque ravito</td><td>Remplir les 2 flasques, manger salé (soupe, chips, fromage, pommes de terre)</td></tr>
+        <tr><td>Après 8 h</td><td>Caféine, environ 50 mg toutes les 2-3 h</td></tr>
+        <tr><td>Nausée</td><td>Ralentir, eau, salé 20-30 min, puis reprendre doucement</td></tr>
+        <tr><td>Arrivée</td><td>Boisson de récup ou repas complet dans l'heure</td></tr>
+      </tbody></table></div>
+      <p class="small">Total : environ 1 100-1 400 g de glucides. Val d'Aran : même rythme qu'en prépa, à 60-70 g/h. Templiers : plan d'Andorra en visant 80-90 g/h, c'est le test de la Diag. Ces valeurs sont des ordres de grandeur courants en ultra, à ajuster à tes sensations ; en cas de troubles digestifs répétés, consulte un diététicien du sport.</p>
+    </div>
+  </section>
+
+  <!-- OBJECTIFS -->
+  <section class="view" id="v-objectifs" hidden>
+    <div class="panel">
+      <h2>Viser environ 33 h sur la Diag</h2>
+      <p>Le temps du 100e n'est publié dans aucune source consultée. Je l'estime entre 32 et 35 h à partir de ces repères : vainqueur 2026 en 22 h 54, 10e homme 2025 en 28 h 48, 10e femme 2025 en 36 h 45, médiane autour de 48 h. Les colonnes « top 100 » traduisent ce niveau sur chaque course, en km-effort (km + D+/100).</p>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Course</th><th>Format</th><th>km-effort</th><th>Objectif réaliste</th><th>Niveau top 100 Diag</th></tr></thead>
+      <tbody>
+        <tr><td>10 km, 6 déc. 2026</td><td>10 km route</td><td>—</td><td>41'30-42'30</td><td>37-38 min d'ici 2029</td></tr>
+        <tr><td>Prépa, avril 2027</td><td>30-40 km</td><td>45-65</td><td>4 h 30-6 h</td><td>12,5 km-e/h</td></tr>
+        <tr class="key"><td>Andorra 80K, juin 2027</td><td>79 km, 3 900 m</td><td>118</td><td>14-16 h</td><td>11 h-11 h 30</td></tr>
+        <tr><td>Val d'Aran EXP, juil. 2027</td><td>32 km, 2 100 m</td><td>53</td><td>5 h-5 h 30</td><td>4 h 15</td></tr>
+        <tr class="key"><td>Templiers, oct. 2027</td><td>80,4 km, 3 443 m</td><td>114</td><td>12-13 h</td><td>10 h 30</td></tr>
+        <tr><td>Trail de Bourbon, oct. 2028</td><td>106 km, 6 200 m</td><td>168</td><td>19-21 h</td><td>17 h 30-18 h</td></tr>
+        <tr><td>GRP 120 km (plan B), août 2028</td><td>120 km, 7 000 m</td><td>190</td><td>22-24 h</td><td>20 h</td></tr>
+        <tr><td>Andorra 80K, juin 2029</td><td>79 km, 3 900 m</td><td>118</td><td>11 h 30-12 h 30</td><td>11 h-11 h 30</td></tr>
+        <tr><td>GRP Ultra, août 2029</td><td>160 km, 10 000 m</td><td>260</td><td>33-36 h</td><td>31 h</td></tr>
+        <tr class="key"><td>Diagonale, oct. 2030</td><td>~180 km, ~10 200 m</td><td>282</td><td>33 h</td><td>33 h</td></tr>
+      </tbody>
+    </table></div>
+    <div class="panel">
+      <p>Les temps « top 100 » de 2027-2028 ne sont pas des objectifs de course : ils montrent l'écart à combler. Le vrai test, c'est 2029. Si tu es proche de la colonne de droite sur Andorra et le GRP Ultra, le top 100 de 2030 est réaliste. Sinon, l'objectif 2030 devient de finir, et le top 100 se vise sur une édition suivante.</p>
+      <p class="small">Sources : <a href="https://reference-trail.fr/resultats-diagonale-des-fous-2026-hugo-deck-lemporte-en-22h54/" target="_blank" rel="noopener">Reference Trail 2026</a>, <a href="https://utmb.world/utmb-index/races/61.legrandraiddelareunionladiagonaledesfous.2025" target="_blank" rel="noopener">UTMB 2025</a>, <a href="https://thepostrace.com/blog/resultats-et-classements-de-la-diagonale-des-fous-2025/" target="_blank" rel="noopener">The Post Race</a>, <a href="https://reference-trail.fr/quel-est-le-temps-moyen-pour-faire-la-diagonale-des-fous/" target="_blank" rel="noopener">temps médian</a>. Estimations, pas des chiffres officiels.</p>
+    </div>
+  </section>
+
+  <!-- PLAN ET REGLES -->
+  <section class="view" id="v-plan" hidden>
+    <div class="panel">
+      <h2>Accès à la Diagonale (règlement 2026)</h2>
+      <ul>
+        <li>2 trails d'au moins 85 points chacun (1 km = 1 point, 100 m D+ = 1 point), sans addition entre courses.</li>
+        <li>Fenêtre 2026 : du 1er janvier 2025 au 31 juillet 2026. Pour 2030, ce serait probablement janvier 2029-juillet 2030 : <b>Andorra 2027 ne comptera pas</b>, tes qualificatives se courent en 2029.</li>
+        <li>Pré-inscriptions de fin janvier à début mars, tirage mi-mars. Pour la métropole : 300 places au tirage, 950 en package Bourbon Voyages (sans tirage).</li>
+        <li>Certificat médical type du Grand Raid + PPS de la FFA, entre mai et août.</li>
+      </ul>
+      <p class="small">Source : <a href="https://www.grandraid-reunion.com/fr/inscriptions/modalites-des-inscriptions/modalites-d-inscriptions" target="_blank" rel="noopener">modalités d'inscription 2026</a>. À revérifier chaque année.</p>
+    </div>
+    <div class="panel">
+      <h2>Allures et zones</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>Zone</th><th>Allure plat</th><th>RPE</th><th>Repère</th><th>Usage</th></tr></thead>
+        <tbody>
+          <tr><td>Z1 Récup</td><td>&gt; 5'50/km</td><td>2-3</td><td>Respiration nasale</td><td>Décrassage</td></tr>
+          <tr><td>Z2 Endurance</td><td>5'15-5'50</td><td>3-4</td><td>Phrases complètes</td><td>80 % du volume, SL</td></tr>
+          <tr><td>Z3 Tempo</td><td>4'35-4'50</td><td>6</td><td>Phrases courtes</td><td>Blocs de 15-30 min</td></tr>
+          <tr><td>Z4 Seuil</td><td>4'20-4'25</td><td>7</td><td>Quelques mots</td><td>2-4 × 8-15 min</td></tr>
+          <tr><td>Z5 VMA</td><td>3'50-3'55</td><td>9</td><td>Impossible de parler</td><td>30 s à 3 min</td></tr>
+        </tbody>
+      </table></div>
+      <p class="small">En montagne, on pilote à l'effort : tu marches dès qu'une montée te fait sortir de Z2. Allures à mettre à jour après le 10 km du 6 décembre.</p>
+    </div>
+    <div class="cols">
+      <div class="panel"><h3>Salle A, mercredi</h3><ul><li>Squat 4 × 6-8, descente en 3 s</li><li>Fente bulgare 3 × 8 par jambe</li><li>Step-up lesté 3 × 10 par jambe</li><li>Soulevé de terre roumain 3 × 8</li><li>Descente de marche excentrique 3 × 10, 4 s</li><li>Mollets genou tendu puis fléchi, 3 × 12</li></ul></div>
+      <div class="panel"><h3>Salle B, vendredi</h3><ul><li>Planche 3 × 45-60 s</li><li>Planche latérale 3 × 30-45 s</li><li>Dead bug 3 × 10</li><li>Rowing haltère 3 × 10</li><li>Pompes 3 × max propre</li><li>Pont fessier une jambe 3 × 12</li><li>Mobilité 10 min</li></ul></div>
+    </div>
+    <div class="panel">
+      <h2>Santé et douleur</h2>
+      <div class="tbl"><table><tbody>
+        <tr><td>Raideur qui part en 10 min</td><td>Tu continues</td></tr>
+        <tr><td>Douleur stable ≤ 3/10, sans boiter</td><td>Tu finis en Z2, tu surveilles le lendemain</td></tr>
+        <tr><td>Douleur qui monte ou &gt; 3/10</td><td>Stop, 2-3 jours sans course</td></tr>
+        <tr><td>Plus de 5-7 jours, ou au repos</td><td>Médecin du sport ou kiné</td></tr>
+        <tr><td>Douleur poitrine, malaise</td><td>Tout arrêter, consulter rapidement</td></tr>
+      </tbody></table></div>
+      <p class="small">Visite chez un médecin du sport avant le premier ultra. Sommeil 7 h 30-8 h : pendant les partiels, réduis le volume plutôt que le sommeil.</p>
+    </div>
+    <div class="panel">
+      <h2>Régularité</h2>
+      <p><b>Semaine minimum (3 h 30)</b> quand ça se complique : la qualité du mardi (45 min), la sortie longue à 60 %, une séance A courte de 25 min. Jamais plus de 7 jours sans séance clé.</p>
+      <ul>
+        <li>Séance ratée en semaine : on ne la rattrape pas.</li>
+        <li>1 semaine sans rien : reprendre 1 semaine en arrière.</li>
+        <li>2 semaines ou plus : 1 semaine allégée, puis reprendre 2 semaines en arrière.</li>
+        <li>Deux semaines de suite ratées : le plan est trop chargé, on le revoit ensemble.</li>
+      </ul>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,124 @@
+
+  <!-- PROGRESSION -->
+  <section class="view" id="v-progres" hidden>
+    <div class="tiles" id="prog-tiles"></div>
+    <div class="cols2">
+      <div class="panel"><h3>Allure sur route</h3><p class="small">Plus haut = plus rapide. Une séance validée avec sa vitesse = un point.</p><div id="ch-route"></div></div>
+      <div class="panel"><h3>Vitesse en trail</h3><p class="small">Le km-effort/h (km + D+/100) permet de comparer des sorties de profils différents : saisis la distance et le D+ pour l'avoir.</p><div id="ch-trail"></div></div>
+      <div class="panel"><h3>Volume de course par semaine</h3><p class="small">Kilomètres courus, séances du plan et activités hors plan comprises.</p><div id="ch-vol"></div></div>
+      <div class="panel"><h3>Régularité par semaine</h3><p class="small">Part des séances prévues (hors repos) que tu as validées.</p><div id="ch-reg"></div></div>
+      <div class="panel"><h3>Musculation</h3><label class="small" for="str-ex">Exercice</label><select id="str-ex" class="strsel"></select><p class="small" id="str-note"></p><div id="ch-str"></div></div>
+      <div class="panel"><h3>Poids</h3><p class="small" id="bmi"></p><div id="ch-weight"></div></div>
+    </div>
+    <div class="cols2">
+      <div class="panel">
+        <h3>Ajouter une pesée</h3>
+        <form id="w-form" class="fields">
+          <label for="w-date"><span>Date</span><input type="date" id="w-date" required></label>
+          <label for="w-kg"><span>Poids (kg)</span><input type="number" id="w-kg" inputmode="decimal" step="0.1" min="30" max="250" required></label>
+          <button class="btn primary" type="submit">Enregistrer</button>
+        </form>
+        <p class="small">Pèse-toi le matin, au réveil, dans les mêmes conditions : la tendance compte plus qu'une pesée isolée. Ton dernier poids sert au calcul nutrition.</p>
+        <div id="w-list" class="hlist"></div>
+      </div>
+      <div class="panel">
+        <h3>Ajouter une séance ou une course passée</h3>
+        <p class="small">Une course ou un test à fond (ressenti 8-10) avec sa distance sert de référence pour tes temps théoriques.</p>
+        <form id="f-form" class="fields">
+          <label for="f-name"><span>Nom (facultatif)</span><input type="text" id="f-name" placeholder="ex. 10 km de Tarbes"></label>
+          <label for="f-date"><span>Date</span><input type="date" id="f-date" required></label>
+          <label for="f-sport"><span>Terrain</span><select id="f-sport"><option value="route">Route</option><option value="trail">Trail</option></select></label>
+          <label><span>Allure (min/km)</span><span class="wheel"><select id="f-min" aria-label="Minutes"></select><span class="sep">'</span><select id="f-sec" aria-label="Secondes"></select><span class="unit">/km</span></span></label>
+          <label for="f-dist"><span>Distance (km)</span><input type="number" id="f-dist" inputmode="decimal" step="0.01" min="0"></label>
+          <label for="f-dplus"><span>D+ (m)</span><input type="number" id="f-dplus" inputmode="numeric" step="10" min="0"></label>
+          <label for="f-rpe"><span>Ressenti (1-10)</span><select id="f-rpe"></select></label>
+          <button class="btn primary" type="submit">Ajouter</button>
+        </form>
+        <p class="small" id="f-ok" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Dernières séances validées</h3>
+      <div id="hist" class="hlist"></div>
+    </div>
+    <div class="panel">
+      <h3>Sauvegarde</h3>
+      <p class="small">Tes données restent sur cet appareil : le téléphone et le PC ne se synchronisent pas. Exporte une sauvegarde de temps en temps. Pour passer d'un appareil à l'autre : exporte d'un côté, colle le texte de l'autre, puis importe.</p>
+      <div class="controls"><button class="btn" type="button" id="b-export">Exporter</button><button class="btn" type="button" id="b-import">Importer le texte collé</button><span class="small" id="b-msg" aria-live="polite"></span></div>
+      <textarea id="backup" rows="3" aria-label="Texte de sauvegarde" placeholder="Le texte de sauvegarde apparaît ici, ou colle-le ici pour importer."></textarea>
+    </div>
+  </section>
+
+  <!-- CALCUL NUTRITION -->
+  <section class="view" id="v-calcul" hidden>
+    <div class="panel">
+      <h2>Calcul nutrition</h2>
+      <p>Remplis ton effort : la durée, la dépense, les glucides, l'eau, le sel et le moment de chaque prise se calculent tout seuls. Les règles viennent des recommandations scientifiques actuelles en nutrition du sport.</p>
+    </div>
+    <div class="calc">
+      <div class="panel" id="calc-form"></div>
+      <div class="panel" id="calc-out" aria-live="polite"></div>
+    </div>
+    <p class="small">Sources : <a href="https://www.mysportscience.com/post/2015/05/27/recommendations-for-carb-intake-during-exercise" target="_blank" rel="noopener">Jeukendrup, glucides selon la durée</a> · <a href="https://www.gssiweb.org/sports-science-exchange/article/dietary-carbohydrate-and-the-endurance-athlete-contemporary-perspectives" target="_blank" rel="noopener">GSSI, charge glucidique, repas d'avant et récupération</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6839090" target="_blank" rel="noopener">ISSN 2019, ultra-trail</a> · <a href="https://jissn.biomedcentral.com/articles/10.1186/s12970-020-00383-4" target="_blank" rel="noopener">ISSN 2021, caféine</a> · <a href="https://iris.unibs.it/retrieve/ddc633e4-3c03-4e2e-e053-3705fe0a4c80/Minetti%20JAP%202002.pdf" target="_blank" rel="noopener">Minetti 2002, coût énergétique en pente</a>.</p>
+  </section>
+
+  <!-- MES COURSES -->
+  <section class="view" id="v-mescourses" hidden>
+    <div class="panel">
+      <h2>Mes courses</h2>
+      <p>Les courses conseillées et celles que tu ajoutes. Elles apparaissent dans le planning (la sortie longue de la semaine est remplacée, la veille est allégée), avec leur temps théorique et un lien vers le calcul nutrition.</p>
+      <div id="mc-list" class="races"></div>
+    </div>
+    <div class="panel">
+      <h3>Ajouter une course</h3>
+      <div id="mc-add"></div>
+      <p class="small" id="mc-msg" aria-live="polite"></p>
+      <p class="small">Les courses ajoutées sont enregistrées sur cet appareil. Elles apparaissent dans le planning de l'appli, mais pas dans le calendrier iPhone abonné, qui reprend seulement le plan commun.</p>
+    </div>
+  </section>
+
+  <!-- TEMPS THEORIQUES -->
+  <section class="view" id="v-temps" hidden>
+    <div class="panel">
+      <h2>Temps théoriques</h2>
+      <div id="t-ref"></div>
+    </div>
+    <div class="panel"><h3>Sur route</h3><div id="t-std"></div></div>
+    <div class="panel"><h3>Tes courses</h3><p class="small">Distance + dénivelé convertis en km-effort, puis corrigés selon le terrain. Les courses passées sont grisées.</p><div id="t-races"></div></div>
+    <div class="panel"><h3>Et si je courais…</h3><div id="t-whatif"></div></div>
+    <div class="panel">
+      <h3>Comment c'est calculé</h3>
+      <ul>
+        <li>Ta meilleure performance récente sur route (moins de 5 mois) est convertie en équivalent 10 km avec la formule de Riegel (temps × (distance / distance)^1,06). Une séance qui n'était pas à fond est corrigée selon ton ressenti.</li>
+        <li>Une course avec du dénivelé est convertie en km-effort : 100 m de D+ comptent comme 1 km.</li>
+        <li>Au-delà de 42 km-effort, la fatigue pèse plus : exposant 1,15 sur route, 1,20 en trail.</li>
+        <li>Facteur de terrain : route ×1,00, trail roulant ×1,03, trail montagne ×1,15, trail très technique ×1,25.</li>
+        <li>La fourchette est de ±5 % jusqu'au semi, ±8 % jusqu'au marathon, ±12 % au-delà. Sur un premier ultra, vise plutôt le haut de la fourchette : le calcul suppose une endurance déjà construite.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- STRATEGIE -->
+  <section class="view" id="v-strategie" hidden>
+    <div class="panel">
+      <h2>Stratégie de course</h2>
+      <label class="small" for="st-race">Course</label>
+      <select id="st-race" class="strsel"></select>
+      <div id="st-body" class="strat"></div>
+    </div>
+  </section>
+
+  <!-- REGLAGES GARMIN -->
+  <section class="view" id="v-reglages" hidden>
+    <div class="panel">
+      <h2>Montre Garmin</h2>
+      <p>Tes activités Garmin arrivent via intervals.icu. Chaque activité est associée à la séance prévue du même jour : la séance est cochée, et l'allure, la distance, la durée, la FC et le D+ sont enregistrés. Les autres activités sont gardées comme « hors plan » et comptent dans le volume et les graphiques.</p>
+      <form id="g-form" class="fields">
+        <label for="g-key"><span>Clé de l'appli</span><input type="password" id="g-key" autocomplete="current-password" placeholder="le mot de passe APP_KEY"></label>
+        <button class="btn primary" type="submit">OK</button>
+        <button class="btn" type="button" id="g-sync">Synchroniser</button>
+      </form>
+      <p class="garmin" id="g-status" aria-live="polite"></p>
+      <p class="small">La synchro se fait aussi toute seule à l'ouverture de l'appli (si la dernière date de plus de 30 min) et quand tu reviens dessus.</p>
+    </div>
+  </section>

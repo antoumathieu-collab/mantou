@@ -1,0 +1,127 @@
+/* --- Saisie de séance --- */
+.todaycard{display:grid;gap:12px}
+.log{display:grid;gap:10px;border-top:1px solid var(--line);padding-top:12px}
+.done{display:flex;align-items:center;gap:10px;font-weight:600;font-size:1rem;cursor:pointer}
+.done input{width:22px;height:22px;accent-color:var(--accent)}
+.saved{font:500 .75rem var(--mono);color:var(--accent);min-height:1em}
+.logrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.lbl{font-size:.85rem;color:var(--muted);font-weight:600}
+.small-seg button{padding:5px 11px;font-size:.8rem}
+.wheel{display:inline-flex;align-items:center;gap:4px;background:var(--rest);border:1px solid var(--line);border-radius:10px;padding:4px 8px}
+.wheel select{font:600 1.25rem var(--mono);font-variant-numeric:tabular-nums;border:0;background:transparent;color:var(--ink);padding:4px 2px;-webkit-appearance:none;appearance:none;text-align:center;cursor:pointer}
+.wheel .sep{font:600 1.25rem var(--mono)}
+.wheel .unit,.speed .unit{font-size:.85rem;color:var(--muted);margin-left:4px}
+details.more summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:.88rem}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end;margin-top:8px}
+.fields label{display:grid;gap:4px;font-size:.82rem;color:var(--muted);min-width:0}
+.fields input,.fields select,textarea,.urlbox,.speed input{font:500 1rem var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+textarea{font:.8rem var(--mono);resize:vertical}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--surface);text-decoration:none;display:inline-block}
+.day{position:relative}
+.day .tick{position:absolute;top:4px;right:6px;font:600 .75rem var(--body);color:var(--accent)}
+.late{display:grid;gap:6px}
+.latebtn{text-align:left;border:1px dashed var(--line);background:none;color:var(--ink);border-radius:8px;padding:7px 10px;font:inherit;cursor:pointer}
+.goto{font-weight:600}
+/* --- Tuiles, graphiques --- */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:2px;min-width:0}
+.tile b{font-family:var(--display);font-size:1.8rem;font-weight:700;line-height:1.05;font-variant-numeric:tabular-nums}
+.tile span{color:var(--muted);font-size:.82rem}
+#calc-out .tile{background:var(--rest);border-color:transparent}
+.cols2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:14px}
+.chart{position:relative;min-width:0}
+.chart svg{display:block;max-width:100%;touch-action:pan-y}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .axis{fill:var(--muted);font:11px var(--mono)}
+.chart .cross{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
+.chart .empty{border:1px dashed var(--line);border-radius:10px;padding:28px 16px;text-align:center;color:var(--muted);font-size:.9rem}
+.chart .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:8px;padding:6px 9px;font-size:.78rem;display:grid;gap:1px;white-space:nowrap;z-index:2}
+.chart .legend{margin-top:6px}
+.chart .legend i{border:0}
+.hlist{display:grid;gap:4px}
+.hrow{display:flex;gap:10px;align-items:baseline;border-bottom:1px solid var(--line);padding:6px 0;font-size:.88rem;flex-wrap:wrap}
+.hrow:last-child{border-bottom:0}
+.hrow .grow{flex:1;min-width:0;color:var(--muted)}
+.hrow .x{border:0;background:none;color:var(--muted);font-size:.78rem;text-decoration:underline;cursor:pointer;margin-left:auto}
+/* --- Calcul nutrition --- */
+.calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:18px;align-items:start}
+@media (max-width:860px){.calc{grid-template-columns:1fr}}
+#calc-form{gap:14px}
+.frow{display:grid;gap:6px}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--rest);color:var(--ink);border-radius:999px;font:600 .8rem var(--body);padding:5px 11px;cursor:pointer}
+.wrapseg{flex-wrap:wrap;border-radius:12px}
+.wrapseg button{flex:1 1 auto}
+.speed{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.speed input{max-width:120px}
+#calc-out h3{margin-top:6px}
+#calc-out table td:first-child{white-space:nowrap;font-weight:600}
+.urlbox{font:.78rem var(--mono)}
+
+#calc-out .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:1100px){#calc-out .tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
+#calc-out .tile b{font-size:1.5rem}
+
+/* --- Navigation regroupée --- */
+.navwrap{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:grid;gap:6px;padding-block:6px}
+.navwrap nav.tabs{position:static;padding-block:0}
+nav.subtabs{display:flex;gap:18px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line)}
+nav.subtabs a{flex:none;text-decoration:none;color:var(--muted);font:600 .88rem var(--body);padding:6px 0 8px;border-bottom:2px solid transparent;margin-bottom:-1px}
+nav.subtabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+.card{top:calc(env(safe-area-inset-top,0px) + 104px)}
+/* --- Courses --- */
+.races{display:grid;gap:0}
+.race{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:center;border-bottom:1px solid var(--line);padding:10px 0}
+.race:last-child{border-bottom:0}
+@media (max-width:620px){.race{grid-template-columns:56px minmax(0,1fr)}.ract{grid-column:2}}
+.race.off .rinfo b{text-decoration:line-through;color:var(--muted)}
+.race.past{opacity:.6}
+.rdate{display:grid;justify-items:center;background:var(--race-soft);color:var(--race);border-radius:10px;padding:6px 4px}
+.rdate b{font-family:var(--display);font-size:1.5rem;line-height:1}
+.rdate span{font:500 .68rem var(--mono);text-transform:uppercase}
+.rinfo{display:grid;gap:2px;min-width:0}
+.rpred{font:500 .8rem var(--mono);color:var(--accent)}
+.ract{display:flex;flex-wrap:wrap;gap:6px}
+.ract .btn{font-size:.78rem;padding:5px 9px;text-decoration:none}
+.raceform{border:1px solid var(--line);border-radius:10px;padding:12px;margin:6px 0}
+.raceform .controls{grid-column:1/-1}
+tr.past td{color:var(--muted)}
+.pred{display:grid;gap:2px;background:var(--race-soft);border-radius:10px;padding:10px 12px;margin:0}
+.pred b{font-family:var(--display);font-size:1.6rem;line-height:1;color:var(--race)}
+
+.wrap>*,section.view>*{min-width:0}
+.panel>*{min-width:0}
+
+#nav-main{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;overflow:visible}
+#nav-main a{text-align:center;padding:7px 4px;font-size:.85rem;white-space:nowrap}
+@media (max-width:420px){#nav-main a{font-size:.78rem;padding:7px 2px}}
+#v-accueil .cols{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#v-accueil .cols .panel{padding:12px}
+#v-accueil .stat b{font-size:1.6rem}
+@media (max-width:560px){#v-accueil .stat b{font-size:1.25rem}#v-accueil .stat span{font-size:.72rem}}
+
+/* --- Musculation --- */
+.gym{display:grid;gap:10px;margin-top:4px}
+.gex{display:grid;gap:6px;border-top:1px solid var(--line);padding-top:10px}
+.gname{display:grid;gap:1px}
+.gname b{font-size:.95rem}
+.gtgt{font:500 .74rem var(--mono);color:var(--accent)}
+.gtip{font-size:.74rem;color:var(--muted)}
+.gsets{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.gset{display:inline-flex;align-items:center;gap:3px;font-size:.8rem;color:var(--muted)}
+.gset .sn{font:500 .7rem var(--mono);margin-right:2px}
+.gset input{width:3.4em;font:600 .95rem var(--mono);text-align:center;padding:5px 2px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink)}
+.gset input::placeholder{color:var(--muted);opacity:.55}
+.strsel{font:500 .95rem var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 10px;max-width:100%}
+
+.strat{display:grid;gap:10px}
+.strat h3{margin-top:8px}
+.goal b{font-size:1.7rem}
+.goal-B{background:var(--race-soft)!important;border-color:transparent!important}
+.goal-B b{color:var(--race)}
+.strat .tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:480px){.strat .tiles{grid-template-columns:1fr}}
+.strat table td:first-child{font-weight:600}
+.strat .x{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:.78rem;cursor:pointer}
+
+.garmin{font:500 .8rem var(--mono);color:var(--ink);background:var(--rest);border-radius:8px;padding:8px 10px;margin:0}

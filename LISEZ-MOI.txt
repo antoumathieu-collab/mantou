@@ -1,0 +1,10 @@
+PRÉPA DIAG 2030 — fonctionnement du dépôt
+
+- Le site publié par Netlify est la racine du dépôt (index.html, sw.js, calendriers .ics, icônes).
+- netlify/functions/sync.mjs : la fonction /api/sync qui lit tes activités Garmin sur intervals.icu.
+  Variables Netlify nécessaires : INTERVALS_API_KEY (clé API intervals.icu) et APP_KEY (mot de passe de l'appli).
+- src/ : les sources de l'appli. Pour reconstruire : OUT=. node src/build.js (fait par Claude).
+- Chaque envoi sur GitHub redéploie automatiquement le site, et le calendrier iPhone se met à jour.
+
+Tes données (séances validées, pesées, salle) restent sur ton téléphone ; exporte une sauvegarde
+de temps en temps (Planning > Progression > Sauvegarde).
