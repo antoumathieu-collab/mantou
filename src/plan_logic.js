@@ -8,6 +8,10 @@ const SITE={t:"Tarbes",p:"Périgueux"};
 const durOf=v=>(v.match(/(\d+ h(?: \d+)?|\d+ min)/)||["—"])[0];
 const S=(kind,title,dur,text,note,short)=>({kind,title,dur,text,note:note||"",short:short||title});
 
+/* Calendrier ENIT 2026-2027, S5APP puis S6APP : semaines école = Tarbes, semaines entreprise = Périgueux (SNCF) */
+const ENIT_BLOCKS=[{from:"2026-08-31",to:"2026-09-20",site:"p"},{from:"2026-09-21",to:"2026-10-25",site:"t"},{from:"2026-10-26",to:"2026-11-22",site:"p"},
+ {from:"2026-11-23",to:"2026-12-20",site:"t"},{from:"2026-12-21",to:"2027-02-21",site:"p"},{from:"2027-02-22",to:"2027-04-04",site:"t"},
+ {from:"2027-04-05",to:"2027-05-09",site:"p"},{from:"2027-05-10",to:"2027-06-20",site:"t"},{from:"2027-06-21",to:"2027-08-29",site:"p"}];
 function weeksFor(mode){return mode==="race"?BASE.concat(EXT):BASE}
 /* Courses actives : conseillées (mode « avec courses », sauf masquées) + courses ajoutées par l'utilisateur (tous modes) */
 function activeRaces(ctx){const h=ctx.hidden||[];const rec=ctx.mode==="race"?RACES.filter(r=>!h.includes(r[0])):[];return rec.concat(ctx.extra||[]).sort((a,b)=>a[0]<b[0]?-1:1)}
@@ -93,4 +97,4 @@ function sessionFor(date,ctx){
 /* Nombre de séances (hors repos) prévues sur une semaine */
 function plannedInWeek(w,ctx){let n=0;for(let i=0;i<7;i++){const s=sessionFor(addDays(parse(w[1]),i),ctx);if(s&&s.kind!=="rest")n++}return n}
 
-return {activeRaces,BASE,EXT,RACES,COURSES,PACKS,CHECK,parse,iso,addDays,MONTHS,DAYS,SITE,weeksFor,raceOn,raceInWeek,lookup,range,sessionFor,plannedInWeek};
+return {ENIT_BLOCKS,activeRaces,BASE,EXT,RACES,COURSES,PACKS,CHECK,parse,iso,addDays,MONTHS,DAYS,SITE,weeksFor,raceOn,raceInWeek,lookup,range,sessionFor,plannedInWeek};

@@ -96,14 +96,16 @@ function ics(mode){
     "REFRESH-INTERVAL;VALUE=DURATION:PT6H","X-PUBLISHED-TTL:PT6H"];
   let n=0;
   for(let d=a;d<=b;d=P.addDays(d,1)){
-    const st=P.sessionFor(d,{mode,site:"t"}),sp=P.sessionFor(d,{mode,site:"p"});
-    if(!st||st.kind==="rest")continue;
+    const k=P.iso(d);const blk=P.ENIT_BLOCKS.find(x=>x.from<=k&&k<=x.to);const where=blk?blk.site:null;
+    const st0=P.sessionFor(d,{mode,site:"t"}),sp0=P.sessionFor(d,{mode,site:"p"});
+    if(!st0||st0.kind==="rest")continue;
+    const st=where==="p"?sp0:st0,sp=where?st:sp0;
     const w=st.week;
     const summary=st.short+(st.dur&&st.dur!=="—"&&!st.short.includes(st.dur)&&st.kind!=="race"?" ("+st.dur+")":"");
-    let desc=st.text===sp.text?st.text:"Tarbes : "+st.text+"\n\nPérigueux : "+sp.text;
+    let desc=where?(where==="t"?"À Tarbes (semaine école) : ":"À Périgueux (semaine entreprise) : ")+st.text:(st.text===sp.text?st.text:"Tarbes : "+st.text+"\n\nPérigueux : "+sp.text);
     if(st.note)desc+="\n\n"+st.note;
     const dpt=w[4],dpp=Math.round(w[4]/2/100)*100;
-    desc+="\n\nSemaine "+w[0]+" · "+w[2]+" · "+(Number.isInteger(w[3])?w[3]+" h":Math.floor(w[3])+" h 30")+" · D+ "+dpt+" m (Tarbes) / "+dpp+" m (Périgueux)";
+    desc+="\n\nSemaine "+w[0]+" · "+w[2]+" · "+(Number.isInteger(w[3])?w[3]+" h":Math.floor(w[3])+" h 30")+" · D+ "+(where==="t"?dpt+" m":where==="p"?dpp+" m":dpt+" m (Tarbes) / "+dpp+" m (Périgueux)");
     if(st.routineLink)desc+="\nRoutine course : onglet Routine course de l'appli.";
     desc+="\nValide la séance et ta vitesse dans l'appli Prépa Diag.";
     L.push("BEGIN:VEVENT","UID:"+ymd(d)+"-"+mode+"@prepa-diag-2030","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+ymd(d),"DTEND;VALUE=DATE:"+ymd(P.addDays(d,1)),

@@ -29,6 +29,7 @@ function allRaceInfos(){return RACES.map(r=>raceInfo(r[0])).concat(userRaces.map
 const saveLogs=()=>{store.setJson("logs",logs);_pmc=null};
 const saveWeights=()=>store.setJson("weights",weights);
 let checkins=store.json("checkins",{}),wellness=store.json("wellness",{}),blocks=store.json("blocks",[]),raceResults=store.json("raceResults",{});
+if(store.get("blocksSeed","")!=="enit2627"){const keep=blocks.filter(b=>b.from>"2027-08-29");blocks=PLAN.ENIT_BLOCKS.map(b=>Object.assign({},b)).concat(keep);store.setJson("blocks",blocks);store.set("blocksSeed","enit2627")}
 const saveCheckins=()=>store.setJson("checkins",checkins),saveWell=()=>store.setJson("wellness",wellness),saveBlocks=()=>store.setJson("blocks",blocks),saveResults=()=>store.setJson("raceResults",raceResults);
 function siteFor(date){const k=typeof date==="string"?date:iso(date);const b=blocks.find(x=>x.from<=k&&k<=x.to);return b?b.site:site}
 const ctxFor=date=>Object.assign(ctx(),{site:siteFor(date)});
