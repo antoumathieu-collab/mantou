@@ -156,6 +156,7 @@ function gymWidget(k,s,onAny,preview){
 /* ---------- Montre Garmin (via intervals.icu et la fonction Netlify /api/sync) ---------- */
 const RUN_T=new Set(["Run","TrailRun","VirtualRun"]),BIKE_T=new Set(["Ride","VirtualRide","GravelRide","MountainBikeRide","EBikeRide"]),SWIM_T=new Set(["Swim","OpenWaterSwim"]);
 const PLAN_START="2026-10-19";
+const HISTORY_START="2026-09-01"; /* 1re synchro : on récupère aussi l'historique récent */
 let garminMap=store.json("garminMap",{});
 function actSport(a){if(RUN_T.has(a.type)){const km=a.dist/1000;return a.type==="TrailRun"||(km>0&&(a.dplus||0)/km>=20)?"trail":"route"}if(BIKE_T.has(a.type))return"velo";if(SWIM_T.has(a.type))return"natation";return null}
 const isRunSport=s=>s==="route"||s==="trail";
@@ -218,8 +219,9 @@ async function garminSync(manual){
   if(typeof IS_PWA==="undefined"||!IS_PWA){if(manual)say("La synchro marche seulement dans l'appli en ligne (Netlify).");return}
   if(!key){if(manual)say("Entre d'abord la clé de l'appli.");return}
   if(syncing)return;syncing=true;if(manual)say("Synchronisation…");
+  if(store.get("gWin","")!=="2"){store.set("gLast","0");store.set("gWin","2")}
   const last=+store.get("gLast","0");
-  const after=last?Math.floor(last/1000)-3*86400:Math.floor(Date.parse(PLAN_START+"T00:00:00Z")/1000);
+  const after=last?Math.floor(last/1000)-3*86400:Math.floor(Date.parse(HISTORY_START+"T00:00:00Z")/1000);
   try{
     const r=await fetch("/api/sync",{method:"POST",headers:{"content-type":"application/json","x-app-key":key},body:JSON.stringify({after})});
     let d={};try{d=await r.json()}catch(e){}
