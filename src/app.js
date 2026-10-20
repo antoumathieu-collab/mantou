@@ -58,7 +58,8 @@ function logWidget(date,s){
   const cb=el("input",{type:"checkbox",id:"done-"+k});cb.checked=!!cur.done;
   cb.onchange=()=>{save({done:cb.checked,title:s.title},cb.checked?"Séance validée":"Validation retirée");if(cb.checked&&isRun&&!logs[k].pace)save({pace:wheelPace(),sport:sport},"Séance validée")};
   box.append(el("label",{class:"done",for:"done-"+k},cb,el("span",{text:"Séance faite"})),status);
-  if(isGym){box.append(gymWidget(k,s,()=>{cb.checked=!!(logs[k]&&logs[k].done);flash("Enregistré")}));return box}
+  if(isGym){const gw=gymWidget(k,s,()=>{cb.checked=!!(logs[k]&&logs[k].done);flash("Enregistré")});
+    const dt=el("details",{class:"gymdet"},el("summary",{text:"Noter mes séries ("+gymPlan(s).ex.length+" exercices)"}),gw);if(!inHome)dt.open=true;box.append(dt);return box}
   if(!isRun)return box;
   let sport=cur.sport||s.sport, unit=store.get("unit-"+sport,"minkm");
   let pace=cur.pace||lastPace(sport)||s.refPace;
@@ -114,7 +115,7 @@ const GYM={
 };
 const GYM_ALL=[...GYM.A,...GYM.B];
 const LIGHT_A=["squat","stepup","mollets"];
-function gymPlan(s){const type=/Salle B/.test(s.title)?"B":"A";const light=/60 %/.test(s.text);
+function gymPlan(s){const type=s.noLegs||/Salle B/.test(s.title)?"B":"A";const light=/60 %/.test(s.text);
   let ex=GYM[type];if(light&&type==="A")ex=ex.filter(e=>LIGHT_A.includes(e.id));return{type,light,ex}}
 function lastGym(id,beforeKey){const ks=Object.keys(logs).filter(k=>k<beforeKey&&logs[k].gym&&logs[k].gym[id]&&logs[k].gym[id].some(x=>x&&x.r)).sort();
   if(!ks.length)return null;return{key:ks.at(-1),sets:logs[ks.at(-1)].gym[id].filter(x=>x&&x.r)}}
@@ -231,7 +232,7 @@ async function garminSync(manual){
     const r=await fetch("/api/sync",{method:"POST",headers:{"content-type":"application/json","x-app-key":key},body:JSON.stringify({after})});
     let d={};try{d=await r.json()}catch(e){}
     if(!r.ok)throw new Error(d.error||("Erreur "+r.status));
-    const res=applyActivities(d.activities||[]);applyWellness(d.wellness||[]);
+    const res=applyActivities(d.activities||[]);applyWellness(d.wellness||[]);mergeAnswers(d.answers||{});uploadIcs();
     store.set("gLast",String(Date.now()));
     const nowS=new Date().toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
     say("Synchro du "+nowS+" : "+res.read+" activité"+(res.read>1?"s":"")+" lue"+(res.read>1?"s":"")+", "+res.upd+" séance"+(res.upd>1?"s":"")+" mise"+(res.upd>1?"s":"")+" à jour, "+res.off+" hors plan."+(res.read===0?" Si tu attendais des activités, vérifie qu'elles sont bien dans le calendrier d'intervals.icu.":""));
@@ -278,8 +279,7 @@ function pmcNow(){
 }
 function formNow(){const p=_pmc||pmcNow();const t=p.at(-1);const wk=p.at(-8)||p[0];
   return{ctl:t.ctl,atl:t.atl,tsb:t.tsb,acwr:t.ctl>1?t.atl/t.ctl:null,ramp:t.ctl-wk.ctl}}
-function readinessFor(date){const k=iso(date);const p=_pmc||pmcNow();const row=p.find(x=>x.d===k);
-  return PRO.readiness({date:k,checkin:checkins[k],well:wellList(),tsb:row?row.tsb:null})}
+function readinessFor(date){const k=iso(date);return SCORE.compute({date:k,ans:checkins[k],well:wellList()})}
 /* Facteur de volume de la semaine en cours : régularité des 2 semaines passées, montée de charge, fatigue */
 function weekFactor(w){
   const s0=parse(w[1]);const cur=addDays(TODAY,-((TODAY.getUTCDay()+6)%7));
@@ -300,7 +300,7 @@ function recoveryState(date){
   return best;
 }
 /* Séance effective : plan + récup après course + volume ajusté + forme du jour */
-function effSession(date){
+function effSession(date,noReady){
   const s0=PLAN.sessionFor(date,ctxFor(date));if(!s0)return s0;
   let s=Object.assign({},s0);s.banners=[];
   const rec=recoveryState(date);
@@ -313,12 +313,76 @@ function effSession(date){
   }
   if(date>=TODAY&&(s.kind==="easy"||s.kind==="hard")&&s.dur!=="—"&&!rec){const wf=weekFactor(s.week);
     if(wf.f!==1){s.dur=PRO.scaleText(s.dur,wf.f);s.text=PRO.scaleText(s.text,wf.f);s.banners.push(["warn","Semaine allégée de "+Math.round((1-wf.f)*100)+" % : "+wf.why])}}
-  if(iso(date)===iso(TODAY)){const c=checkins[iso(TODAY)];
-    if(c){const r=readinessFor(TODAY);const ad=PRO.adapt(s,r.level);
-      if(ad&&c.choice!=="plan"){s.planned={title:s.title,dur:s.dur};Object.assign(s,ad);s.adapted=r.level;s.banners.push([r.level==="rouge"?"bad":"warn","Séance adaptée à ta forme du jour ("+r.score+"/100)"])}
-      else if(ad)s.banners.push(["warn","Forme "+r.level+" : tu as choisi de garder la séance prévue"])}}
+  if(!noReady&&iso(date)===iso(TODAY)){const r=readinessFor(TODAY);
+    if(r.answered||r.rhr||r.hrv){const ri=s.raceDate?raceInfo(s.raceDate):null;const ad=SCORE.adapt(Object.assign({},s,{prio:ri&&ri.prio}),r.level,r.pain);
+      if(ad){s.planned={title:s.title,dur:s.dur};Object.assign(s,ad);s.adapted=r.level;s.banners.push([r.level==="rouge"||r.pain>=2?"bad":"warn",ad.flag+" · forme "+r.score+"/100"])}}}
   return s;
 }
+
+
+/* ---------- Forme du jour : réponses, envoi au serveur ---------- */
+function mergeAnswers(srv){let ch=false;for(const[d,v]of Object.entries(srv)){if(!v)continue;const c=checkins[d];if(!c||(v.at||0)>(c.at||0)){checkins[d]=Object.assign({},v);ch=true}}if(ch)saveCheckins()}
+async function postAnswer(date,ans){
+  const key=store.get("appKey","");if(typeof IS_PWA==="undefined"||!IS_PWA||!key)return;
+  try{await fetch("/api/well",{method:"POST",headers:{"content-type":"application/json","x-app-key":key},body:JSON.stringify(Object.assign({date},ans))})}catch(e){}
+}
+/* ---------- Météo (Open-Meteo, sans clé) ---------- */
+const COORD={t:[43.23,0.08],p:[45.18,0.72]};
+let meteo=store.json("meteo",{});
+async function loadMeteo(){
+  if(meteo.at&&Date.now()-meteo.at<3*3600e3)return;
+  const out={at:Date.now()};
+  for(const [k,[la,lo]] of Object.entries(COORD)){try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+la+"&longitude="+lo+"&daily=temperature_2m_max&timezone=Europe%2FParis&forecast_days=14");
+    if(r.ok){const j=await r.json();out[k]={};(j.daily.time||[]).forEach((d,i)=>out[k][d]=j.daily.temperature_2m_max[i])}}catch(e){}}
+  meteo=out;store.setJson("meteo",meteo);
+}
+function tempFor(date){const k=iso(date);const t=meteo[siteFor(date)]&&meteo[siteFor(date)][k];return t==null?null:t}
+const tempCat=t=>t==null?"doux":t<10?"frais":t<20?"doux":t<27?"chaud":"tres_chaud";
+/* ---------- Nutrition du jour (calculée pour chaque séance) ---------- */
+function sessionNutrition(s,date){
+  if(!s||s.kind==="rest"||s.kind==="gym"||s.cross||s.dur==="—")return null;
+  let min=plannedMinOf(s);if(!min)return null;
+  const isTrail=s.kind==="race"?(s.raceDate&&(raceInfo(s.raceDate)||{}).terrain!=="route"):(/Sortie/.test(s.title)&&siteFor(date)==="t");
+  let kmh=s.kind==="race"&&s.raceDate&&predictRace(raceInfo(s.raceDate))?predictRace(raceInfo(s.raceDate)).kmh:s.kind==="hard"?12.5:isTrail?8:11;
+  const dist=kmh*min/60;const t=tempFor(date);
+  const r=NUTRI.compute({sport:isTrail?"trail":"route",dist,dplus:0,speedKmh:kmh,effort:s.kind==="race"?"competition":s.kind==="hard"?"tempo":"endurance",temp:tempCat(t),context:s.kind==="race"?"course":"entrainement",gut:(NI&&NI.gut)||"debutant",weight:latestWeight(),sweat:0});
+  const W=latestWeight();const parts=[];
+  if(r.carb.target){parts.push(r.carb.target+" g/h de glucides, 1er gel à "+NUTRI.hm(r.carb.start)+" puis toutes les 20 min")}
+  else parts.push("rien à manger pendant ("+(min<45?"moins de 45 min":"moins de 75 min")+")");
+  if(r.fluid.needed)parts.push("eau "+r.fluid.lo+"-"+r.fluid.hi+" ml/h");else parts.push("eau : bois avant et après");
+  if(r.sodium.needed)parts.push("sel "+r.sodium.lo+"-"+r.sodium.hi+" mg/h");
+  if(s.kind==="race")parts.push("caféine ~"+Math.round(W*3/10)*10+" mg 45-60 min avant (3 mg/kg, si testée)");
+  const before=min>=90?"Avant : "+Math.round(W*2/10)*10+"-"+Math.round(W*3/10)*10+" g de glucides 3-4 h avant":"Avant : repas normal 2-3 h avant";
+  const after=min>=90||s.kind==="hard"||s.kind==="race"?"Après : "+Math.round(W/10)*10+" g de glucides + "+Math.round(W*0.3/5)*5+" g de protéines dans l'heure":"Après : repas normal";
+  return{line:parts.join(" · "),before,after,temp:t,why:r.why};
+}
+/* ---------- Calendrier personnel (.ics) envoyé au serveur ---------- */
+function buildIcs(){
+  const esc=SCORE.esc,fold=SCORE.fold;const ymd=d=>iso(d).replace(/-/g,"");
+  const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d+Z$/,"Z");
+  const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Prepa Diag 2030//FR","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:Prépa Diag","X-WR-TIMEZONE:Europe/Paris","REFRESH-INTERVAL;VALUE=DURATION:PT1H","X-PUBLISHED-TTL:PT1H"];
+  const [,end]=PLAN.range(mode);
+  for(let d=addDays(TODAY,-7);d<=end;d=addDays(d,1)){
+    const s=effSession(d,true);if(!s||s.kind==="rest")continue;
+    const w=s.week;const sp=siteFor(d);const n=sessionNutrition(s,d);
+    const summary=(s.kind==="race"?"🏁 ":s.kind==="gym"?"💪 ":s.kind==="hard"?"⚡ ":"🏃 ")+s.title+(s.dur&&s.dur!=="—"&&s.kind!=="race"?" ("+s.dur+")":"");
+    let desc=(sp==="t"?"Tarbes (école)":"Périgueux (entreprise)")+" · semaine "+w[0]+" · "+w[2]+"\n"+s.text;
+    (s.banners||[]).forEach(b=>desc+="\n"+b[1]);
+    if(s.note)desc+="\n"+s.note;
+    if(n)desc+="\n\n🍌 Nutrition"+(n.temp!=null?" ("+Math.round(n.temp)+" °C prévus)":"")+" : "+n.line+"\n"+n.before+"\n"+n.after;
+    const ri=s.raceDate?raceInfo(s.raceDate):null;
+    L.push("BEGIN:VEVENT","UID:"+ymd(d)+"@prepa-diag-2030","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+ymd(d),"DTEND;VALUE=DATE:"+ymd(addDays(d,1)),
+      "SUMMARY:"+esc(summary),"DESCRIPTION:"+esc(desc),"TRANSP:TRANSPARENT",
+      "X-PREPA-KIND:"+s.kind,"X-PREPA-TITLE:"+esc(s.title),"X-PREPA-DUR:"+esc(s.dur||""),"X-PREPA-TEXT:"+esc(s.text||""),"X-PREPA-SITE:"+sp,(ri&&ri.prio?"X-PREPA-PRIO:"+ri.prio:"X-PREPA-PRIO:"),"END:VEVENT");
+  }
+  L.push("END:VCALENDAR");
+  return L.map(fold).join("\r\n")+"\r\n";
+}
+let icsTimer=null;
+function uploadIcs(){clearTimeout(icsTimer);icsTimer=setTimeout(async()=>{
+  const key=store.get("appKey","");if(typeof IS_PWA==="undefined"||!IS_PWA||!key)return;
+  try{await loadMeteo();const r=await fetch("/api/ics",{method:"POST",headers:{"content-type":"text/calendar","x-app-key":key},body:buildIcs()});store.set("icsAt",r.ok?String(Date.now()):"err")}catch(e){}
+},800)}
 
 /* ---------- Fiche séance ---------- */
 function fillCard(c,date,withWeek){
@@ -334,6 +398,7 @@ function fillCard(c,date,withWeek){
   c.append(el("p",{text:s.text}));
   if(s.note)c.append(el("p",{class:"note",text:s.note}));
   {const gl=garminLine(logs[iso(date)],s);if(gl)c.append(gl)}
+  {const n=sessionNutrition(s,date);if(n&&date>=addDays(TODAY,-1))c.append(el("div",{class:"nutri"},el("b",{text:"🍌 Nutrition du jour"+(n.temp!=null?" · "+Math.round(n.temp)+" °C":"")}),el("span",{text:n.line}),el("span",{class:"small",text:n.before+" · "+n.after})))}
   if(s.routineLink)c.append(el("a",{href:"#routine",class:"goto",text:s.kind==="race"?"Routine du jour de course →":(/Veille/.test(s.title)?"Routine de la veille →":"Routine de la semaine avant course →")}));
   if(s.kind==="race"&&s.raceDate){const ri=raceInfo(s.raceDate);const pr=ri&&predictRace(ri);
     if(pr)c.append(el("p",{class:"pred"},el("span",{class:"eyebrow",text:"Temps théorique"}),el("b",{text:PREDICT.fmt(pr.sec)}),el("span",{class:"small",text:"fourchette "+PREDICT.fmt(pr.lo)+" à "+PREDICT.fmt(pr.hi)})));
@@ -389,7 +454,7 @@ function renderPlanning(){
 }
 function renderIcs(){
   const box=document.getElementById("ics-box");if(!box)return;box.innerHTML="";
-  const file=mode==="race"?"calendrier-courses.ics":"calendrier-base.ics";
+  const file="plan.ics";
   if(typeof IS_PWA==="undefined"||!IS_PWA||location.protocol!=="https:"){
     box.append(el("p",{class:"small",text:"Disponible dans l'appli installée (mise en ligne sur Netlify) : le lien d'abonnement apparaîtra ici."}));return}
   const dir=location.pathname.replace(/[^/]*$/,"");
@@ -398,20 +463,20 @@ function renderIcs(){
   copy.onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(https).then(()=>copy.textContent="Lien copié",()=>{inp.select()})};
   const inp=el("input",{type:"text",readonly:"readonly",value:https,class:"urlbox","aria-label":"Lien du calendrier"});
   box.append(el("div",{class:"controls"},el("a",{class:"btn primary",href:webcal,text:"S'abonner sur iPhone"}),copy),inp,
-    el("p",{class:"small",text:"Calendrier « "+(mode==="race"?"avec mes courses":"plan de base")+" ». Chaque séance indique la version Tarbes et la version Périgueux. Il se met à jour tout seul quand tu redéploies l'appli au même endroit sur Netlify."}));
+    el("p",{class:"small",text:"Ton calendrier personnel : alternance, courses ajoutées, nutrition du jour, et séance du jour adaptée à ta forme. Il se met à jour à chaque ouverture de l'appli. Si tu étais abonné à l'ancien calendrier, supprime-le et abonne-toi à celui-ci."}));
 }
 
 /* ---------- Accueil ---------- */
 function renderHome(){
   _pmc=null;renderFormPanel();
   const tp=document.getElementById("today-panel");tp.innerHTML="";
-  tp.append(el("h2",{text:"Séance du jour"}));
+  renderWeekStrip();
   const [f,l]=PLAN.range(mode);
   const d=TODAY<f?f:TODAY;
   if(d>l){tp.append(el("p",{text:"Le plan détaillé est terminé : on prépare la saison suivante ensemble."}))}
   else{
     if(d.getTime()!==TODAY.getTime())tp.append(el("p",{class:"small",text:"Le plan commence plus tard. Voici la première séance :"}));
-    const box=el("div",{class:"todaycard"});fillCard(box,d,false);tp.append(box);
+    const box=el("div",{class:"todaycard"});inHome=true;try{fillCard(box,d,false)}finally{inHome=false}tp.append(box);
     const late=[];for(let i=1;i<=6&&late.length<3;i++){const dd=addDays(TODAY,-i);const s=PLAN.sessionFor(dd,ctxFor(dd));if(s&&(s.run||s.kind==="gym")&&!(logs[iso(dd)]&&logs[iso(dd)].done))late.push([dd,s])}
     if(late.length){const ul=el("div",{class:"late"},el("div",{class:"eyebrow",text:"Pas encore validées"}));
       late.forEach(([dd,s])=>ul.append(el("button",{type:"button",class:"latebtn",text:fmtDate(dd).replace(/ \d{4}$/,"")+" · "+s.title,onclick:()=>{selected=dd;view={y:dd.getUTCFullYear(),m:dd.getUTCMonth()};location.hash="#planning"}})));
@@ -426,6 +491,21 @@ function renderHome(){
   document.getElementById("cd-andorra").textContent=da>0?"J-"+da:"Courue";
 }
 
+
+/* ---------- Bande de la semaine (accueil) ---------- */
+function renderWeekStrip(){
+  const box=document.getElementById("week-strip");if(!box)return;box.innerHTML="";
+  const mon=addDays(TODAY,-((TODAY.getUTCDay()+6)%7));
+  const row=el("div",{class:"wk"});
+  for(let i=0;i<7;i++){const d=addDays(mon,i);const s=effSession(d);const lg=logs[iso(d)];
+    const done=lg&&lg.done;const k=s?s.kind:"rest";
+    const b=el("button",{type:"button",class:"wkd k-"+k+(iso(d)===iso(TODAY)?" now":"")+(done?" done":""),"aria-label":fmtDate(d)+" : "+(s?s.title:"rien")+(done?", faite":"")},
+      el("span",{class:"wl",text:["L","M","M","J","V","S","D"][i]}),el("span",{class:"wn",text:String(d.getUTCDate())}),el("span",{class:"wdot",text:done?"✓":""}),
+      el("span",{class:"wt",text:s&&k!=="rest"?(k==="gym"?"Salle":k==="race"?"Course":k==="hard"?"Qualité":/Sortie longue/.test(s.title)?"SL":"Footing"):"Repos"}));
+    b.onclick=()=>{selected=d;view={y:d.getUTCFullYear(),m:d.getUTCMonth()};location.hash="#planning"};row.append(b)}
+  const w=PLAN.lookup(TODAY,mode);
+  box.append(el("div",{class:"wkhead"},el("b",{text:"Cette semaine"}),el("span",{class:"small",text:w?w.w[2]+" · "+SITE[siteFor(TODAY)]:""})),row);
+}
 /* ---------- Courses, matériel, checklist ---------- */
 function renderCourses(){
   const tb=document.getElementById("course-rows");tb.innerHTML="";
@@ -790,38 +870,35 @@ function renderStrategy(){
 }
 
 /* ---------- Accueil : check-in du matin et forme du jour ---------- */
-const CHECK_Q=[["sleepQ","Qualité du sommeil",["Très mauvaise","Mauvaise","Moyenne","Bonne","Excellente"]],["energy","Énergie",["Vidé","Faible","Normale","Bonne","Au top"]],
-  ["motivation","Motivation",["Aucune","Faible","Normale","Bonne","Très forte"]],["soreness","Courbatures",["Aucune","Légères","Modérées","Fortes","Très fortes"]],["stress","Stress",["Aucun","Léger","Modéré","Élevé","Très élevé"]]];
-let editCheckin=false;
+let editCheckin=false,inHome=false;
+const Q3=[["sleep","Sommeil",["Très mauvais","Mauvais","Moyen","Bon","Excellent"],1],["legs","Jambes",["Très lourdes","Lourdes","Normales","Bonnes","Fraîches"],1],["pain","Douleur",["Aucune","Légère","Gênante","Forte"],0]];
 function renderFormPanel(){
-  const box=document.getElementById("form-panel");if(!box)return;box.innerHTML="";
-  const k=iso(TODAY);const c=checkins[k];
-  if(!c||editCheckin){
-    const draft=Object.assign({sleepQ:3,energy:3,motivation:3,soreness:1,stress:2,sleepH:null,pain:false,painWhere:""},c||{});
-    box.append(el("h2",{text:"Forme du matin"}),el("p",{class:"small",text:"30 secondes : ces réponses, avec la VFC, la FC au repos et le sommeil de ta montre, donnent ta forme du jour et adaptent ta séance."}));
-    CHECK_Q.forEach(([key,label,opts])=>{const seg=el("div",{class:"seg scale",role:"group","aria-label":label});
-      opts.forEach((t,i)=>{const b=el("button",{type:"button","aria-pressed":String(draft[key]===i+1),title:t,text:String(i+1)});b.onclick=()=>{draft[key]=i+1;[...seg.children].forEach((x,j)=>x.setAttribute("aria-pressed",String(j===i)));lab.textContent=label+" : "+t};seg.append(b)});
-      const lab=el("span",{class:"lbl",text:label+" : "+opts[draft[key]-1]});box.append(el("div",{class:"frow"},lab,seg))});
-    const sl=el("select",{id:"ci-sleep"});sl.append(el("option",{value:"",text:"Selon la montre"}));for(let h=4;h<=10;h+=0.5)sl.append(el("option",{value:String(h),text:String(h).replace(".5"," h 30").replace(/^(\d+)$/,"$1 h")}));sl.value=draft.sleepH!=null?String(draft.sleepH):"";
-    const pain=el("input",{type:"checkbox",id:"ci-pain"});pain.checked=!!draft.pain;
-    const where=el("input",{type:"text",id:"ci-where",placeholder:"où ? (genou, Achille…)",value:draft.painWhere||""});
-    box.append(el("div",{class:"fields"},el("label",{for:"ci-sleep"},el("span",{text:"Heures de sommeil"}),sl),el("label",{class:"done",for:"ci-pain"},pain,el("span",{text:"J'ai une douleur"})),el("label",{for:"ci-where"},el("span",{text:"Où"}),where)));
-    box.append(el("button",{type:"button",class:"btn primary",text:"Valider ma forme du jour",onclick:()=>{draft.sleepH=sl.value===""?null:+sl.value;draft.pain=pain.checked;draft.painWhere=where.value.trim();draft.choice=(c&&c.choice)||"adapt";checkins[k]=draft;saveCheckins();editCheckin=false;renderHome()}}));
-    return;
+  const box=document.getElementById("form-panel");if(!box)return;box.innerHTML="";box.className="panel hero";
+  const k=iso(TODAY);const c=checkins[k];const r=readinessFor(TODAY);
+  const ring=el("div",{class:"ring big "+r.level},el("b",{text:String(r.score)}),el("span",{text:"/100"}));
+  const head=el("div",{class:"readyhead"},ring,el("div",{},el("div",{class:"eyebrow",text:fmtDate(TODAY)}),
+    el("h2",{text:!r.answered?"Comment tu te sens ?":r.level==="vert"?"Feu vert":r.level==="orange"?"Forme moyenne":"Récupération"}),
+    el("p",{class:"small",text:r.answered?(r.level==="vert"?"Séance comme prévue.":"Ta séance est adaptée automatiquement."):(r.rhr||r.hrv?"Score provisoire d'après ta montre. Réponds en 10 secondes pour l'affiner.":"Réponds en 10 secondes : ta séance s'adapte toute seule.")})));
+  if(!r.answered)ring.classList.add("pending");
+  box.append(head);
+  const watch=[];if(r.rhr)watch.push("FC réveil "+r.rhr+(r.rhrAvg?" (moy. "+r.rhrAvg+")":""));if(r.hrv)watch.push("VFC "+Math.round(r.hrv)+" ms"+(r.hrvAvg?" (moy. "+r.hrvAvg+")":""));if(r.sleepH)watch.push("sommeil "+String(r.sleepH).replace(".",",")+" h");if(r.sleepScore)watch.push("score "+r.sleepScore);
+  if(watch.length)box.append(el("p",{class:"watch",text:"⌚ "+watch.join(" · ")}));
+  if(c&&!editCheckin){
+    if(r.reasons.length){const ul=el("ul",{class:"why"});r.reasons.forEach(t=>ul.append(el("li",{class:r.level==="rouge"?"bad":"warn",text:t})));box.append(ul)}
+    box.append(el("button",{type:"button",class:"linkbtn",text:"Modifier mes réponses",onclick:()=>{editCheckin=true;renderFormPanel()}}));return;
   }
-  const r=readinessFor(TODAY);const f=formNow();
-  box.classList.add("ready-"+r.level);
-  box.append(el("div",{class:"readyhead"},el("div",{class:"ring "+r.level},el("b",{text:String(r.score)}),el("span",{text:"/100"})),
-    el("div",{},el("div",{class:"eyebrow",text:"Forme du jour"}),el("h2",{text:r.level==="vert"?"Feu vert : séance comme prévue":r.level==="orange"?"Forme moyenne : séance allégée":"Feu rouge : récupération"}))));
-  const ul=el("ul",{class:"why"});r.why.slice(0,6).forEach(([lv,t])=>ul.append(el("li",{class:lv,text:t})));if(!r.why.length)ul.append(el("li",{text:"Rien à signaler."}));box.append(ul);
-  const z=PRO.tsbZone(f.tsb);
-  box.append(el("p",{class:"small",text:"Forme (charge de fond) "+Math.round(f.ctl)+" · Fatigue "+Math.round(f.atl)+" · Fraîcheur "+(f.tsb>=0?"+":"")+Math.round(f.tsb)+" ("+z.name.toLowerCase()+")"}));
-  const s0=PLAN.sessionFor(TODAY,ctxFor(TODAY));const ad=s0&&PRO.adapt(s0,r.level);
-  if(ad){const seg=el("div",{class:"seg",role:"group","aria-label":"Choix de séance"});
-    [["adapt","Suivre l'adaptation"],["plan","Garder la séance prévue"]].forEach(([v,t])=>seg.append(el("button",{type:"button","aria-pressed":String((checkins[iso(TODAY)].choice||"adapt")===v),text:t,onclick:()=>{checkins[iso(TODAY)].choice=v;saveCheckins();renderHome()}})));
-    box.append(seg)}
-  if(r.pain)box.append(el("p",{class:"banner bad",text:"Douleur : pas de course aujourd'hui. Si elle dure plus de 5 à 7 jours ou si elle est présente au repos, consulte un médecin du sport ou un kiné."}));
-  box.append(el("button",{type:"button",class:"latebtn",text:"Modifier mon check-in",onclick:()=>{editCheckin=true;renderFormPanel()}}));
+  const draft=Object.assign({legs:3,pain:0,sleep:null},c||{});
+  const noWatchSleep=!(r.sleepH||r.sleepScore);
+  Q3.forEach(([key,label,opts,base])=>{
+    if(key==="sleep"&&!noWatchSleep&&draft.sleep==null){}
+    const seg=el("div",{class:"seg scale",role:"group","aria-label":label});
+    opts.forEach((t,i)=>{const v=i+base;const b=el("button",{type:"button","aria-pressed":String(draft[key]===v),title:t,text:key==="pain"?["0","1","2","3"][i]:String(v)});
+      b.onclick=()=>{draft[key]=draft[key]===v&&key==="sleep"?null:v;[...seg.children].forEach((x,j)=>x.setAttribute("aria-pressed",String(draft[key]===j+base)));lab.textContent=lt()};seg.append(b)});
+    const lt=()=>label+" : "+(draft[key]==null?(key==="sleep"?(noWatchSleep?"à remplir":"selon la montre"):"—"):opts[draft[key]-base]);
+    const lab=el("span",{class:"lbl",text:lt()});box.append(el("div",{class:"qrow"},lab,seg));
+  });
+  box.append(el("button",{type:"button",class:"btn primary wide",text:"Valider",onclick:()=>{const ans={legs:draft.legs,pain:draft.pain,at:Date.now()};if(draft.sleep!=null)ans.sleep=draft.sleep;
+    checkins[k]=ans;saveCheckins();editCheckin=false;postAnswer(k,ans);uploadIcs();renderHome()}}));
 }
 
 /* ---------- Forme et charge ---------- */
@@ -852,7 +929,7 @@ function renderForme(){
   const wl=wellList().filter(w=>w.date>=PRO.shift(iso(TODAY),-90));
   chart(document.getElementById("ch-hrv"),{type:"line",label:"VFC",dots:false,yFmt:v=>Math.round(v)+" ms",empty:"La VFC arrive avec la synchro Garmin si ta montre la mesure la nuit.",series:[{name:"VFC",color:c1,points:wl.filter(w=>w.hrv).map(w=>({x:parse(w.date),y:w.hrv,tip:"VFC "+Math.round(w.hrv)+" ms"}))}]});
   chart(document.getElementById("ch-rhr"),{type:"line",label:"FC au repos",dots:false,yFmt:v=>Math.round(v)+"",empty:"La FC au repos arrive avec la synchro Garmin.",series:[{name:"FC repos",color:c2,points:wl.filter(w=>w.rhr).map(w=>({x:parse(w.date),y:w.rhr,tip:"FC repos "+Math.round(w.rhr)}))}]});
-  const rd=Object.keys(checkins).sort().filter(k=>k>=PRO.shift(iso(TODAY),-90)).map(k=>{const r=PRO.readiness({date:k,checkin:checkins[k],well:wellList(),tsb:(p.find(x=>x.d===k)||{}).tsb});return{x:parse(k),y:r.score,tip:"Forme du jour "+r.score+"/100 ("+r.level+")"}});
+  const rd=Object.keys(checkins).sort().filter(k=>k>=PRO.shift(iso(TODAY),-90)).map(k=>{const r=SCORE.compute({date:k,ans:checkins[k],well:wellList()});return{x:parse(k),y:r.score,tip:"Forme du jour "+r.score+"/100 ("+r.level+")"}});
   chart(document.getElementById("ch-ready"),{type:"line",label:"Forme du jour",yMin:0,yMax:100,yFmt:v=>Math.round(v)+"",empty:"Fais ton check-in du matin sur l'accueil pour suivre ta forme du jour.",series:[{name:"Forme du jour",color:c1,points:rd}]});
 }
 
@@ -964,9 +1041,16 @@ const GROUPS=[
 const VIEWS=GROUPS.flatMap(g=>g.views.map(v=>v[0]));
 const groupOf=v=>GROUPS.find(g=>g.views.some(x=>x[0]===v));
 let curView="accueil";
+const ICONS={accueil:'<path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/>',
+  entrainement:'<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  courses:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+  nutrition:'<path d="M12 21c-4.4 0-7-3.4-7-7.5C5 8.6 8.4 5 12 5s7 3.6 7 8.5c0 4.1-2.6 7.5-7 7.5zM12 5c0-1.5.8-2.5 2-3"/>',
+  infos:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8h.01"/>'};
 function buildNav(){
   const nav=document.getElementById("nav-main");nav.innerHTML="";
-  GROUPS.forEach(g=>nav.append(el("a",{href:"#"+g.views[0][0],"data-g":g.id,text:g.name})));
+  GROUPS.forEach(g=>{const a=el("a",{href:"#"+g.views[0][0],"data-g":g.id});
+    a.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+ICONS[g.id]+'</svg>';
+    a.append(el("span",{text:g.name}));nav.append(a)});
 }
 function show(){
   let v=(location.hash||"").slice(1);if(!VIEWS.includes(v))v="accueil";curView=v;
@@ -997,5 +1081,5 @@ document.getElementById("today-btn").onclick=()=>{selected=(TODAY>=FIRST&&TODAY<
 document.querySelectorAll("[data-pk]").forEach(b=>b.onclick=()=>{pk=b.dataset.pk;store.set("pk",pk);renderPack()});
 document.getElementById("check-reset").onclick=()=>{store.setJson("check",{});renderChecklist()};
 buildNav();initWhatIf();initAddRace();renderCourses();renderPack();renderChecklist();initProgressForms();show();
-maybeAutoSync();
+maybeAutoSync();loadMeteo().then(()=>{if(curView==="accueil")renderHome()});
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")maybeAutoSync()});

@@ -86,8 +86,8 @@
     <div class="panel"><h3>Sur route</h3><div id="t-std"></div></div>
     <div class="panel"><h3>Tes courses</h3><p class="small">Distance + dénivelé convertis en km-effort, puis corrigés selon le terrain. Les courses passées sont grisées.</p><div id="t-races"></div></div>
     <div class="panel"><h3>Et si je courais…</h3><div id="t-whatif"></div></div>
-    <div class="panel">
-      <h3>Comment c'est calculé</h3>
+    <details class="panel howto">
+      <summary>Comment c'est calculé</summary>
       <ul>
         <li>Ta meilleure performance récente sur route (moins de 5 mois) est convertie en équivalent 10 km avec la formule de Riegel (temps × (distance / distance)^1,06). Une séance qui n'était pas à fond est corrigée selon ton ressenti.</li>
         <li>Une course avec du dénivelé est convertie en km-effort : 100 m de D+ comptent comme 1 km.</li>
@@ -95,7 +95,7 @@
         <li>Facteur de terrain : route ×1,00, trail roulant ×1,03, trail montagne ×1,15, trail très technique ×1,25.</li>
         <li>La fourchette est de ±5 % jusqu'au semi, ±8 % jusqu'au marathon, ±12 % au-delà. Sur un premier ultra, vise plutôt le haut de la fourchette : le calcul suppose une endurance déjà construite.</li>
       </ul>
-    </div>
+    </details>
   </section>
 
   <!-- STRATEGIE -->
@@ -134,15 +134,15 @@
       <div class="panel"><h3>VFC (variabilité cardiaque)</h3><p class="small">Une VFC sous ta moyenne habituelle signale de la fatigue, un stress ou une maladie qui arrive.</p><div id="ch-hrv"></div></div>
       <div class="panel"><h3>FC au repos</h3><p class="small">5 battements au-dessus de ta moyenne = signal d'alerte.</p><div id="ch-rhr"></div></div>
     </div>
-    <div class="panel">
-      <h3>Comment c'est calculé</h3>
+    <details class="panel howto">
+      <summary>Comment c'est calculé</summary>
       <ul>
         <li><b>Charge d'une séance</b> : celle calculée par intervals.icu à partir de ta montre, sinon une estimation selon la durée et l'intensité (100 = 1 h au seuil).</li>
         <li><b>Forme</b> : moyenne de ta charge sur environ 42 jours. <b>Fatigue</b> : sur environ 7 jours. <b>Fraîcheur</b> : forme moins fatigue (modèle de Banister, utilisé par TrainingPeaks et intervals.icu).</li>
         <li><b>Ratio aiguë / chronique</b> : au-dessus de 1,5, le risque de blessure augmente nettement ; entre 0,8 et 1,3, c'est la zone sûre.</li>
-        <li><b>Forme du jour</b> : départ à 70, puis VFC et FC au repos comparées à ta moyenne des 28 derniers jours, sommeil, check-in et fraîcheur. Vert ≥ 70, orange 50-69, rouge &lt; 50 ou douleur.</li>
+        <li><b>Forme du jour</b> : sommeil 30 pts (ta réponse, sinon le score ou les heures de la montre), jambes 40 pts, douleur 30 pts. Pénalité si la FC au réveil dépasse de 5 bpm (−15) ou 8 bpm (−25) ta moyenne des 7 jours, ou si la VFC tombe sous 85 % (−15) ou 75 % (−25) de sa moyenne, 30 pts au maximum. Vert ≥ 70, orange 50-69, rouge &lt; 50 ou douleur gênante.</li>
         <li><b>Plan adaptatif</b> : la semaine en cours est allégée de 15 % si les 2 semaines précédentes sont incomplètes, si la charge monte trop vite ou si la fatigue est trop forte. Après une course, une récupération est imposée (environ 1 jour par 6 km-effort).</li>
       </ul>
       <p class="small">Ces indicateurs aident à décider ; ils ne remplacent pas ton ressenti ni un avis médical.</p>
-    </div>
+    </details>
   </section>

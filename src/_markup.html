@@ -108,8 +108,8 @@ tr.key td{background:var(--race-soft)}
 <div class="wrap">
   <header class="top">
     <div>
-      <h1>Prépa Diag 2030</h1>
-      <p class="sub">Mathieu · objectif Diagonale des Fous, octobre 2030 · plan établi le 18 octobre 2026</p>
+      <h1>Prépa Diag</h1>
+      <p class="sub">Objectif Diagonale des Fous · octobre 2030</p>
     </div>
   </header>
 
@@ -126,26 +126,13 @@ tr.key td{background:var(--race-soft)}
 
   <!-- ACCUEIL -->
   <section class="view" id="v-accueil">
-    <div class="cols">
-      <div class="panel stat"><span>Prochaine course conseillée</span><b id="next-race">—</b><span id="next-race-d"></span></div>
-      <div class="panel stat"><span>Andorra Trail 80K</span><b id="cd-andorra">—</b><span>79 km · 3 900 m D+ · 10-11 juin 2027</span></div>
-      <div class="panel stat"><span>Diagonale des Fous</span><b>Oct. 2030</b><span>~180 km · ~10 200 m D+ · objectif 33 h</span></div>
-    </div>
-    <div class="panel" id="today-panel"></div>
-    <div class="panel">
-      <h2>Le plan en bref</h2>
-      <p class="lead">4 saisons, une marche par an, 7 à 9 h d'entraînement par semaine tenues sans trou.</p>
-      <div class="tbl"><table>
-        <thead><tr><th>Quand</th><th>Étape</th><th>Rôle</th></tr></thead>
-        <tbody>
-          <tr><td>Juin 2027</td><td>Andorra Trail 80K (79 km, 3 900 m D+)</td><td>Premier ultra, qualifie pour le Trail de Bourbon 2028</td></tr>
-          <tr><td>Oct. 2027</td><td>Les Templiers (80,4 km, 3 443 m D+)</td><td>Deuxième ultra, test nutrition à 80-90 g/h</td></tr>
-          <tr><td>Oct. 2028</td><td>Trail de Bourbon (106 km, 6 200 m D+), plan B GRP 120 km</td><td>Découvrir le terrain réunionnais et la nuit</td></tr>
-          <tr><td>2029</td><td>Andorra 80K (juin) + GRP Ultra 160 km (août)</td><td>Les 2 qualificatives Diag (85 points chacune)</td></tr>
-          <tr><td>Janv.-mars 2030</td><td>Inscription Diag</td><td>Package Bourbon Voyages ou tirage au sort</td></tr>
-          <tr class="key"><td>Oct. 2030</td><td>Diagonale des Fous</td><td>Objectif top 100, environ 33 h</td></tr>
-        </tbody>
-      </table></div>
+    <div class="panel hero" id="form-panel"></div>
+    <div class="panel" id="week-strip"></div>
+    <div class="panel today" id="today-panel"></div>
+    <div class="cols countdown">
+      <div class="panel stat"><span>Prochaine course</span><b id="next-race">—</b><span id="next-race-d"></span></div>
+      <div class="panel stat"><span>Andorra 80K</span><b id="cd-andorra">—</b><span>10-11 juin 2027</span></div>
+      <div class="panel stat"><span>Diagonale</span><b>2030</b><span>objectif 33 h</span></div>
     </div>
   </section>
 
@@ -355,6 +342,21 @@ tr.key td{background:var(--race-soft)}
 
   <!-- OBJECTIFS -->
   <section class="view" id="v-objectifs" hidden>
+    <div class="panel">
+      <h2>Le plan en bref</h2>
+      <p class="lead">4 saisons, une marche par an, 7 à 9 h d'entraînement par semaine tenues sans trou.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Quand</th><th>Étape</th><th>Rôle</th></tr></thead>
+        <tbody>
+          <tr><td>Juin 2027</td><td>Andorra Trail 80K (79 km, 3 900 m D+)</td><td>Premier ultra, qualifie pour le Trail de Bourbon 2028</td></tr>
+          <tr><td>Oct. 2027</td><td>Les Templiers (80,4 km, 3 443 m D+)</td><td>Deuxième ultra, test nutrition à 80-90 g/h</td></tr>
+          <tr><td>Oct. 2028</td><td>Trail de Bourbon (106 km, 6 200 m D+), plan B GRP 120 km</td><td>Découvrir le terrain réunionnais et la nuit</td></tr>
+          <tr><td>2029</td><td>Andorra 80K (juin) + GRP Ultra 160 km (août)</td><td>Les 2 qualificatives Diag (85 points chacune)</td></tr>
+          <tr><td>Janv.-mars 2030</td><td>Inscription Diag</td><td>Package Bourbon Voyages ou tirage au sort</td></tr>
+          <tr class="key"><td>Oct. 2030</td><td>Diagonale des Fous</td><td>Objectif top 100, environ 33 h</td></tr>
+        </tbody>
+      </table></div>
+    </div>
     <div class="panel">
       <h2>Viser environ 33 h sur la Diag</h2>
       <p>Le temps du 100e n'est publié dans aucune source consultée. Je l'estime entre 32 et 35 h à partir de ces repères : vainqueur 2026 en 22 h 54, 10e homme 2025 en 28 h 48, 10e femme 2025 en 36 h 45, médiane autour de 48 h. Les colonnes « top 100 » traduisent ce niveau sur chaque course, en km-effort (km + D+/100).</p>

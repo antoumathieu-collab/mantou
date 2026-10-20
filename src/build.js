@@ -8,7 +8,7 @@ const VERSION=process.env.APPV||"4";
 /* ---- JS ---- */
 const planJs="const PLAN=(function(){\n"+read("_data.js")+"\n"+read("plan_logic.js")+"\n})();\nif(typeof module!==\"undefined\"&&module.exports)module.exports=PLAN;\n";
 fs.writeFileSync(path.join(SRC,"plan.js"),planJs);
-const nutriJs=read("nutri.js")+"\n"+read("predict.js")+"\n"+read("pro.js"), appJs=read("app.js");
+const nutriJs=read("nutri.js")+"\n"+read("predict.js")+"\n"+read("pro.js")+"\n"+read("score.js"), appJs=read("app.js");
 
 /* ---- HTML ---- */
 let m=read("_markup.html");
@@ -16,8 +16,7 @@ const must=(a,b)=>{if(!m.includes(a))throw new Error("introuvable : "+a.slice(0,
 must('  --race:#7a3fa0; --race-soft:#efe4f6; --rest:#eef1ee;','  --race:#7a3fa0; --race-soft:#efe4f6; --rest:#eef1ee; --s1:#1f7a52; --s2:#8a45b8;');
 m=m.split('--rest:#202925; color-scheme:dark').join('--rest:#202925; --s1:#3f9a70; --s2:#a46ccc; color-scheme:dark');
 must('</style>',read("_extra.css")+'\n</style>');
-{const st=m.indexOf('    <div class="panel" id="today-panel"></div>\n');if(st<0)throw new Error("today-panel");m=m.replace('    <div class="panel" id="today-panel"></div>\n','');
- m=m.replace('<section class="view" id="v-accueil">','<section class="view" id="v-accueil">\n    <div class="panel" id="form-panel"></div>\n    <div class="panel" id="today-panel"></div>');}
+
 must(m.slice(m.indexOf('  <nav class="tabs"'),m.indexOf('</nav>')+6),`  <div class="navwrap">
     <nav class="tabs" id="nav-main" aria-label="Sections"></nav>
     <nav class="subtabs" id="nav-sub" aria-label="Sous-sections" hidden></nav>
@@ -83,6 +82,7 @@ self.addEventListener("fetch",e=>{
 `);
 for(const f of ["manifest.webmanifest","LISEZ-MOI.txt"])fs.copyFileSync(path.join(SRC,"static",f),path.join(OUT,f));
 for(const f of fs.readdirSync(path.join(SRC,"static","icons")))fs.copyFileSync(path.join(SRC,"static","icons",f),path.join(OUT,"icons",f));
+fs.mkdirSync(path.join(OUT,"widget"),{recursive:true});for(const f of fs.readdirSync(path.join(SRC,"static","widget")))fs.copyFileSync(path.join(SRC,"static","widget",f),path.join(OUT,"widget",f));
 
 /* ---- Calendriers .ics ---- */
 const P=require(path.join(SRC,"plan.js"));

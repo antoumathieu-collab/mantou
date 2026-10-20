@@ -1,0 +1,8 @@
+{
+  "name": "prepa-diag-2030",
+  "private": true,
+  "description": "Appli d'entraînement Prépa Diag 2030 (site statique + fonctions Netlify)",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}

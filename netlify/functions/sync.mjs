@@ -1,3 +1,5 @@
+import { getStore } from "@netlify/blobs";
+import { answers } from "./lib/core.mjs";
 const API = "https://intervals.icu/api/v1";
 const RUN = new Set(["Run","TrailRun","VirtualRun"]);
 const json = (d, s=200) => new Response(JSON.stringify(d), {status:s, headers:{"content-type":"application/json","cache-control":"no-store"}});
@@ -31,7 +33,10 @@ export default async (req) => {
         sleepSecs:x.sleepSecs??(x.sleepTime!=null?(x.sleepTime>24?x.sleepTime:x.sleepTime*3600):null), sleepScore:x.sleepScore??null,
         weight:x.weight??null, ctl:x.ctl??null, atl:x.atl??null}));
     } catch {}
-    return json({activities:out, wellness});
+    /* Réponses du questionnaire de forme (appli ou widget) */
+    let ans = {};
+    try { ans = await answers(getStore("prepa"), day(Math.min(+body.after||0, Date.now()/1000-60*86400))); } catch {}
+    return json({activities:out, wellness, answers:ans});
   } catch (e) { return json({error:e.message}, 502); }
 };
 export const config = { path: "/api/sync" };

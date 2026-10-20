@@ -267,6 +267,64 @@ ul.why li.good::before{background:var(--accent)}ul.why li.warn::before{backgroun
 
 @media (max-width:560px){#fo-tiles .tile:last-child:nth-child(odd){grid-column:1/-1}}
 
+/* ===== Refonte épurée ===== */
+body{font-size:15.5px}
+.wrap{gap:14px}
+header.top h1{font-size:1.9rem}
+header.top .sub{font-size:.85rem}
+.panel{border:0;box-shadow:0 1px 2px color-mix(in srgb,var(--ink) 6%,transparent),0 0 0 1px color-mix(in srgb,var(--line) 70%,transparent);border-radius:16px}
+.view{gap:14px}
+.navwrap{gap:4px}
+#nav-main{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+#nav-main a{display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;padding:6px 2px;border-radius:12px;font-size:.74rem;color:var(--muted)}
+#nav-main a svg{width:24px;height:24px}
+#nav-main a[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+@media (max-width:820px){
+  .navwrap{position:static}
+  #nav-main{position:fixed;top:auto;left:0;right:0;bottom:0;z-index:20;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);padding:6px max(10px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-right,0px))}
+  body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  html{scroll-padding-bottom:calc(96px + env(safe-area-inset-bottom,0px));scroll-padding-top:56px}
+  nav.subtabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg)}
+  .card{top:calc(env(safe-area-inset-top,0px) + 48px)}
+}
+/* Accueil */
+.hero{gap:14px}
+.ring.big{width:92px;height:92px;border-width:7px}
+.ring.big b{font-size:2.2rem}
+.hero h2{font-size:1.6rem}
+.watch{margin:0;font:500 .78rem var(--mono);color:var(--muted)}
+.qrow{display:grid;gap:6px}
+.qrow .seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));border-radius:12px}
+.qrow .seg button{padding:10px 0;font:600 1rem var(--mono)}
+.btn.wide{width:100%;padding:12px;font-size:1rem;border-radius:12px}
+.linkbtn{border:0;background:none;color:var(--accent);font:600 .85rem var(--body);padding:0;cursor:pointer;justify-self:start}
+.today{gap:10px}
+.today h3{font-size:2rem}
+.today .goto{font-size:.88rem}
+.nutri{display:grid;gap:3px;background:color-mix(in srgb,#e8c547 18%,var(--surface));border-radius:12px;padding:10px 12px}
+.nutri b{font-size:.92rem}
+.nutri span{font-size:.88rem}
+.wkhead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.wkd{display:grid;justify-items:center;gap:2px;border:0;border-radius:12px;padding:8px 0;background:var(--rest);color:var(--ink);cursor:pointer;font:inherit;min-width:0}
+.wkd .wl{font:500 .66rem var(--mono);color:var(--muted)}
+.wkd .wn{font:700 1.05rem var(--display)}
+.wkd .wdot{height:14px;font:700 .7rem var(--body);color:var(--accent)}
+.wkd .wt{font-size:.62rem;color:var(--muted);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wkd.k-hard{background:var(--hard-soft)}.wkd.k-easy{background:var(--accent-soft)}.wkd.k-race{background:var(--race-soft)}.wkd.k-gym{background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
+.wkd.now{outline:2px solid var(--ink);outline-offset:-2px}
+.countdown .panel{padding:12px}
+.countdown .stat b{font-size:1.4rem}
+.countdown .stat span{font-size:.72rem}
+details.howto summary{cursor:pointer;font:600 1.05rem var(--display);list-style:none}
+details.howto summary::after{content:" +";color:var(--muted)}
+details.howto[open] summary::after{content:" −"}
+.tile{border:0;background:var(--surface);box-shadow:0 0 0 1px color-mix(in srgb,var(--line) 70%,transparent)}
+
+.ring.pending{opacity:.55}
+details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);padding:4px 0}
+
 </style>
 
 </head>
@@ -274,8 +332,8 @@ ul.why li.good::before{background:var(--accent)}ul.why li.warn::before{backgroun
 <div class="wrap">
   <header class="top">
     <div>
-      <h1>Prépa Diag 2030</h1>
-      <p class="sub">Mathieu · objectif Diagonale des Fous, octobre 2030 · plan établi le 18 octobre 2026</p>
+      <h1>Prépa Diag</h1>
+      <p class="sub">Objectif Diagonale des Fous · octobre 2030</p>
     </div>
   </header>
 
@@ -286,27 +344,13 @@ ul.why li.good::before{background:var(--accent)}ul.why li.warn::before{backgroun
 
   <!-- ACCUEIL -->
   <section class="view" id="v-accueil">
-    <div class="panel" id="form-panel"></div>
-    <div class="panel" id="today-panel"></div>
-    <div class="cols">
-      <div class="panel stat"><span>Prochaine course conseillée</span><b id="next-race">—</b><span id="next-race-d"></span></div>
-      <div class="panel stat"><span>Andorra Trail 80K</span><b id="cd-andorra">—</b><span>79 km · 3 900 m D+ · 10-11 juin 2027</span></div>
-      <div class="panel stat"><span>Diagonale des Fous</span><b>Oct. 2030</b><span>~180 km · ~10 200 m D+ · objectif 33 h</span></div>
-    </div>
-    <div class="panel">
-      <h2>Le plan en bref</h2>
-      <p class="lead">4 saisons, une marche par an, 7 à 9 h d'entraînement par semaine tenues sans trou.</p>
-      <div class="tbl"><table>
-        <thead><tr><th>Quand</th><th>Étape</th><th>Rôle</th></tr></thead>
-        <tbody>
-          <tr><td>Juin 2027</td><td>Andorra Trail 80K (79 km, 3 900 m D+)</td><td>Premier ultra, qualifie pour le Trail de Bourbon 2028</td></tr>
-          <tr><td>Oct. 2027</td><td>Les Templiers (80,4 km, 3 443 m D+)</td><td>Deuxième ultra, test nutrition à 80-90 g/h</td></tr>
-          <tr><td>Oct. 2028</td><td>Trail de Bourbon (106 km, 6 200 m D+), plan B GRP 120 km</td><td>Découvrir le terrain réunionnais et la nuit</td></tr>
-          <tr><td>2029</td><td>Andorra 80K (juin) + GRP Ultra 160 km (août)</td><td>Les 2 qualificatives Diag (85 points chacune)</td></tr>
-          <tr><td>Janv.-mars 2030</td><td>Inscription Diag</td><td>Package Bourbon Voyages ou tirage au sort</td></tr>
-          <tr class="key"><td>Oct. 2030</td><td>Diagonale des Fous</td><td>Objectif top 100, environ 33 h</td></tr>
-        </tbody>
-      </table></div>
+    <div class="panel hero" id="form-panel"></div>
+    <div class="panel" id="week-strip"></div>
+    <div class="panel today" id="today-panel"></div>
+    <div class="cols countdown">
+      <div class="panel stat"><span>Prochaine course</span><b id="next-race">—</b><span id="next-race-d"></span></div>
+      <div class="panel stat"><span>Andorra 80K</span><b id="cd-andorra">—</b><span>10-11 juin 2027</span></div>
+      <div class="panel stat"><span>Diagonale</span><b>2030</b><span>objectif 33 h</span></div>
     </div>
   </section>
 
@@ -502,8 +546,8 @@ ul.why li.good::before{background:var(--accent)}ul.why li.warn::before{backgroun
     <div class="panel"><h3>Sur route</h3><div id="t-std"></div></div>
     <div class="panel"><h3>Tes courses</h3><p class="small">Distance + dénivelé convertis en km-effort, puis corrigés selon le terrain. Les courses passées sont grisées.</p><div id="t-races"></div></div>
     <div class="panel"><h3>Et si je courais…</h3><div id="t-whatif"></div></div>
-    <div class="panel">
-      <h3>Comment c'est calculé</h3>
+    <details class="panel howto">
+      <summary>Comment c'est calculé</summary>
       <ul>
         <li>Ta meilleure performance récente sur route (moins de 5 mois) est convertie en équivalent 10 km avec la formule de Riegel (temps × (distance / distance)^1,06). Une séance qui n'était pas à fond est corrigée selon ton ressenti.</li>
         <li>Une course avec du dénivelé est convertie en km-effort : 100 m de D+ comptent comme 1 km.</li>
@@ -511,7 +555,7 @@ ul.why li.good::before{background:var(--accent)}ul.why li.warn::before{backgroun
         <li>Facteur de terrain : route ×1,00, trail roulant ×1,03, trail montagne ×1,15, trail très technique ×1,25.</li>
         <li>La fourchette est de ±5 % jusqu'au semi, ±8 % jusqu'au marathon, ±12 % au-delà. Sur un premier ultra, vise plutôt le haut de la fourchette : le calcul suppose une endurance déjà construite.</li>
       </ul>
-    </div>
+    </details>
   </section>
 
   <!-- STRATEGIE -->
@@ -550,17 +594,17 @@ ul.why li.good::before{background:var(--accent)}ul.why li.warn::before{backgroun
       <div class="panel"><h3>VFC (variabilité cardiaque)</h3><p class="small">Une VFC sous ta moyenne habituelle signale de la fatigue, un stress ou une maladie qui arrive.</p><div id="ch-hrv"></div></div>
       <div class="panel"><h3>FC au repos</h3><p class="small">5 battements au-dessus de ta moyenne = signal d'alerte.</p><div id="ch-rhr"></div></div>
     </div>
-    <div class="panel">
-      <h3>Comment c'est calculé</h3>
+    <details class="panel howto">
+      <summary>Comment c'est calculé</summary>
       <ul>
         <li><b>Charge d'une séance</b> : celle calculée par intervals.icu à partir de ta montre, sinon une estimation selon la durée et l'intensité (100 = 1 h au seuil).</li>
         <li><b>Forme</b> : moyenne de ta charge sur environ 42 jours. <b>Fatigue</b> : sur environ 7 jours. <b>Fraîcheur</b> : forme moins fatigue (modèle de Banister, utilisé par TrainingPeaks et intervals.icu).</li>
         <li><b>Ratio aiguë / chronique</b> : au-dessus de 1,5, le risque de blessure augmente nettement ; entre 0,8 et 1,3, c'est la zone sûre.</li>
-        <li><b>Forme du jour</b> : départ à 70, puis VFC et FC au repos comparées à ta moyenne des 28 derniers jours, sommeil, check-in et fraîcheur. Vert ≥ 70, orange 50-69, rouge &lt; 50 ou douleur.</li>
+        <li><b>Forme du jour</b> : sommeil 30 pts (ta réponse, sinon le score ou les heures de la montre), jambes 40 pts, douleur 30 pts. Pénalité si la FC au réveil dépasse de 5 bpm (−15) ou 8 bpm (−25) ta moyenne des 7 jours, ou si la VFC tombe sous 85 % (−15) ou 75 % (−25) de sa moyenne, 30 pts au maximum. Vert ≥ 70, orange 50-69, rouge &lt; 50 ou douleur gênante.</li>
         <li><b>Plan adaptatif</b> : la semaine en cours est allégée de 15 % si les 2 semaines précédentes sont incomplètes, si la charge monte trop vite ou si la fatigue est trop forte. Après une course, une récupération est imposée (environ 1 jour par 6 km-effort).</li>
       </ul>
       <p class="small">Ces indicateurs aident à décider ; ils ne remplacent pas ton ressenti ni un avis médical.</p>
-    </div>
+    </details>
   </section>
 
   <!-- ROUTINE COURSE -->
@@ -676,6 +720,21 @@ ul.why li.good::before{background:var(--accent)}ul.why li.warn::before{backgroun
 
   <!-- OBJECTIFS -->
   <section class="view" id="v-objectifs" hidden>
+    <div class="panel">
+      <h2>Le plan en bref</h2>
+      <p class="lead">4 saisons, une marche par an, 7 à 9 h d'entraînement par semaine tenues sans trou.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Quand</th><th>Étape</th><th>Rôle</th></tr></thead>
+        <tbody>
+          <tr><td>Juin 2027</td><td>Andorra Trail 80K (79 km, 3 900 m D+)</td><td>Premier ultra, qualifie pour le Trail de Bourbon 2028</td></tr>
+          <tr><td>Oct. 2027</td><td>Les Templiers (80,4 km, 3 443 m D+)</td><td>Deuxième ultra, test nutrition à 80-90 g/h</td></tr>
+          <tr><td>Oct. 2028</td><td>Trail de Bourbon (106 km, 6 200 m D+), plan B GRP 120 km</td><td>Découvrir le terrain réunionnais et la nuit</td></tr>
+          <tr><td>2029</td><td>Andorra 80K (juin) + GRP Ultra 160 km (août)</td><td>Les 2 qualificatives Diag (85 points chacune)</td></tr>
+          <tr><td>Janv.-mars 2030</td><td>Inscription Diag</td><td>Package Bourbon Voyages ou tirage au sort</td></tr>
+          <tr class="key"><td>Oct. 2030</td><td>Diagonale des Fous</td><td>Objectif top 100, environ 33 h</td></tr>
+        </tbody>
+      </table></div>
+    </div>
     <div class="panel">
       <h2>Viser environ 33 h sur la Diag</h2>
       <p>Le temps du 100e n'est publié dans aucune source consultée. Je l'estime entre 32 et 35 h à partir de ces repères : vainqueur 2026 en 22 h 54, 10e homme 2025 en 28 h 48, 10e femme 2025 en 36 h 45, médiane autour de 48 h. Les colonnes « top 100 » traduisent ce niveau sur chaque course, en km-effort (km + D+/100).</p>
@@ -1283,6 +1342,99 @@ const PRO=(function(){
 })();
 if(typeof module!=="undefined"&&module.exports)module.exports=PRO;
 
+/* ---------- Forme du jour : score et adaptation (partagé entre l'appli, les fonctions Netlify et le calendrier) ----------
+Score /100 : sommeil 30 pts (réponse, sinon montre : score Garmin ou heures), jambes 40 pts, douleur 30 pts.
+Pénalités : FC repos ≥ +5 bpm (−15) ou ≥ +8 (−25) vs moyenne des 7 jours précédents ; VFC < 85 % (−15) ou < 75 % (−25) de sa moyenne ;
+pénalité totale plafonnée à −30. Vert ≥ 70, orange 50-69, rouge < 50 ou douleur ≥ 2. */
+const SCORE=(function(){
+  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+  const shift=(iso,n)=>new Date(new Date(iso+"T00:00:00Z").getTime()+n*864e5).toISOString().slice(0,10);
+  function avgPrev(well,field,date,n){const lo=shift(date,-n);const v=(well||[]).filter(w=>w&&w.date<date&&w.date>=lo&&w[field]>0).map(w=>+w[field]);return v.length>=3?v.reduce((a,b)=>a+b,0)/v.length:null}
+  function compute({date,ans,well}){
+    const w=(well||[]).find(x=>x&&x.date===date)||{};
+    const a=ans||{};const reasons=[];
+    /* sommeil */
+    let sleep,sleepSrc;
+    if(a.sleep>=1){sleep=(a.sleep-1)/4*30;sleepSrc="réponse"}
+    else if(w.sleepScore>0){sleep=clamp(w.sleepScore,0,100)*0.3;sleepSrc="score Garmin "+Math.round(w.sleepScore)}
+    else if(w.sleepSecs>0){const h=w.sleepSecs/3600;sleep=clamp((h-5)/3,0,1)*30;sleepSrc=h.toFixed(1).replace(".",",")+" h (montre)"}
+    else{sleep=20;sleepSrc="inconnu"}
+    const legs=a.legs>=1?(a.legs-1)/4*40:24;
+    const painLv=a.pain!=null?+a.pain:0;
+    const pain=[30,20,8,0][clamp(painLv,0,3)];
+    /* pénalités montre */
+    let pen=0;const rhrAvg=avgPrev(well,"rhr",date,7),hrvAvg=avgPrev(well,"hrv",date,7);
+    if(w.rhr>0&&rhrAvg){const d=w.rhr-rhrAvg;if(d>=8){pen+=25;reasons.push("FC au réveil +"+Math.round(d)+" bpm")}else if(d>=5){pen+=15;reasons.push("FC au réveil +"+Math.round(d)+" bpm")}}
+    if(w.hrv>0&&hrvAvg){const r=w.hrv/hrvAvg;if(r<0.75){pen+=25;reasons.push("VFC à "+Math.round(r*100)+" % de ta moyenne")}else if(r<0.85){pen+=15;reasons.push("VFC à "+Math.round(r*100)+" % de ta moyenne")}}
+    pen=Math.min(30,pen);
+    const score=clamp(Math.round(sleep+legs+pain-pen),0,100);
+    if(sleep<15)reasons.push("Sommeil insuffisant ("+sleepSrc+")");
+    if(a.legs&&a.legs<=2)reasons.push("Jambes lourdes");
+    if(painLv>=1)reasons.push(["","Petite douleur","Douleur","Douleur forte"][painLv]);
+    const level=painLv>=2||score<50?"rouge":score<70?"orange":"vert";
+    return{date,score,level,answered:!!(a.legs>=1),pain:painLv,parts:{sleep:Math.round(sleep),legs:Math.round(legs),pain,penalty:pen},sleepSrc,
+      rhr:w.rhr||null,rhrAvg:rhrAvg?Math.round(rhrAvg):null,hrv:w.hrv||null,hrvAvg:hrvAvg?Math.round(hrvAvg):null,sleepH:w.sleepSecs?Math.round(w.sleepSecs/360)/10:null,sleepScore:w.sleepScore||null,reasons};
+  }
+  /* Fractionné allégé : 1 répétition sur 4 en moins, 5 s/km plus lent */
+  function lighten(text){
+    let t=String(text).replace(/(\d+)\s*×/,(m,n)=>Math.max(1,Math.round((+n)*0.75))+" ×");
+    t=t.replace(/à (\d)'(\d{2})(?:-(\d)'?(\d{2}))?/,(m,a,b,c,d)=>{const f=(x,y)=>{const s=(+x)*60+(+y)+5;return Math.floor(s/60)+"'"+String(s%60).padStart(2,"0")};return "à "+f(a,b)+(c?"-"+f(c,d):"")});
+    return t;
+  }
+  const isLong=s=>/Sortie longue/.test(s.title||"")&&parseMin(s.dur)>=90;
+  function parseMin(t){if(!t)return 0;let m=String(t).match(/(\d+)(?:-(\d+))?\s*h(?:\s*(\d+))?/);if(m){const h=m[2]?(+m[1]+ +m[2])/2:+m[1];return h*60+(+m[3]||0)}m=String(t).match(/(\d+)\s*min/);return m?+m[1]:0}
+  /* s : {kind:"hard"|"easy"|"gym"|"race"|"rest", title, text, dur, prio?} → séance adaptée ou null */
+  function adapt(s,level,pain){
+    if(!s||s.kind==="rest")return null;
+    const run=s.kind==="hard"||s.kind==="easy"||s.kind==="race";
+    const isTest=s.kind==="race"&&(s.prio!=="A")||/test/i.test(s.title||"");
+    if(pain>=2&&run&&!(s.kind==="race"&&s.prio==="A")){
+      return{kind:"easy",cross:true,title:"Vélo, natation ou elliptique",dur:s.dur&&s.dur!=="Course"?s.dur:"45 min",flag:"🩹 Douleur : pas de course",
+        text:"Douleur signalée : remplace la course par du vélo, de la natation ou de l'elliptique, même durée, très facile. Si la douleur dure plus de 5 à 7 jours, consulte."};
+    }
+    if(pain>=2&&s.kind==="gym")return{kind:"gym",noLegs:true,title:"Haut du corps et gainage",dur:"30 min",flag:"🩹 Pas de renfo jambes",text:"Douleur : gainage et haut du corps seulement (planches, rowing, pompes)."};
+    if(level==="rouge"){
+      if(isTest)return{kind:s.kind,title:"À reporter : "+s.title,dur:s.dur,flag:"🔴 Test à reporter",text:"Forme au rouge : un test ou une course secondaire aujourd'hui ne refléterait pas ton niveau. Reporte-le et fais 30-40 min très facile."};
+      if(s.kind==="race")return{kind:"race",title:s.title,dur:s.dur,flag:"🔴 Forme basse",text:"Forme au rouge le jour d'un objectif : pars encore plus prudemment, et abandonne sans hésiter si un malaise ou une douleur apparaît."};
+      if(s.kind==="hard"||isLong(s))return{kind:"easy",title:"Footing très facile",dur:"30-40 min",flag:"🔴 Séance remplacée",text:"Forme au rouge : la séance intense est remplacée par 30-40 min très facile (Z1), ou repos complet."};
+      if(s.kind==="gym")return{kind:"gym",noLegs:true,title:"Mobilité et gainage",dur:"20 min",flag:"🔴 Séance allégée",text:"Forme au rouge : 20 min de mobilité et de gainage, pas de charge."};
+      return{kind:"easy",title:s.title+" (très facile)",dur:s.dur,flag:"🔴 Très facile",text:s.text+" Forme au rouge : reste en Z1, coupe court si les jambes ne reviennent pas."};
+    }
+    if(level==="orange"){
+      if(s.kind==="hard")return{kind:"hard",title:"Fractionné allégé",dur:s.dur,flag:"⚠️ Séance allégée",text:lighten(s.text)+" (forme orange : 1 répétition sur 4 en moins, 5 s/km plus lent)"};
+      if(s.kind==="gym"&&/Salle A/.test(s.title))return{kind:"gym",noLegs:true,title:"Salle sans les jambes",dur:"45 min",flag:"⚠️ Pas de renfo jambes",text:"Forme orange : pas de renfo jambes aujourd'hui. Gainage et haut du corps (planches, dead bug, rowing, pompes)."};
+    }
+    return null;
+  }
+  /* ---- Calendrier : adapter l'événement du jour dans un .ics (utilisé par /plan.ics) ---- */
+  const unesc=t=>String(t).replace(/\\n/g,"\n").replace(/\\,/g,",").replace(/\\;/g,";").replace(/\\\\/g,"\\");
+  const esc=t=>String(t).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\r?\n/g,"\\n");
+  function fold(line){const out=[];let cur="";for(const ch of line){const enc=typeof TextEncoder!=="undefined"?new TextEncoder().encode(cur+ch).length:(cur+ch).length;if(enc>(out.length?73:74)){out.push(cur);cur=ch}else cur+=ch}out.push(cur);return out.join("\r\n ")}
+  function adaptIcs(ics,date,res){
+    if(!res||res.level==="vert"&&res.pain<2)return ics;
+    const ymd=date.replace(/-/g,"");
+    const unf=ics.replace(/\r?\n[ \t]/g,"");const lines=unf.split(/\r?\n/);
+    let out=[],ev=null;
+    for(const l of lines){
+      if(l==="BEGIN:VEVENT"){ev=[l];continue}
+      if(ev){ev.push(l);if(l==="END:VEVENT"){out=out.concat(adaptEvent(ev,ymd,res));ev=null}continue}
+      out.push(l);
+    }
+    return out.filter(x=>x!=="").map(fold).join("\r\n")+"\r\n";
+  }
+  function adaptEvent(ev,ymd,res){
+    const get=k=>{const l=ev.find(x=>x.startsWith(k+":")||x.startsWith(k+";"));return l?unesc(l.slice(l.indexOf(":")+1)):null};
+    if(!(get("DTSTART")||"").includes(ymd))return ev;
+    const s={kind:get("X-PREPA-KIND")||"easy",title:get("X-PREPA-TITLE")||get("SUMMARY")||"",text:get("X-PREPA-TEXT")||"",dur:get("X-PREPA-DUR")||"",prio:get("X-PREPA-PRIO")||null};
+    const ad=adapt(s,res.level,res.pain);if(!ad)return ev;
+    const desc=get("DESCRIPTION")||"";const nut=desc.indexOf("🍌 Nutrition")>=0?desc.slice(desc.indexOf("🍌 Nutrition")):"";
+    const newDesc=ad.flag+" (forme "+res.score+"/100)\n"+ad.text+"\n\nPrévu : "+s.title+(s.dur?" ("+s.dur+")":"")+(nut&&!ad.cross?"\n\n"+nut:"");
+    return ev.map(x=>x.startsWith("SUMMARY")?"SUMMARY:"+esc(ad.flag.split(" ")[0]+" "+ad.title+(ad.dur?" ("+ad.dur+")":"")):x.startsWith("DESCRIPTION")?"DESCRIPTION:"+esc(newDesc):x);
+  }
+  return{compute,adapt,lighten,adaptIcs,esc,fold,parseMin,shift};
+})();
+if(typeof module!=="undefined"&&module.exports)module.exports=SCORE;
+
 </script>
 <script>
 /* ---------- Appli : état, stockage ---------- */
@@ -1345,7 +1497,8 @@ function logWidget(date,s){
   const cb=el("input",{type:"checkbox",id:"done-"+k});cb.checked=!!cur.done;
   cb.onchange=()=>{save({done:cb.checked,title:s.title},cb.checked?"Séance validée":"Validation retirée");if(cb.checked&&isRun&&!logs[k].pace)save({pace:wheelPace(),sport:sport},"Séance validée")};
   box.append(el("label",{class:"done",for:"done-"+k},cb,el("span",{text:"Séance faite"})),status);
-  if(isGym){box.append(gymWidget(k,s,()=>{cb.checked=!!(logs[k]&&logs[k].done);flash("Enregistré")}));return box}
+  if(isGym){const gw=gymWidget(k,s,()=>{cb.checked=!!(logs[k]&&logs[k].done);flash("Enregistré")});
+    const dt=el("details",{class:"gymdet"},el("summary",{text:"Noter mes séries ("+gymPlan(s).ex.length+" exercices)"}),gw);if(!inHome)dt.open=true;box.append(dt);return box}
   if(!isRun)return box;
   let sport=cur.sport||s.sport, unit=store.get("unit-"+sport,"minkm");
   let pace=cur.pace||lastPace(sport)||s.refPace;
@@ -1401,7 +1554,7 @@ const GYM={
 };
 const GYM_ALL=[...GYM.A,...GYM.B];
 const LIGHT_A=["squat","stepup","mollets"];
-function gymPlan(s){const type=/Salle B/.test(s.title)?"B":"A";const light=/60 %/.test(s.text);
+function gymPlan(s){const type=s.noLegs||/Salle B/.test(s.title)?"B":"A";const light=/60 %/.test(s.text);
   let ex=GYM[type];if(light&&type==="A")ex=ex.filter(e=>LIGHT_A.includes(e.id));return{type,light,ex}}
 function lastGym(id,beforeKey){const ks=Object.keys(logs).filter(k=>k<beforeKey&&logs[k].gym&&logs[k].gym[id]&&logs[k].gym[id].some(x=>x&&x.r)).sort();
   if(!ks.length)return null;return{key:ks.at(-1),sets:logs[ks.at(-1)].gym[id].filter(x=>x&&x.r)}}
@@ -1518,7 +1671,7 @@ async function garminSync(manual){
     const r=await fetch("/api/sync",{method:"POST",headers:{"content-type":"application/json","x-app-key":key},body:JSON.stringify({after})});
     let d={};try{d=await r.json()}catch(e){}
     if(!r.ok)throw new Error(d.error||("Erreur "+r.status));
-    const res=applyActivities(d.activities||[]);applyWellness(d.wellness||[]);
+    const res=applyActivities(d.activities||[]);applyWellness(d.wellness||[]);mergeAnswers(d.answers||{});uploadIcs();
     store.set("gLast",String(Date.now()));
     const nowS=new Date().toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
     say("Synchro du "+nowS+" : "+res.read+" activité"+(res.read>1?"s":"")+" lue"+(res.read>1?"s":"")+", "+res.upd+" séance"+(res.upd>1?"s":"")+" mise"+(res.upd>1?"s":"")+" à jour, "+res.off+" hors plan."+(res.read===0?" Si tu attendais des activités, vérifie qu'elles sont bien dans le calendrier d'intervals.icu.":""));
@@ -1565,8 +1718,7 @@ function pmcNow(){
 }
 function formNow(){const p=_pmc||pmcNow();const t=p.at(-1);const wk=p.at(-8)||p[0];
   return{ctl:t.ctl,atl:t.atl,tsb:t.tsb,acwr:t.ctl>1?t.atl/t.ctl:null,ramp:t.ctl-wk.ctl}}
-function readinessFor(date){const k=iso(date);const p=_pmc||pmcNow();const row=p.find(x=>x.d===k);
-  return PRO.readiness({date:k,checkin:checkins[k],well:wellList(),tsb:row?row.tsb:null})}
+function readinessFor(date){const k=iso(date);return SCORE.compute({date:k,ans:checkins[k],well:wellList()})}
 /* Facteur de volume de la semaine en cours : régularité des 2 semaines passées, montée de charge, fatigue */
 function weekFactor(w){
   const s0=parse(w[1]);const cur=addDays(TODAY,-((TODAY.getUTCDay()+6)%7));
@@ -1587,7 +1739,7 @@ function recoveryState(date){
   return best;
 }
 /* Séance effective : plan + récup après course + volume ajusté + forme du jour */
-function effSession(date){
+function effSession(date,noReady){
   const s0=PLAN.sessionFor(date,ctxFor(date));if(!s0)return s0;
   let s=Object.assign({},s0);s.banners=[];
   const rec=recoveryState(date);
@@ -1600,12 +1752,76 @@ function effSession(date){
   }
   if(date>=TODAY&&(s.kind==="easy"||s.kind==="hard")&&s.dur!=="—"&&!rec){const wf=weekFactor(s.week);
     if(wf.f!==1){s.dur=PRO.scaleText(s.dur,wf.f);s.text=PRO.scaleText(s.text,wf.f);s.banners.push(["warn","Semaine allégée de "+Math.round((1-wf.f)*100)+" % : "+wf.why])}}
-  if(iso(date)===iso(TODAY)){const c=checkins[iso(TODAY)];
-    if(c){const r=readinessFor(TODAY);const ad=PRO.adapt(s,r.level);
-      if(ad&&c.choice!=="plan"){s.planned={title:s.title,dur:s.dur};Object.assign(s,ad);s.adapted=r.level;s.banners.push([r.level==="rouge"?"bad":"warn","Séance adaptée à ta forme du jour ("+r.score+"/100)"])}
-      else if(ad)s.banners.push(["warn","Forme "+r.level+" : tu as choisi de garder la séance prévue"])}}
+  if(!noReady&&iso(date)===iso(TODAY)){const r=readinessFor(TODAY);
+    if(r.answered||r.rhr||r.hrv){const ri=s.raceDate?raceInfo(s.raceDate):null;const ad=SCORE.adapt(Object.assign({},s,{prio:ri&&ri.prio}),r.level,r.pain);
+      if(ad){s.planned={title:s.title,dur:s.dur};Object.assign(s,ad);s.adapted=r.level;s.banners.push([r.level==="rouge"||r.pain>=2?"bad":"warn",ad.flag+" · forme "+r.score+"/100"])}}}
   return s;
 }
+
+
+/* ---------- Forme du jour : réponses, envoi au serveur ---------- */
+function mergeAnswers(srv){let ch=false;for(const[d,v]of Object.entries(srv)){if(!v)continue;const c=checkins[d];if(!c||(v.at||0)>(c.at||0)){checkins[d]=Object.assign({},v);ch=true}}if(ch)saveCheckins()}
+async function postAnswer(date,ans){
+  const key=store.get("appKey","");if(typeof IS_PWA==="undefined"||!IS_PWA||!key)return;
+  try{await fetch("/api/well",{method:"POST",headers:{"content-type":"application/json","x-app-key":key},body:JSON.stringify(Object.assign({date},ans))})}catch(e){}
+}
+/* ---------- Météo (Open-Meteo, sans clé) ---------- */
+const COORD={t:[43.23,0.08],p:[45.18,0.72]};
+let meteo=store.json("meteo",{});
+async function loadMeteo(){
+  if(meteo.at&&Date.now()-meteo.at<3*3600e3)return;
+  const out={at:Date.now()};
+  for(const [k,[la,lo]] of Object.entries(COORD)){try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+la+"&longitude="+lo+"&daily=temperature_2m_max&timezone=Europe%2FParis&forecast_days=14");
+    if(r.ok){const j=await r.json();out[k]={};(j.daily.time||[]).forEach((d,i)=>out[k][d]=j.daily.temperature_2m_max[i])}}catch(e){}}
+  meteo=out;store.setJson("meteo",meteo);
+}
+function tempFor(date){const k=iso(date);const t=meteo[siteFor(date)]&&meteo[siteFor(date)][k];return t==null?null:t}
+const tempCat=t=>t==null?"doux":t<10?"frais":t<20?"doux":t<27?"chaud":"tres_chaud";
+/* ---------- Nutrition du jour (calculée pour chaque séance) ---------- */
+function sessionNutrition(s,date){
+  if(!s||s.kind==="rest"||s.kind==="gym"||s.cross||s.dur==="—")return null;
+  let min=plannedMinOf(s);if(!min)return null;
+  const isTrail=s.kind==="race"?(s.raceDate&&(raceInfo(s.raceDate)||{}).terrain!=="route"):(/Sortie/.test(s.title)&&siteFor(date)==="t");
+  let kmh=s.kind==="race"&&s.raceDate&&predictRace(raceInfo(s.raceDate))?predictRace(raceInfo(s.raceDate)).kmh:s.kind==="hard"?12.5:isTrail?8:11;
+  const dist=kmh*min/60;const t=tempFor(date);
+  const r=NUTRI.compute({sport:isTrail?"trail":"route",dist,dplus:0,speedKmh:kmh,effort:s.kind==="race"?"competition":s.kind==="hard"?"tempo":"endurance",temp:tempCat(t),context:s.kind==="race"?"course":"entrainement",gut:(NI&&NI.gut)||"debutant",weight:latestWeight(),sweat:0});
+  const W=latestWeight();const parts=[];
+  if(r.carb.target){parts.push(r.carb.target+" g/h de glucides, 1er gel à "+NUTRI.hm(r.carb.start)+" puis toutes les 20 min")}
+  else parts.push("rien à manger pendant ("+(min<45?"moins de 45 min":"moins de 75 min")+")");
+  if(r.fluid.needed)parts.push("eau "+r.fluid.lo+"-"+r.fluid.hi+" ml/h");else parts.push("eau : bois avant et après");
+  if(r.sodium.needed)parts.push("sel "+r.sodium.lo+"-"+r.sodium.hi+" mg/h");
+  if(s.kind==="race")parts.push("caféine ~"+Math.round(W*3/10)*10+" mg 45-60 min avant (3 mg/kg, si testée)");
+  const before=min>=90?"Avant : "+Math.round(W*2/10)*10+"-"+Math.round(W*3/10)*10+" g de glucides 3-4 h avant":"Avant : repas normal 2-3 h avant";
+  const after=min>=90||s.kind==="hard"||s.kind==="race"?"Après : "+Math.round(W/10)*10+" g de glucides + "+Math.round(W*0.3/5)*5+" g de protéines dans l'heure":"Après : repas normal";
+  return{line:parts.join(" · "),before,after,temp:t,why:r.why};
+}
+/* ---------- Calendrier personnel (.ics) envoyé au serveur ---------- */
+function buildIcs(){
+  const esc=SCORE.esc,fold=SCORE.fold;const ymd=d=>iso(d).replace(/-/g,"");
+  const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d+Z$/,"Z");
+  const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Prepa Diag 2030//FR","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:Prépa Diag","X-WR-TIMEZONE:Europe/Paris","REFRESH-INTERVAL;VALUE=DURATION:PT1H","X-PUBLISHED-TTL:PT1H"];
+  const [,end]=PLAN.range(mode);
+  for(let d=addDays(TODAY,-7);d<=end;d=addDays(d,1)){
+    const s=effSession(d,true);if(!s||s.kind==="rest")continue;
+    const w=s.week;const sp=siteFor(d);const n=sessionNutrition(s,d);
+    const summary=(s.kind==="race"?"🏁 ":s.kind==="gym"?"💪 ":s.kind==="hard"?"⚡ ":"🏃 ")+s.title+(s.dur&&s.dur!=="—"&&s.kind!=="race"?" ("+s.dur+")":"");
+    let desc=(sp==="t"?"Tarbes (école)":"Périgueux (entreprise)")+" · semaine "+w[0]+" · "+w[2]+"\n"+s.text;
+    (s.banners||[]).forEach(b=>desc+="\n"+b[1]);
+    if(s.note)desc+="\n"+s.note;
+    if(n)desc+="\n\n🍌 Nutrition"+(n.temp!=null?" ("+Math.round(n.temp)+" °C prévus)":"")+" : "+n.line+"\n"+n.before+"\n"+n.after;
+    const ri=s.raceDate?raceInfo(s.raceDate):null;
+    L.push("BEGIN:VEVENT","UID:"+ymd(d)+"@prepa-diag-2030","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+ymd(d),"DTEND;VALUE=DATE:"+ymd(addDays(d,1)),
+      "SUMMARY:"+esc(summary),"DESCRIPTION:"+esc(desc),"TRANSP:TRANSPARENT",
+      "X-PREPA-KIND:"+s.kind,"X-PREPA-TITLE:"+esc(s.title),"X-PREPA-DUR:"+esc(s.dur||""),"X-PREPA-TEXT:"+esc(s.text||""),"X-PREPA-SITE:"+sp,(ri&&ri.prio?"X-PREPA-PRIO:"+ri.prio:"X-PREPA-PRIO:"),"END:VEVENT");
+  }
+  L.push("END:VCALENDAR");
+  return L.map(fold).join("\r\n")+"\r\n";
+}
+let icsTimer=null;
+function uploadIcs(){clearTimeout(icsTimer);icsTimer=setTimeout(async()=>{
+  const key=store.get("appKey","");if(typeof IS_PWA==="undefined"||!IS_PWA||!key)return;
+  try{await loadMeteo();const r=await fetch("/api/ics",{method:"POST",headers:{"content-type":"text/calendar","x-app-key":key},body:buildIcs()});store.set("icsAt",r.ok?String(Date.now()):"err")}catch(e){}
+},800)}
 
 /* ---------- Fiche séance ---------- */
 function fillCard(c,date,withWeek){
@@ -1621,6 +1837,7 @@ function fillCard(c,date,withWeek){
   c.append(el("p",{text:s.text}));
   if(s.note)c.append(el("p",{class:"note",text:s.note}));
   {const gl=garminLine(logs[iso(date)],s);if(gl)c.append(gl)}
+  {const n=sessionNutrition(s,date);if(n&&date>=addDays(TODAY,-1))c.append(el("div",{class:"nutri"},el("b",{text:"🍌 Nutrition du jour"+(n.temp!=null?" · "+Math.round(n.temp)+" °C":"")}),el("span",{text:n.line}),el("span",{class:"small",text:n.before+" · "+n.after})))}
   if(s.routineLink)c.append(el("a",{href:"#routine",class:"goto",text:s.kind==="race"?"Routine du jour de course →":(/Veille/.test(s.title)?"Routine de la veille →":"Routine de la semaine avant course →")}));
   if(s.kind==="race"&&s.raceDate){const ri=raceInfo(s.raceDate);const pr=ri&&predictRace(ri);
     if(pr)c.append(el("p",{class:"pred"},el("span",{class:"eyebrow",text:"Temps théorique"}),el("b",{text:PREDICT.fmt(pr.sec)}),el("span",{class:"small",text:"fourchette "+PREDICT.fmt(pr.lo)+" à "+PREDICT.fmt(pr.hi)})));
@@ -1676,7 +1893,7 @@ function renderPlanning(){
 }
 function renderIcs(){
   const box=document.getElementById("ics-box");if(!box)return;box.innerHTML="";
-  const file=mode==="race"?"calendrier-courses.ics":"calendrier-base.ics";
+  const file="plan.ics";
   if(typeof IS_PWA==="undefined"||!IS_PWA||location.protocol!=="https:"){
     box.append(el("p",{class:"small",text:"Disponible dans l'appli installée (mise en ligne sur Netlify) : le lien d'abonnement apparaîtra ici."}));return}
   const dir=location.pathname.replace(/[^/]*$/,"");
@@ -1685,20 +1902,20 @@ function renderIcs(){
   copy.onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(https).then(()=>copy.textContent="Lien copié",()=>{inp.select()})};
   const inp=el("input",{type:"text",readonly:"readonly",value:https,class:"urlbox","aria-label":"Lien du calendrier"});
   box.append(el("div",{class:"controls"},el("a",{class:"btn primary",href:webcal,text:"S'abonner sur iPhone"}),copy),inp,
-    el("p",{class:"small",text:"Calendrier « "+(mode==="race"?"avec mes courses":"plan de base")+" ». Chaque séance indique la version Tarbes et la version Périgueux. Il se met à jour tout seul quand tu redéploies l'appli au même endroit sur Netlify."}));
+    el("p",{class:"small",text:"Ton calendrier personnel : alternance, courses ajoutées, nutrition du jour, et séance du jour adaptée à ta forme. Il se met à jour à chaque ouverture de l'appli. Si tu étais abonné à l'ancien calendrier, supprime-le et abonne-toi à celui-ci."}));
 }
 
 /* ---------- Accueil ---------- */
 function renderHome(){
   _pmc=null;renderFormPanel();
   const tp=document.getElementById("today-panel");tp.innerHTML="";
-  tp.append(el("h2",{text:"Séance du jour"}));
+  renderWeekStrip();
   const [f,l]=PLAN.range(mode);
   const d=TODAY<f?f:TODAY;
   if(d>l){tp.append(el("p",{text:"Le plan détaillé est terminé : on prépare la saison suivante ensemble."}))}
   else{
     if(d.getTime()!==TODAY.getTime())tp.append(el("p",{class:"small",text:"Le plan commence plus tard. Voici la première séance :"}));
-    const box=el("div",{class:"todaycard"});fillCard(box,d,false);tp.append(box);
+    const box=el("div",{class:"todaycard"});inHome=true;try{fillCard(box,d,false)}finally{inHome=false}tp.append(box);
     const late=[];for(let i=1;i<=6&&late.length<3;i++){const dd=addDays(TODAY,-i);const s=PLAN.sessionFor(dd,ctxFor(dd));if(s&&(s.run||s.kind==="gym")&&!(logs[iso(dd)]&&logs[iso(dd)].done))late.push([dd,s])}
     if(late.length){const ul=el("div",{class:"late"},el("div",{class:"eyebrow",text:"Pas encore validées"}));
       late.forEach(([dd,s])=>ul.append(el("button",{type:"button",class:"latebtn",text:fmtDate(dd).replace(/ \d{4}$/,"")+" · "+s.title,onclick:()=>{selected=dd;view={y:dd.getUTCFullYear(),m:dd.getUTCMonth()};location.hash="#planning"}})));
@@ -1713,6 +1930,21 @@ function renderHome(){
   document.getElementById("cd-andorra").textContent=da>0?"J-"+da:"Courue";
 }
 
+
+/* ---------- Bande de la semaine (accueil) ---------- */
+function renderWeekStrip(){
+  const box=document.getElementById("week-strip");if(!box)return;box.innerHTML="";
+  const mon=addDays(TODAY,-((TODAY.getUTCDay()+6)%7));
+  const row=el("div",{class:"wk"});
+  for(let i=0;i<7;i++){const d=addDays(mon,i);const s=effSession(d);const lg=logs[iso(d)];
+    const done=lg&&lg.done;const k=s?s.kind:"rest";
+    const b=el("button",{type:"button",class:"wkd k-"+k+(iso(d)===iso(TODAY)?" now":"")+(done?" done":""),"aria-label":fmtDate(d)+" : "+(s?s.title:"rien")+(done?", faite":"")},
+      el("span",{class:"wl",text:["L","M","M","J","V","S","D"][i]}),el("span",{class:"wn",text:String(d.getUTCDate())}),el("span",{class:"wdot",text:done?"✓":""}),
+      el("span",{class:"wt",text:s&&k!=="rest"?(k==="gym"?"Salle":k==="race"?"Course":k==="hard"?"Qualité":/Sortie longue/.test(s.title)?"SL":"Footing"):"Repos"}));
+    b.onclick=()=>{selected=d;view={y:d.getUTCFullYear(),m:d.getUTCMonth()};location.hash="#planning"};row.append(b)}
+  const w=PLAN.lookup(TODAY,mode);
+  box.append(el("div",{class:"wkhead"},el("b",{text:"Cette semaine"}),el("span",{class:"small",text:w?w.w[2]+" · "+SITE[siteFor(TODAY)]:""})),row);
+}
 /* ---------- Courses, matériel, checklist ---------- */
 function renderCourses(){
   const tb=document.getElementById("course-rows");tb.innerHTML="";
@@ -2077,38 +2309,35 @@ function renderStrategy(){
 }
 
 /* ---------- Accueil : check-in du matin et forme du jour ---------- */
-const CHECK_Q=[["sleepQ","Qualité du sommeil",["Très mauvaise","Mauvaise","Moyenne","Bonne","Excellente"]],["energy","Énergie",["Vidé","Faible","Normale","Bonne","Au top"]],
-  ["motivation","Motivation",["Aucune","Faible","Normale","Bonne","Très forte"]],["soreness","Courbatures",["Aucune","Légères","Modérées","Fortes","Très fortes"]],["stress","Stress",["Aucun","Léger","Modéré","Élevé","Très élevé"]]];
-let editCheckin=false;
+let editCheckin=false,inHome=false;
+const Q3=[["sleep","Sommeil",["Très mauvais","Mauvais","Moyen","Bon","Excellent"],1],["legs","Jambes",["Très lourdes","Lourdes","Normales","Bonnes","Fraîches"],1],["pain","Douleur",["Aucune","Légère","Gênante","Forte"],0]];
 function renderFormPanel(){
-  const box=document.getElementById("form-panel");if(!box)return;box.innerHTML="";
-  const k=iso(TODAY);const c=checkins[k];
-  if(!c||editCheckin){
-    const draft=Object.assign({sleepQ:3,energy:3,motivation:3,soreness:1,stress:2,sleepH:null,pain:false,painWhere:""},c||{});
-    box.append(el("h2",{text:"Forme du matin"}),el("p",{class:"small",text:"30 secondes : ces réponses, avec la VFC, la FC au repos et le sommeil de ta montre, donnent ta forme du jour et adaptent ta séance."}));
-    CHECK_Q.forEach(([key,label,opts])=>{const seg=el("div",{class:"seg scale",role:"group","aria-label":label});
-      opts.forEach((t,i)=>{const b=el("button",{type:"button","aria-pressed":String(draft[key]===i+1),title:t,text:String(i+1)});b.onclick=()=>{draft[key]=i+1;[...seg.children].forEach((x,j)=>x.setAttribute("aria-pressed",String(j===i)));lab.textContent=label+" : "+t};seg.append(b)});
-      const lab=el("span",{class:"lbl",text:label+" : "+opts[draft[key]-1]});box.append(el("div",{class:"frow"},lab,seg))});
-    const sl=el("select",{id:"ci-sleep"});sl.append(el("option",{value:"",text:"Selon la montre"}));for(let h=4;h<=10;h+=0.5)sl.append(el("option",{value:String(h),text:String(h).replace(".5"," h 30").replace(/^(\d+)$/,"$1 h")}));sl.value=draft.sleepH!=null?String(draft.sleepH):"";
-    const pain=el("input",{type:"checkbox",id:"ci-pain"});pain.checked=!!draft.pain;
-    const where=el("input",{type:"text",id:"ci-where",placeholder:"où ? (genou, Achille…)",value:draft.painWhere||""});
-    box.append(el("div",{class:"fields"},el("label",{for:"ci-sleep"},el("span",{text:"Heures de sommeil"}),sl),el("label",{class:"done",for:"ci-pain"},pain,el("span",{text:"J'ai une douleur"})),el("label",{for:"ci-where"},el("span",{text:"Où"}),where)));
-    box.append(el("button",{type:"button",class:"btn primary",text:"Valider ma forme du jour",onclick:()=>{draft.sleepH=sl.value===""?null:+sl.value;draft.pain=pain.checked;draft.painWhere=where.value.trim();draft.choice=(c&&c.choice)||"adapt";checkins[k]=draft;saveCheckins();editCheckin=false;renderHome()}}));
-    return;
+  const box=document.getElementById("form-panel");if(!box)return;box.innerHTML="";box.className="panel hero";
+  const k=iso(TODAY);const c=checkins[k];const r=readinessFor(TODAY);
+  const ring=el("div",{class:"ring big "+r.level},el("b",{text:String(r.score)}),el("span",{text:"/100"}));
+  const head=el("div",{class:"readyhead"},ring,el("div",{},el("div",{class:"eyebrow",text:fmtDate(TODAY)}),
+    el("h2",{text:!r.answered?"Comment tu te sens ?":r.level==="vert"?"Feu vert":r.level==="orange"?"Forme moyenne":"Récupération"}),
+    el("p",{class:"small",text:r.answered?(r.level==="vert"?"Séance comme prévue.":"Ta séance est adaptée automatiquement."):(r.rhr||r.hrv?"Score provisoire d'après ta montre. Réponds en 10 secondes pour l'affiner.":"Réponds en 10 secondes : ta séance s'adapte toute seule.")})));
+  if(!r.answered)ring.classList.add("pending");
+  box.append(head);
+  const watch=[];if(r.rhr)watch.push("FC réveil "+r.rhr+(r.rhrAvg?" (moy. "+r.rhrAvg+")":""));if(r.hrv)watch.push("VFC "+Math.round(r.hrv)+" ms"+(r.hrvAvg?" (moy. "+r.hrvAvg+")":""));if(r.sleepH)watch.push("sommeil "+String(r.sleepH).replace(".",",")+" h");if(r.sleepScore)watch.push("score "+r.sleepScore);
+  if(watch.length)box.append(el("p",{class:"watch",text:"⌚ "+watch.join(" · ")}));
+  if(c&&!editCheckin){
+    if(r.reasons.length){const ul=el("ul",{class:"why"});r.reasons.forEach(t=>ul.append(el("li",{class:r.level==="rouge"?"bad":"warn",text:t})));box.append(ul)}
+    box.append(el("button",{type:"button",class:"linkbtn",text:"Modifier mes réponses",onclick:()=>{editCheckin=true;renderFormPanel()}}));return;
   }
-  const r=readinessFor(TODAY);const f=formNow();
-  box.classList.add("ready-"+r.level);
-  box.append(el("div",{class:"readyhead"},el("div",{class:"ring "+r.level},el("b",{text:String(r.score)}),el("span",{text:"/100"})),
-    el("div",{},el("div",{class:"eyebrow",text:"Forme du jour"}),el("h2",{text:r.level==="vert"?"Feu vert : séance comme prévue":r.level==="orange"?"Forme moyenne : séance allégée":"Feu rouge : récupération"}))));
-  const ul=el("ul",{class:"why"});r.why.slice(0,6).forEach(([lv,t])=>ul.append(el("li",{class:lv,text:t})));if(!r.why.length)ul.append(el("li",{text:"Rien à signaler."}));box.append(ul);
-  const z=PRO.tsbZone(f.tsb);
-  box.append(el("p",{class:"small",text:"Forme (charge de fond) "+Math.round(f.ctl)+" · Fatigue "+Math.round(f.atl)+" · Fraîcheur "+(f.tsb>=0?"+":"")+Math.round(f.tsb)+" ("+z.name.toLowerCase()+")"}));
-  const s0=PLAN.sessionFor(TODAY,ctxFor(TODAY));const ad=s0&&PRO.adapt(s0,r.level);
-  if(ad){const seg=el("div",{class:"seg",role:"group","aria-label":"Choix de séance"});
-    [["adapt","Suivre l'adaptation"],["plan","Garder la séance prévue"]].forEach(([v,t])=>seg.append(el("button",{type:"button","aria-pressed":String((checkins[iso(TODAY)].choice||"adapt")===v),text:t,onclick:()=>{checkins[iso(TODAY)].choice=v;saveCheckins();renderHome()}})));
-    box.append(seg)}
-  if(r.pain)box.append(el("p",{class:"banner bad",text:"Douleur : pas de course aujourd'hui. Si elle dure plus de 5 à 7 jours ou si elle est présente au repos, consulte un médecin du sport ou un kiné."}));
-  box.append(el("button",{type:"button",class:"latebtn",text:"Modifier mon check-in",onclick:()=>{editCheckin=true;renderFormPanel()}}));
+  const draft=Object.assign({legs:3,pain:0,sleep:null},c||{});
+  const noWatchSleep=!(r.sleepH||r.sleepScore);
+  Q3.forEach(([key,label,opts,base])=>{
+    if(key==="sleep"&&!noWatchSleep&&draft.sleep==null){}
+    const seg=el("div",{class:"seg scale",role:"group","aria-label":label});
+    opts.forEach((t,i)=>{const v=i+base;const b=el("button",{type:"button","aria-pressed":String(draft[key]===v),title:t,text:key==="pain"?["0","1","2","3"][i]:String(v)});
+      b.onclick=()=>{draft[key]=draft[key]===v&&key==="sleep"?null:v;[...seg.children].forEach((x,j)=>x.setAttribute("aria-pressed",String(draft[key]===j+base)));lab.textContent=lt()};seg.append(b)});
+    const lt=()=>label+" : "+(draft[key]==null?(key==="sleep"?(noWatchSleep?"à remplir":"selon la montre"):"—"):opts[draft[key]-base]);
+    const lab=el("span",{class:"lbl",text:lt()});box.append(el("div",{class:"qrow"},lab,seg));
+  });
+  box.append(el("button",{type:"button",class:"btn primary wide",text:"Valider",onclick:()=>{const ans={legs:draft.legs,pain:draft.pain,at:Date.now()};if(draft.sleep!=null)ans.sleep=draft.sleep;
+    checkins[k]=ans;saveCheckins();editCheckin=false;postAnswer(k,ans);uploadIcs();renderHome()}}));
 }
 
 /* ---------- Forme et charge ---------- */
@@ -2139,7 +2368,7 @@ function renderForme(){
   const wl=wellList().filter(w=>w.date>=PRO.shift(iso(TODAY),-90));
   chart(document.getElementById("ch-hrv"),{type:"line",label:"VFC",dots:false,yFmt:v=>Math.round(v)+" ms",empty:"La VFC arrive avec la synchro Garmin si ta montre la mesure la nuit.",series:[{name:"VFC",color:c1,points:wl.filter(w=>w.hrv).map(w=>({x:parse(w.date),y:w.hrv,tip:"VFC "+Math.round(w.hrv)+" ms"}))}]});
   chart(document.getElementById("ch-rhr"),{type:"line",label:"FC au repos",dots:false,yFmt:v=>Math.round(v)+"",empty:"La FC au repos arrive avec la synchro Garmin.",series:[{name:"FC repos",color:c2,points:wl.filter(w=>w.rhr).map(w=>({x:parse(w.date),y:w.rhr,tip:"FC repos "+Math.round(w.rhr)}))}]});
-  const rd=Object.keys(checkins).sort().filter(k=>k>=PRO.shift(iso(TODAY),-90)).map(k=>{const r=PRO.readiness({date:k,checkin:checkins[k],well:wellList(),tsb:(p.find(x=>x.d===k)||{}).tsb});return{x:parse(k),y:r.score,tip:"Forme du jour "+r.score+"/100 ("+r.level+")"}});
+  const rd=Object.keys(checkins).sort().filter(k=>k>=PRO.shift(iso(TODAY),-90)).map(k=>{const r=SCORE.compute({date:k,ans:checkins[k],well:wellList()});return{x:parse(k),y:r.score,tip:"Forme du jour "+r.score+"/100 ("+r.level+")"}});
   chart(document.getElementById("ch-ready"),{type:"line",label:"Forme du jour",yMin:0,yMax:100,yFmt:v=>Math.round(v)+"",empty:"Fais ton check-in du matin sur l'accueil pour suivre ta forme du jour.",series:[{name:"Forme du jour",color:c1,points:rd}]});
 }
 
@@ -2251,9 +2480,16 @@ const GROUPS=[
 const VIEWS=GROUPS.flatMap(g=>g.views.map(v=>v[0]));
 const groupOf=v=>GROUPS.find(g=>g.views.some(x=>x[0]===v));
 let curView="accueil";
+const ICONS={accueil:'<path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/>',
+  entrainement:'<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  courses:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+  nutrition:'<path d="M12 21c-4.4 0-7-3.4-7-7.5C5 8.6 8.4 5 12 5s7 3.6 7 8.5c0 4.1-2.6 7.5-7 7.5zM12 5c0-1.5.8-2.5 2-3"/>',
+  infos:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8h.01"/>'};
 function buildNav(){
   const nav=document.getElementById("nav-main");nav.innerHTML="";
-  GROUPS.forEach(g=>nav.append(el("a",{href:"#"+g.views[0][0],"data-g":g.id,text:g.name})));
+  GROUPS.forEach(g=>{const a=el("a",{href:"#"+g.views[0][0],"data-g":g.id});
+    a.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+ICONS[g.id]+'</svg>';
+    a.append(el("span",{text:g.name}));nav.append(a)});
 }
 function show(){
   let v=(location.hash||"").slice(1);if(!VIEWS.includes(v))v="accueil";curView=v;
@@ -2284,7 +2520,7 @@ document.getElementById("today-btn").onclick=()=>{selected=(TODAY>=FIRST&&TODAY<
 document.querySelectorAll("[data-pk]").forEach(b=>b.onclick=()=>{pk=b.dataset.pk;store.set("pk",pk);renderPack()});
 document.getElementById("check-reset").onclick=()=>{store.setJson("check",{});renderChecklist()};
 buildNav();initWhatIf();initAddRace();renderCourses();renderPack();renderChecklist();initProgressForms();show();
-maybeAutoSync();
+maybeAutoSync();loadMeteo().then(()=>{if(curView==="accueil")renderHome()});
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")maybeAutoSync()});
 
 </script>
