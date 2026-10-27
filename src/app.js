@@ -86,8 +86,16 @@ function logWidget(date,s){
   const rpe=el("select",{id:"rpe-"+k});rpe.append(el("option",{value:"",text:"—"}));for(let i=1;i<=10;i++)rpe.append(el("option",{value:String(i),text:String(i)}));rpe.value=cur.rpe?String(cur.rpe):"";
   const num=v=>v===""?null:+v;
   dist.onchange=()=>save({dist:num(dist.value)});dplus.onchange=()=>save({dplus:num(dplus.value)});rpe.onchange=()=>save({rpe:num(rpe.value)});
-  const det=el("details",{class:"more"},el("summary",{text:"Distance, D+ et ressenti (facultatif)"}),
+  const rt=s.kind==="hard"?repType(s):null;let repsIn=null;
+  if(rt){const cur2=cur.repsM||[];repsIn=el("input",{type:"text",id:"reps-"+k,inputmode:"text",placeholder:rt.dist?"ex. 1'32 1'30 1'31":"allure de chaque rép. ex. 4'05 4'02",
+      value:cur2.length?cur2.map(r=>rt.dist?fmtPace(r.t):fmtPace(r.t/(r.d/1000))).join(" "):""});
+    repsIn.onchange=()=>{const v=parseRepTimes(repsIn.value).filter(x=>x>0);
+      const reps=v.map(x=>rt.dist?{d:rt.dist,t:x,hr:null}:{d:Math.round(rt.sec/x*1000),t:rt.sec,hr:null});
+      const patch={repsM:reps};if(reps.length){patch.done=true;cb.checked=true;if(!(logs[k]&&logs[k].garmin))patch.pace=Math.round(repStats(reps).avg)}
+      save(patch,reps.length?reps.length+" répétitions enregistrées":"Répétitions effacées");if(patch.pace){pace=patch.pace;drawWheel()}const card=box.parentElement;if(card){const old=card.querySelector(".reps");if(old)old.remove();const rb=repsBox(date,s);if(rb)card.insertBefore(rb,card.querySelector(".nutri")||box)}}}
+  const det=el("details",{class:"more"},el("summary",{text:rt?"Répétitions, distance, D+ et ressenti":"Distance, D+ et ressenti (facultatif)"}),
     el("div",{class:"fields"},
+      ...(rt?[el("label",{for:"reps-"+k},el("span",{text:rt.dist?"Temps par "+rt.key:"Allure par rép. ("+rt.key+")"}),repsIn)]:[]),
       el("label",{for:"dist-"+k},el("span",{text:"Distance (km)"}),dist),
       el("label",{for:"dplus-"+k},el("span",{text:"D+ (m)"}),dplus),
       el("label",{for:"rpe-"+k},el("span",{text:"Ressenti (1-10)"}),rpe)),
@@ -159,9 +167,9 @@ function qualityPace(a,s){
   const laps=(a.laps||[]).filter(l=>l&&l.dist>0&&l.time>0);
   const work=laps.filter(l=>l.work);
   const sum=L=>{const d=L.reduce((x,l)=>x+l.dist,0),t=L.reduce((x,l)=>x+l.time,0);return d>0?t/(d/1000):null};
-  if(work.length)return{pace:sum(work),how:"intervalles"};
+  if(work.length)return{pace:sum(work),how:"intervalles",laps:work};
   const tp=targetPaceOf(s);
-  if(tp&&laps.length){const near=laps.filter(l=>{const p=l.time/(l.dist/1000);return Math.abs(p-tp)/tp<=0.08});if(near.length)return{pace:sum(near),how:"tours proches de l'allure prévue"}}
+  if(tp&&laps.length){const near=laps.filter(l=>{const p=l.time/(l.dist/1000);return Math.abs(p-tp)/tp<=0.08});if(near.length)return{pace:sum(near),how:"tours proches de l'allure prévue",laps:near}}
   return{pace:a.time/(a.dist/1000),how:"moyenne"};
 }
 const REF_RE=/\btest\b|\brace\b|compétition|competition|\bsemi\b|marathon/i;
@@ -194,7 +202,41 @@ function applyActivities(acts){
   saveLogs();store.setJson("garminMap",garminMap);
   return{read,upd,off};
 }
-function fixPace(rec,a,s){if(s&&s.kind==="hard"&&isRunSport(rec.sport)){const q=qualityPace(a,s);rec.pace=Math.round(q.pace);rec.paceHow=q.how;rec.avgPace=Math.round(a.time/(a.dist/1000))}}
+function fixPace(rec,a,s){if(s&&s.kind==="hard"&&isRunSport(rec.sport)){const q=qualityPace(a,s);rec.pace=Math.round(q.pace);rec.paceHow=q.how;rec.avgPace=Math.round(a.time/(a.dist/1000));
+  if(q.laps&&q.laps.length)rec.reps=q.laps.slice(0,40).map(l=>({d:Math.round(l.dist),t:Math.round(l.time),hr:l.hr?Math.round(l.hr):null}));else delete rec.reps}}
+/* ---------- Fractionné : répétitions, allure moyenne et évolution par type de séance ---------- */
+const kmTxt=d=>d%1000===0?d/1000+" km":d>=1000?String(d/1000).replace(".",",")+" km":d+" m";
+function repType(s){const t=(s&&s.text)||"";let m=t.match(/(\d+)\s*×\s*(\d+(?:[.,]\d+)?)\s*(km|m)\b/);
+  if(m){const d=Math.round(parseFloat(m[2].replace(",","."))*(m[3]==="km"?1000:1));return{key:kmTxt(d),dist:d,n:+m[1]}}
+  m=t.match(/(\d+)\s*×\s*(\d+)\s*(?:'|min)(?!\d)/);if(m)return{key:m[2]+" min",sec:(+m[2])*60,n:+m[1]};
+  m=t.match(/(\d+)\s*×\s*(\d+)\s*s\b/);if(m)return{key:m[2]+" s",sec:+m[2],n:+m[1]};return null}
+function repsOf(rec){const r=rec&&(rec.reps&&rec.reps.length?rec.reps:rec.repsM);return r&&r.length?r:null}
+function repStats(reps){const ps=reps.map(r=>r.t/(r.d/1000));const D=reps.reduce((a,r)=>a+r.d,0),T=reps.reduce((a,r)=>a+r.t,0);const hrs=reps.filter(r=>r.hr).map(r=>r.hr);
+  return{n:reps.length,avg:T/(D/1000),best:Math.min(...ps),worst:Math.max(...ps),first:ps[0],last:ps.at(-1),hr:hrs.length?Math.round(hrs.reduce((a,b)=>a+b,0)/hrs.length):null,ps}}
+/* Toutes les séances de qualité notées (montre ou saisie), avec leur type */
+function qualityHistory(){const out=[];
+  for(const[k,v]of Object.entries(logs)){if(k.includes("~")||!v||!v.done)continue;const reps=repsOf(v);if(!reps)continue;
+    const d=parse(k);const s=PLAN.sessionFor(d,ctxFor(d));const rt=repType(s);if(!rt)continue;
+    out.push({k,d,key:rt.key,st:repStats(reps),target:targetPaceOf(s),title:s.title,src:v.reps&&v.reps.length?"montre":"saisie"})}
+  return out.sort((a,b)=>a.k<b.k?-1:1)}
+const sgn=x=>(x>0?"+":x<0?"−":"±")+Math.abs(Math.round(x))+" s/km";
+function repsBox(date,s){
+  const k=iso(date);const rec=logs[k];const reps=repsOf(rec);const rt=repType(s);if(!reps)return null;
+  const st=repStats(reps);const tgt=targetPaceOf(s);
+  const box=el("div",{class:"reps"},el("b",{text:"⏱ Répétitions"+(rt?" · "+st.n+" × "+rt.key:"")+(rec.reps&&rec.reps.length?" (montre)":" (saisie)")}));
+  const grid=el("div",{class:"repgrid"});
+  reps.forEach((r,i)=>{const p=st.ps[i];const cls=tgt?(p<=tgt+2?"ok":p<=tgt+8?"mid":"slow"):"";
+    grid.append(el("span",{class:"rep "+cls,title:"Répétition "+(i+1)},el("i",{text:String(i+1)}),el("b",{text:fmtPace(p)}),el("small",{text:(rt&&rt.sec?kmTxt(Math.round(r.d/10)*10):fmtPace(r.t))+(r.hr?" · ♥"+r.hr:"")}))) });
+  box.append(grid);
+  const line=["Moyenne "+fmtPace(st.avg)+"/km"+(tgt?" (cible "+fmtPace(tgt)+", "+sgn(st.avg-tgt)+")":""),"meilleure "+fmtPace(st.best),st.n>2?"dernière vs 1re "+sgn(st.last-st.first):"",st.hr?"FC moy. "+st.hr:""].filter(Boolean).join(" · ");
+  box.append(el("p",{class:"small",text:line}));
+  if(rt){const prev=qualityHistory().filter(x=>x.key===rt.key&&x.k<k).at(-1);
+    if(prev){const dd=st.avg-prev.st.avg;box.append(el("p",{class:"small "+(dd<=-1?"good":dd>=3?"warnt":""),text:"Séance "+rt.key+" précédente ("+shortDate(prev.d)+") : "+fmtPace(prev.st.avg)+"/km → "+sgn(dd)+(dd<=-1?" 👍":"")}))}}
+  if(st.n>2&&st.last-st.first>8)box.append(el("p",{class:"small",text:"Tu as ralenti en fin de séance : pars un peu plus prudemment sur les premières répétitions."}));
+  return box;
+}
+/* Saisie manuelle : temps de chaque répétition (« 1'32 1'30 92 ») ou allure par rép. pour les séances au temps */
+function parseRepTimes(txt){return (String(txt).match(/\d+'\d{1,2}|\d+(?:[.,]\d+)?/g)||[]).map(t=>t.includes("'")?(+t.split("'")[0])*60+(+t.split("'")[1]):Math.round(parseFloat(t.replace(",","."))))}
 const fmtDur=sec=>{sec=Math.round(sec||0);const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60);return h?h+" h "+String(m).padStart(2,"0"):m+" min"};
 function garminLine(rec,s){
   if(!rec||!rec.garmin)return null;
@@ -212,7 +254,7 @@ async function garminSync(manual){
   if(typeof IS_PWA==="undefined"||!IS_PWA){if(manual)say("La synchro marche seulement dans l'appli en ligne (Netlify).");return}
   if(!key){if(manual)say("Entre d'abord la clé de l'appli.");return}
   if(syncing)return;syncing=true;if(manual)say("Synchronisation…");
-  if(store.get("gWin","")!=="3"){store.set("gLast","0");store.set("gWin","3")} /* resynchro complète : charge d'entraînement + données de forme */
+  if(store.get("gWin","")!=="4"){store.set("gLast","0");store.set("gWin","4")} /* resynchro complète : charge d'entraînement + données de forme */
   const last=+store.get("gLast","0");
   const after=last?Math.floor(last/1000)-3*86400:Math.floor(Date.parse(HISTORY_START+"T00:00:00Z")/1000);
   try{
@@ -325,6 +367,7 @@ function effSession(date,noReady){
     s.banners.push(["warn","Séance hors plan hier ("+xb.why+") : qualité remplacée par un footing facile"])}
   if(date>=TODAY&&(s.kind==="easy"||s.kind==="hard")&&s.dur!=="—"&&!rec){const wf=weekFactor(s.week);
     if(wf.f!==1){s.dur=PRO.scaleText(s.dur,wf.f);s.text=PRO.scaleText(s.text,wf.f);s.banners.push(["warn","Semaine allégée de "+Math.round((1-wf.f)*100)+" % : "+wf.why])}}
+  if(date>=TODAY)weatherAdapt(s,date);
   if(!noReady&&iso(date)===iso(TODAY)){const r=readinessFor(TODAY);
     if(r.answered||r.rhr||r.hrv){const ri=s.raceDate?raceInfo(s.raceDate):null;const ad=SCORE.adapt(Object.assign({},s,{prio:ri&&ri.prio}),r.level,r.pain);
       if(ad){s.planned={title:s.title,dur:s.dur};Object.assign(s,ad);s.adapted=r.level;s.banners.push([r.level==="rouge"||r.pain>=2?"bad":"warn",ad.flag+" · forme "+r.score+"/100"])}}}
@@ -340,15 +383,33 @@ async function postAnswer(date,ans){
 }
 /* ---------- Météo (Open-Meteo, sans clé) ---------- */
 const COORD={t:[43.23,0.08],p:[45.18,0.72]};
-let meteo=store.json("meteo",{});
+let meteo=store.json("meteo2",{});
 async function loadMeteo(){
   if(meteo.at&&Date.now()-meteo.at<3*3600e3)return;
   const out={at:Date.now()};
-  for(const [k,[la,lo]] of Object.entries(COORD)){try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+la+"&longitude="+lo+"&daily=temperature_2m_max&timezone=Europe%2FParis&forecast_days=14");
-    if(r.ok){const j=await r.json();out[k]={};(j.daily.time||[]).forEach((d,i)=>out[k][d]=j.daily.temperature_2m_max[i])}}catch(e){}}
-  meteo=out;store.setJson("meteo",meteo);
+  for(const [k,[la,lo]] of Object.entries(COORD)){try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+la+"&longitude="+lo+"&daily=temperature_2m_max,temperature_2m_min,apparent_temperature_max,precipitation_sum,snowfall_sum,wind_speed_10m_max,wind_gusts_10m_max,weather_code&timezone=Europe%2FParis&forecast_days=14");
+    if(r.ok){const j=await r.json();const D=j.daily;out[k]={};(D.time||[]).forEach((d,i)=>out[k][d]={tmax:D.temperature_2m_max[i],tmin:D.temperature_2m_min[i],app:D.apparent_temperature_max[i],rain:D.precipitation_sum[i],snow:D.snowfall_sum[i],wind:D.wind_speed_10m_max[i],gust:D.wind_gusts_10m_max[i],code:D.weather_code[i]})}}catch(e){}}
+  meteo=out;store.setJson("meteo2",meteo);
 }
-function tempFor(date){const k=iso(date);const t=meteo[siteFor(date)]&&meteo[siteFor(date)][k];return t==null?null:t}
+function wxFor(date){const m=meteo[siteFor(date)];const w=m&&m[iso(date)];return w&&typeof w==="object"?w:null}
+function tempFor(date){const w=wxFor(date);return w&&w.tmax!=null?w.tmax:null}
+/* ---------- Météo : ajuste l'allure et la sécurité, jamais le volume ----------
+Chaleur : ~0,4 % plus lent par °C ressenti au-dessus de 18 °C (fractionné). Orage : pas d'altitude. Vent fort : à la sensation. Gel/neige : pas de descente technique. Pluie : on garde. */
+function shiftTargetPaces(text,f){return String(text).replace(/à (\d)'(\d{2})(?:-(\d)'?(\d{2}))?/g,(m,a,b,c,d)=>{const g=(x,y)=>{const p=(+x)*60+(+y);return fmtPace(p+f(p))};return "à "+g(a,b)+(c?"-"+g(c,d):"")})}
+function weatherAdapt(s,date){
+  const w=wxFor(date);if(!w||!s||s.cross||!(s.kind==="hard"||s.kind==="easy"||s.kind==="race"))return;
+  const feels=w.app!=null?w.app:w.tmax;const mountain=siteFor(date)==="t"&&(/Sortie|trail|D\+|côte|montagne/i.test(s.title+" "+s.text));
+  if(w.code>=95){s.banners.push(["bad",mountain?"⛈️ Orage prévu : pas de crête ni d'altitude. Fais la sortie en vallée, en côtes près d'un abri ou sur tapis, et surveille le ciel.":"⛈️ Orage prévu : cours avant ou après, pas pendant."])}
+  if(feels>=22&&s.kind!=="race"){const pct=Math.min(0.08,(feels-18)*0.004);
+    if(s.kind==="hard"&&/à \d'\d{2}/.test(s.text)){const ref=targetPaceOf(s)||240;const sec=Math.round(ref*pct);s.text=shiftTargetPaces(s.text,p=>Math.round(p*pct));
+      s.banners.push(["warn","🌡️ Chaleur ("+Math.round(feels)+" °C ressentis) : allures cibles ralenties de "+sec+" s/km. Cours tôt le matin et bois régulièrement."])}
+    else s.banners.push(["warn","🌡️ Chaleur ("+Math.round(feels)+" °C ressentis) : reste en Z2 au cardio, l'allure baissera, c'est normal. Pars tôt et emporte de l'eau."])}
+  else if(feels>=22&&s.kind==="race")s.banners.push(["warn","🌡️ Chaleur ("+Math.round(feels)+" °C ressentis) : pars plus lentement que prévu, bois et sale plus que d'habitude."]);
+  if(s.kind==="hard"&&(w.gust>=55||w.wind>=35))s.banners.push(["warn","💨 Vent fort (rafales "+Math.round(w.gust||w.wind)+" km/h) : fractionné à la sensation d'effort sur une boucle abritée, sans viser l'allure contre le vent."]);
+  if((w.snow>0||(w.tmin<=0&&w.rain>=0.5))&&mountain)s.banners.push(["warn","🧊 Gel ou neige : évite les descentes techniques et les sentiers gelés ; route ou côtes à la place."]);
+  else if(feels<=0&&s.kind==="hard")s.banners.push(["warn","🥶 Froid ("+Math.round(feels)+" °C ressentis) : échauffement plus long (15-20 min) et couches à retirer."]);
+  if(w.rain>=5&&w.code<95)s.banners.push(["good","🌧️ Pluie ("+Math.round(w.rain)+" mm) : on garde la séance, c'est de l'entraînement spécifique Diag. Veste, crème anti-frottements aux pieds, chaussettes sèches après."]);
+}
 const tempCat=t=>t==null?"doux":t<10?"frais":t<20?"doux":t<27?"chaud":"tres_chaud";
 /* ---------- Nutrition du jour (calculée pour chaque séance) ---------- */
 function sessionNutrition(s,date){
@@ -425,6 +486,7 @@ function fillCard(c,date,withWeek){
   c.append(el("p",{text:s.text}));
   if(s.note)c.append(el("p",{class:"note",text:s.note}));
   {const gl=garminLine(logs[iso(date)],s);if(gl)c.append(gl)}
+  if(s.kind==="hard"){const rb=repsBox(date,s);if(rb)c.append(rb)}
   {const n=sessionNutrition(s,date);if(n&&date>=addDays(TODAY,-1))c.append(el("div",{class:"nutri"},el("b",{text:"🍌 Nutrition du jour"+(n.temp!=null?" · "+Math.round(n.temp)+" °C":"")}),el("span",{text:n.line}),el("span",{class:"small",text:n.before+" · "+n.after})))}
   if(s.routineLink)c.append(el("a",{href:"#routine",class:"goto",text:s.kind==="race"?"Routine du jour de course →":(/Veille/.test(s.title)?"Routine de la veille →":"Routine de la semaine avant course →")}));
   if(s.kind==="race"&&s.raceDate){const ri=raceInfo(s.raceDate);const pr=ri&&predictRace(ri);
@@ -743,7 +805,7 @@ function renderProgress(){
     series:[{name:"Séances faites",color:c1,points:wk.map(x=>({x:addDays(x.d,3),y:x.pct,tip:"Semaine "+x.w[0]+" : "+x.done+"/"+x.planned+" séances ("+x.pct+" %)"}))}]});
   chart(document.getElementById("ch-weight"),{type:"line",label:"Poids",yFmt:v=>fr(v),empty:"Ajoute une pesée pour suivre ton poids.",
     series:[{name:"Poids",color:c1,points:ws.map(w=>({x:parse(w.d),y:w.kg,tip:fr(w.kg)+" kg · IMC "+fr(w.kg/(HEIGHT*HEIGHT))}))}]});
-  renderStrength(c1);
+  renderStrength(c1);renderQuality(c1,c2);
   const bmi=ws.length?ws.at(-1).kg/(HEIGHT*HEIGHT):null;
   document.getElementById("bmi").textContent=bmi?"IMC actuel : "+fr(bmi)+" (taille 1,79 m).":"";
   renderWeightList();renderHistory();
@@ -763,6 +825,24 @@ function renderStrength(color){
   document.getElementById("str-note").textContent=useKg?"Force estimée (1RM, formule d'Epley : charge × (1 + rép/30)) de ta meilleure série.":"Répétitions (ou secondes) de ta meilleure série.";
   chart(document.getElementById("ch-str"),{type:"line",label:"Progression "+e.name,yFmt:v=>useKg?fmtKg(v)+" kg":String(Math.round(v)),empty:"Note tes séries sur une séance de salle pour voir ta progression sur cet exercice.",
     series:[{name:e.name,color,points:pts}]});
+}
+let qType=store.get("qType","");
+function renderQuality(c1,c2){
+  const sel=document.getElementById("q-type");if(!sel)return;
+  const H=qualityHistory();const keys=[...new Set(H.map(x=>x.key))];
+  sel.innerHTML="";keys.forEach(k=>sel.append(el("option",{value:k,text:k+" ("+H.filter(x=>x.key===k).length+" séance"+(H.filter(x=>x.key===k).length>1?"s":"")+")"})));
+  sel.hidden=!keys.length;if(!keys.includes(qType))qType=keys.at(-1)||"";sel.value=qType;
+  sel.onchange=()=>{qType=sel.value;store.set("qType",qType);renderQuality(c1,c2)};
+  const L=H.filter(x=>x.key===qType);
+  chart(document.getElementById("ch-q"),{type:"line",invert:true,paceTicks:true,label:"Allure des répétitions "+qType,yFmt:v=>fmtPace(v),
+    empty:"Dès qu'une séance de fractionné a ses répétitions (montre ou saisie dans « Répétitions »), tu verras ici l'évolution de ton allure moyenne et de ta meilleure répétition, type par type (400 m, 1 km…).",
+    series:L.length?[{name:"Allure moyenne",color:c1,points:L.map(x=>({x:x.d,y:x.st.avg,tip:shortDate(x.d)+" : "+x.st.n+" × "+x.key+" · moyenne "+fmtPace(x.st.avg)+"/km"+(x.target?" (cible "+fmtPace(x.target)+")":"")}))},
+      {name:"Meilleure répétition",color:c2,points:L.map(x=>({x:x.d,y:x.st.best,tip:"Meilleure : "+fmtPace(x.st.best)+"/km"}))}]:[]});
+  const note=document.getElementById("q-note");
+  if(L.length>1){const a=L[0],b=L.at(-1);const dd=b.st.avg-a.st.avg;note.textContent="Depuis le "+shortDate(a.d)+" : allure moyenne "+sgn(dd)+(dd<0?" 👍":"")+" sur les "+qType+"."}else note.textContent="";
+  const box=document.getElementById("q-list");box.innerHTML="";
+  [...L].reverse().slice(0,10).forEach(x=>box.append(el("div",{class:"hrow"},el("span",{text:shortDate(x.d)}),el("b",{text:x.st.n+" × "+x.key+" · "+fmtPace(x.st.avg)+"/km"}),
+    el("span",{class:"grow",text:"meilleure "+fmtPace(x.st.best)+(x.target?" · cible "+fmtPace(x.target):"")+(x.st.hr?" · FC "+x.st.hr:"")+" · "+x.src}))));
 }
 function renderWeightList(){
   const box=document.getElementById("w-list");box.innerHTML="";

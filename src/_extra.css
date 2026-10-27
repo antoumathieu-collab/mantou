@@ -205,3 +205,16 @@ details.howto[open] summary::after{content:" −"}
 
 .ring.pending{opacity:.55}
 details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);padding:4px 0}
+
+/* Répétitions de fractionné */
+.reps{margin:10px 0;padding:10px 12px;border-radius:12px;background:var(--rest);display:grid;gap:6px}
+.repgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px}
+.rep{display:grid;justify-items:center;padding:6px 4px;border-radius:10px;background:var(--surface);border:1px solid var(--line);line-height:1.15}
+.rep i{font-style:normal;font-size:.7rem;color:var(--muted)}
+.rep b{font-size:1rem;font-variant-numeric:tabular-nums}
+.rep small{font-size:.68rem;color:var(--muted)}
+.rep.ok{border-color:var(--s1);box-shadow:inset 0 -3px 0 var(--s1)}
+.rep.mid{box-shadow:inset 0 -3px 0 #c9962b}
+.rep.slow{box-shadow:inset 0 -3px 0 #c0582f}
+.small.good{color:var(--s1);font-weight:600}
+.small.warnt{color:#b8741f}
