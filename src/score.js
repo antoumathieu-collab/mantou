@@ -58,7 +58,7 @@ const SCORE=(function(){
     }
     if(level==="orange"){
       if(s.kind==="hard")return{kind:"hard",title:"Fractionné allégé",dur:s.dur,flag:"⚠️ Séance allégée",text:lighten(s.text)+" (forme orange : 1 répétition sur 4 en moins, 5 s/km plus lent)"};
-      if(s.kind==="gym"&&/Salle A/.test(s.title))return{kind:"gym",noLegs:true,title:"Salle sans les jambes",dur:"45 min",flag:"⚠️ Pas de renfo jambes",text:"Forme orange : pas de renfo jambes aujourd'hui. Gainage et haut du corps (planches, dead bug, rowing, pompes)."};
+      if(s.kind==="gym"&&/Salle A|maison · Jambes/.test(s.title))return{kind:"gym",noLegs:true,title:"Salle sans les jambes",dur:"45 min",flag:"⚠️ Pas de renfo jambes",text:"Forme orange : pas de renfo jambes aujourd'hui. Gainage et haut du corps (planches, dead bug, rowing, pompes)."};
     }
     return null;
   }

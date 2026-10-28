@@ -47,6 +47,43 @@ const GYM={
      {id:"elevlat",name:"Élévations latérales",sets:3,lo:12,hi:15,unit:"rép",start:6,inc:1,tip:"Charge d'un haltère, sans élan"},
      {id:"deadbug",name:"Dead bug",sets:3,lo:10,hi:10,unit:"rép/côté",start:0,inc:0,tip:"Lombaires collées au sol"}]
 };
+/* Version maison : poids du corps, une chaise, un sac à dos (lesté de livres ou de bouteilles) et un tapis */
+const HOME={
+  A:[{id:"h_bulgare",name:"Fente bulgare (pied arrière sur une chaise)",sets:3,lo:10,hi:15,unit:"rép/jambe",start:0,inc:0,tip:"Sac à dos lesté quand 15 devient facile"},
+     {id:"h_stepup",name:"Step-up sur chaise ou marche",sets:3,lo:12,hi:15,unit:"rép/jambe",start:0,inc:0,tip:"Pousse avec la jambe du haut, pas d'élan"},
+     {id:"h_sdtuni",name:"Soulevé de terre à une jambe (sac à dos)",sets:3,lo:10,hi:12,unit:"rép/jambe",start:0,inc:0,tip:"Dos plat, bassin de face : équilibre de traileur"},
+     {id:"h_exc",name:"Descente de marche excentrique",sets:3,lo:10,hi:12,unit:"rép/jambe",start:0,inc:0,tip:"4 s pour descendre : protège les genoux en descente"},
+     {id:"h_chaise",name:"Chaise contre le mur",sets:3,lo:45,hi:75,unit:"s",start:0,inc:0,tip:"Cuisses parallèles au sol"},
+     {id:"h_mollets",name:"Mollets à une jambe sur une marche",sets:3,lo:15,hi:20,unit:"rép/jambe",start:0,inc:0,tip:"Talon sous la marche, montée complète"}],
+  B:[{id:"planche",name:"Planche ventrale",sets:3,lo:45,hi:60,unit:"s",start:0,inc:0,tip:"Bassin neutre"},
+     {id:"planchelat",name:"Planche latérale",sets:3,lo:30,hi:45,unit:"s/côté",start:0,inc:0,tip:"Hanche haute"},
+     {id:"deadbug",name:"Dead bug",sets:3,lo:10,hi:10,unit:"rép/côté",start:0,inc:0,tip:"Lombaires collées au sol"},
+     {id:"h_rowsac",name:"Rowing sac à dos (ou tirage sous une table)",sets:3,lo:12,hi:15,unit:"rép",start:0,inc:0,tip:"Omoplates serrées en haut"},
+     {id:"pompes",name:"Pompes",sets:3,lo:8,hi:20,unit:"rép",start:0,inc:0,tip:"Max propre"},
+     {id:"pont",name:"Pont fessier à une jambe",sets:3,lo:12,hi:12,unit:"rép/jambe",start:0,inc:0,tip:"Fessier, pas les lombaires"}],
+  C:[{id:"h_squat",name:"Squat lent (3 s pour descendre)",sets:3,lo:15,hi:20,unit:"rép",start:0,inc:0,tip:"Sac à dos lesté dans les bras si trop facile"},
+     {id:"h_fentes",name:"Fentes arrière alternées",sets:3,lo:10,hi:12,unit:"rép/jambe",start:0,inc:0,tip:"Genou avant au-dessus de la cheville"},
+     {id:"pompes",name:"Pompes",sets:3,lo:8,hi:20,unit:"rép",start:0,inc:0,tip:"Max propre"},
+     {id:"h_rowsac",name:"Rowing sac à dos (ou tirage sous une table)",sets:3,lo:12,hi:15,unit:"rép",start:0,inc:0,tip:"Omoplates serrées en haut"},
+     {id:"h_sdtuni",name:"Soulevé de terre à une jambe (sac à dos)",sets:3,lo:10,hi:12,unit:"rép/jambe",start:0,inc:0,tip:"Dos plat, bassin de face"},
+     {id:"h_mollets",name:"Mollets à une jambe sur une marche",sets:3,lo:15,hi:20,unit:"rép/jambe",start:0,inc:0,tip:"Montée complète"},
+     {id:"planche",name:"Planche ventrale",sets:3,lo:45,hi:60,unit:"s",start:0,inc:0,tip:"Bassin neutre"}],
+  D:[{id:"h_rowsac",name:"Rowing sac à dos (ou tirage sous une table)",sets:4,lo:12,hi:15,unit:"rép",start:0,inc:0,tip:"Omoplates serrées en haut"},
+     {id:"h_superman",name:"Superman",sets:3,lo:12,hi:15,unit:"rép",start:0,inc:0,tip:"2 s en haut, regard vers le sol"},
+     {id:"h_ytw",name:"Y-T-W allongé au sol",sets:2,lo:8,hi:10,unit:"rép par lettre",start:0,inc:0,tip:"Lent, pouces vers le plafond"},
+     {id:"h_birddog",name:"Bird dog",sets:3,lo:10,hi:10,unit:"rép/côté",start:0,inc:0,tip:"Bassin immobile"},
+     {id:"planchelat",name:"Planche latérale",sets:3,lo:30,hi:45,unit:"s/côté",start:0,inc:0,tip:"Hanche haute"},
+     {id:"pont",name:"Pont fessier à une jambe",sets:3,lo:12,hi:12,unit:"rép/jambe",start:0,inc:0,tip:"Fessier, pas les lombaires"}],
+  E:[{id:"pompes",name:"Pompes",sets:4,lo:8,hi:20,unit:"rép",start:0,inc:0,tip:"Max propre"},
+     {id:"h_pike",name:"Pompes piquées (épaules)",sets:3,lo:6,hi:10,unit:"rép",start:0,inc:0,tip:"Fesses hautes, tête entre les mains"},
+     {id:"h_dips",name:"Dips sur une chaise",sets:3,lo:10,hi:15,unit:"rép",start:0,inc:0,tip:"Épaules basses, descente à 90°"},
+     {id:"h_pompesdecl",name:"Pompes pieds surélevés",sets:3,lo:6,hi:12,unit:"rép",start:0,inc:0,tip:"Pieds sur la chaise, gainage serré"},
+     {id:"h_touches",name:"Planche haute, touches d'épaule",sets:3,lo:10,hi:10,unit:"rép/côté",start:0,inc:0,tip:"Bassin immobile"},
+     {id:"deadbug",name:"Dead bug",sets:3,lo:10,hi:10,unit:"rép/côté",start:0,inc:0,tip:"Lombaires collées au sol"}]
+};
+const LIGHT_HA=["h_stepup","h_exc","h_mollets"];
+function homeLines(type,light){let ex=HOME[type];if(light&&type==="A")ex=ex.filter(e=>LIGHT_HA.includes(e.id));
+  return ex.map(e=>e.name+" "+(light?Math.max(2,e.sets-1):e.sets)+" × "+(e.lo===e.hi?e.lo:e.lo+"-"+e.hi)+" "+e.unit).join(" · ")}
 const GYM_NAMES={A:"Jambes et force",B:"Gainage et haut du corps",C:"Full body coureur",D:"Dos et posture",E:"Pecs et épaules"};
 const LIGHT_A=["squat","stepup","mollets"];
 function gymLines(type,light){let ex=GYM[type];if(light&&type==="A")ex=ex.filter(e=>LIGHT_A.includes(e.id));
@@ -139,4 +176,4 @@ function sessionFor(date,ctx){
 /* Nombre de séances (hors repos) prévues sur une semaine */
 function plannedInWeek(w,ctx){let n=0;for(let i=0;i<7;i++){const s=sessionFor(addDays(parse(w[1]),i),ctx);if(s&&s.kind!=="rest")n++}return n}
 
-return {GYM,GYM_NAMES,gymLines,ENIT_BLOCKS,activeRaces,BASE,EXT,RACES,COURSES,PACKS,CHECK,parse,iso,addDays,MONTHS,DAYS,SITE,weeksFor,raceOn,raceInWeek,lookup,range,sessionFor,plannedInWeek};
+return {GYM,HOME,LIGHT_HA,homeLines,GYM_NAMES,gymLines,ENIT_BLOCKS,activeRaces,BASE,EXT,RACES,COURSES,PACKS,CHECK,parse,iso,addDays,MONTHS,DAYS,SITE,weeksFor,raceOn,raceInWeek,lookup,range,sessionFor,plannedInWeek};

@@ -108,10 +108,22 @@ function logWidget(date,s){
 
 /* ---------- Musculation : exercices, cibles et saisie ---------- */
 const GYM=PLAN.GYM;
-const GYM_ALL=Object.values(GYM).flat().filter((x,i,arr)=>arr.findIndex(y=>y.id===x.id)===i);
+const HOME=PLAN.HOME;
+const GYM_ALL=Object.values(GYM).concat(Object.values(HOME)).flat().filter((x,i,arr)=>arr.findIndex(y=>y.id===x.id)===i);
 const LIGHT_A=["squat","stepup","mollets"];
-function gymPlan(s){const type=s.noLegs?"B":(s.gymType||(/Salle B/.test(s.title)?"B":"A"));const light=/60 %/.test(s.text);
+function gymPlan(s){const type=s.noLegs?"B":(s.gymType||(/Salle B/.test(s.title)?"B":"A"));
+  if(s.home){const light=!!s.homeLight;let ex=HOME[type];if(light&&type==="A")ex=ex.filter(e=>PLAN.LIGHT_HA.includes(e.id));return{type,light,ex,home:true}}
+  const light=/60 %/.test(s.text);
   let ex=GYM[type];if(light&&type==="A")ex=ex.filter(e=>LIGHT_A.includes(e.id));return{type,light,ex}}
+/* ---------- Salle ou maison : choix par jour (ou par défaut) ---------- */
+let homeDays=store.json("homeDays",{});
+const isHome=date=>{const v=homeDays[iso(date)];return v!=null?v:store.get("gymDefault","salle")==="maison"};
+function setHome(date,v){homeDays[iso(date)]=v;store.setJson("homeDays",homeDays);uploadIcs();show()}
+function applyHome(s){
+  const type=s.gymType||"A";const light=/60 %/.test(s.text);
+  Object.assign(s,{home:true,homeLight:light,salle:{title:s.title,dur:s.dur},title:"Footing + renfo maison · "+PLAN.GYM_NAMES[type],dur:light?"50 min":"1 h 05",
+    text:"Footing "+(light?"25-30":"30-40")+" min en Z2, puis renfo maison "+(light?"(semaine allégée) ":"")+"(25-30 min) : "+PLAN.homeLines(type,light)+". Matériel : une chaise, un sac à dos lesté (livres, bouteilles), un tapis. Puis 5 min de mobilité."});
+}
 function lastGym(id,beforeKey){const ks=Object.keys(logs).filter(k=>k<beforeKey&&logs[k].gym&&logs[k].gym[id]&&logs[k].gym[id].some(x=>x&&x.r)).sort();
   if(!ks.length)return null;return{key:ks.at(-1),sets:logs[ks.at(-1)].gym[id].filter(x=>x&&x.r)}}
 const r25=x=>Math.round(x/2.5)*2.5;
@@ -126,7 +138,7 @@ function gymTarget(e,key,light){
 const fmtKg=x=>(Math.round(x*10)/10).toString().replace(".",",");
 function gymWidget(k,s,onAny,preview){
   const {ex,light,type}=gymPlan(s);
-  const wrap=el("div",{class:"gym"},el("div",{class:"eyebrow",text:"Séance "+type+(light?" allégée (60 % de la charge)":"")+(preview?" · aperçu, à remplir le jour J":" · noter tes séries")}));
+  const wrap=el("div",{class:"gym"},el("div",{class:"eyebrow",text:"Séance "+type+(s.home?" maison":"")+(light?" allégée (60 % de la charge)":"")+(preview?" · aperçu, à remplir le jour J":" · noter tes séries")}));
   ex.forEach(e=>{
     const t=gymTarget(e,k,light);
     const reps=t.lo===t.hi?String(t.lo):t.lo+"-"+t.hi;
@@ -396,6 +408,7 @@ function recoveryState(date){
 function effSession(date,noReady){
   const s0=PLAN.sessionFor(date,ctxFor(date));if(!s0)return s0;
   let s=Object.assign({},s0);s.banners=[];
+  if(s.kind==="gym"&&s.gymType&&isHome(date))applyHome(s);
   const rec=recoveryState(date);
   if(rec&&s.kind!=="race"&&s.kind!=="rest"){
     const early=rec.i<=Math.ceil(rec.N/2);
@@ -412,7 +425,7 @@ function effSession(date,noReady){
   if(date>=TODAY)weatherAdapt(s,date);
   if(!noReady&&iso(date)===iso(TODAY)){const r=readinessFor(TODAY);
     if(r.answered||r.rhr||r.hrv){const ri=s.raceDate?raceInfo(s.raceDate):null;const ad=SCORE.adapt(Object.assign({},s,{prio:ri&&ri.prio}),r.level,r.pain);
-      if(ad){s.planned={title:s.title,dur:s.dur};Object.assign(s,ad);s.adapted=r.level;s.banners.push([r.level==="rouge"||r.pain>=2?"bad":"warn",ad.flag+" · forme "+r.score+"/100"])}}}
+      if(ad){s.planned={title:s.title,dur:s.dur};if(s.home&&ad.title)ad.title=ad.title.replace("Salle sans les jambes","Renfo maison sans les jambes");Object.assign(s,ad);s.adapted=r.level;s.banners.push([r.level==="rouge"||r.pain>=2?"bad":"warn",ad.flag+" · forme "+r.score+"/100"])}}}
   return s;
 }
 
@@ -525,6 +538,13 @@ function fillCard(c,date,withWeek){
   [[s.dur,cls],[SITE[siteFor(date)],""],[w[2],""]].forEach(([t,k])=>{if(t&&t!=="—")pills.append(el("span",{class:"pill "+k,text:t}))});
   c.append(pills);(s.banners||[]).forEach(([lv,t])=>c.append(el("p",{class:"banner "+lv,text:t})));
   if(s.planned)c.append(el("p",{class:"small",text:"Prévu à l'origine : "+s.planned.title+" ("+s.planned.dur+")"}));
+  {const s0=PLAN.sessionFor(date,ctxFor(date));if(s0&&s0.kind==="gym"&&s0.gymType&&s.kind==="gym"){const h=isHome(date);const def=store.get("gymDefault","salle")==="maison";
+    const seg=el("div",{class:"seg small-seg",role:"group","aria-label":"Salle ou maison"},
+      el("button",{type:"button","aria-pressed":String(!h),text:"🏋️ Salle",onclick:()=>setHome(date,false)}),
+      el("button",{type:"button","aria-pressed":String(h),text:"🏠 Course + maison",onclick:()=>setHome(date,true)}));
+    const dflt=el("button",{type:"button",class:"linkbtn",text:def?"Par défaut : maison (repasser à la salle par défaut)":"Toujours la version maison par défaut",
+      onclick:()=>{store.set("gymDefault",def?"salle":"maison");homeDays={};store.setJson("homeDays",homeDays);uploadIcs();show()}});
+    c.append(el("div",{class:"homesw"},seg,dflt))}}
   c.append(el("p",{text:s.text}));
   if(s.note)c.append(el("p",{class:"note",text:s.note}));
   {const gl=garminLine(logs[iso(date)],s);if(gl)c.append(gl)}
@@ -856,7 +876,8 @@ function renderProgress(){
 let strEx=store.get("strEx","squat");
 function renderStrength(color){
   const sel=document.getElementById("str-ex");if(!sel)return;
-  if(!sel.options.length){const seen=new Set();Object.entries(GYM).forEach(([t,list0])=>{const list=list0.filter(e=>!seen.has(e.id)&&seen.add(e.id));if(!list.length)return;const g=el("optgroup",{label:PLAN.GYM_NAMES[t]});list.forEach(e=>g.append(el("option",{value:e.id,text:e.name})));sel.append(g)});sel.onchange=()=>{strEx=sel.value;store.set("strEx",strEx);renderStrength(color)}}
+  if(!sel.options.length){const seen=new Set();Object.entries(GYM).forEach(([t,list0])=>{const list=list0.filter(e=>!seen.has(e.id)&&seen.add(e.id));if(!list.length)return;const g=el("optgroup",{label:PLAN.GYM_NAMES[t]});list.forEach(e=>g.append(el("option",{value:e.id,text:e.name})));sel.append(g)});
+    {const hl=Object.values(HOME).flat().filter(e=>!seen.has(e.id)&&seen.add(e.id));if(hl.length){const g=el("optgroup",{label:"À la maison"});hl.forEach(e=>g.append(el("option",{value:e.id,text:e.name})));sel.append(g)}}sel.onchange=()=>{strEx=sel.value;store.set("strEx",strEx);renderStrength(color)}}
   if(!GYM_ALL.some(e=>e.id===strEx))strEx="squat";sel.value=strEx;
   const e=GYM_ALL.find(x=>x.id===strEx);const weighted=e.inc>0;
   const pts=Object.keys(logs).filter(k=>logs[k].gym&&logs[k].gym[e.id]).sort().map(k=>{const sets=logs[k].gym[e.id].filter(x=>x&&x.r);if(!sets.length)return null;
