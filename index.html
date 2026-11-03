@@ -1599,7 +1599,9 @@ const latestWeight=()=>{const w=[...weights].sort((a,b)=>a.d<b.d?-1:1);return w.
 
 /* ---------- Saisie d'une séance : case + molette de vitesse ---------- */
 function opts(sel,from,to,step,fmt,val){sel.innerHTML="";for(let v=from;v<=to+1e-9;v+=step){const o=el("option",{value:String(v),text:fmt(v)});sel.append(o)}sel.value=String(val)}
-function lastPace(sport){const ks=Object.keys(logs).filter(k=>!k.includes("~")).filter(k=>logs[k].sport===sport&&logs[k].pace).sort();return ks.length?logs[ks.at(-1)].pace:null}
+/* Séance de fractionné : son allure est celle des répétitions, on ne la mélange pas avec les allures continues */
+const isIntervalLog=v=>!!(v&&(v.noReps||(v.reps&&v.reps.length)||(v.repsM&&v.repsM.length)||/intervalles|répétitions|tours proches/.test(v.paceHow||"")));
+function lastPace(sport){const ks=Object.keys(logs).filter(k=>!k.includes("~")).filter(k=>logs[k].sport===sport&&logs[k].pace&&!isIntervalLog(logs[k])).sort();return ks.length?logs[ks.at(-1)].pace:null}
 function logWidget(date,s){
   const k=iso(date);const isRun=s.run;const isGym=s.kind==="gym";
   if(!isRun&&!isGym)return null;
@@ -1770,12 +1772,13 @@ function applyActivities(acts){
 function fixPace(rec,a,s){
   if(!isRunSport(rec.sport))return;
   const det=detectReps(a.laps||[],s);
-  if(det){rec.reps=det.work.slice(0,40).map(l=>({d:Math.round(l.dist),t:Math.round(l.time),hr:l.hr?Math.round(l.hr):null}));rec.repKey=det.key;rec.recov=det.recov;rec.repWhy=det.why}
-  else{delete rec.reps;delete rec.repKey;delete rec.recov}
-  if(s&&s.kind==="hard"){rec.avgPace=Math.round(a.time/(a.dist/1000));
-    if(det){rec.pace=Math.round(repStats(rec.reps).avg);rec.paceHow="répétitions"}
-    else{const q=qualityPace(a,s);rec.pace=Math.round(q.pace);rec.paceHow=q.how;
-      if(q.laps&&q.laps.length){rec.reps=q.laps.slice(0,40).map(l=>({d:Math.round(l.dist),t:Math.round(l.time),hr:l.hr?Math.round(l.hr):null}))}}}
+  rec.avgPace=Math.round(a.time/(a.dist/1000));delete rec.noReps;
+  if(det){rec.reps=det.work.slice(0,40).map(l=>({d:Math.round(l.dist),t:Math.round(l.time),hr:l.hr?Math.round(l.hr):null}));rec.repKey=det.key;rec.recov=det.recov;rec.repWhy=det.why;
+    rec.pace=Math.round(repStats(rec.reps).avg);rec.paceHow="répétitions";return}
+  delete rec.reps;delete rec.repKey;delete rec.recov;delete rec.paceHow;
+  if(s&&s.kind==="hard"){
+    {const q=qualityPace(a,s);rec.pace=Math.round(q.pace);rec.paceHow=q.how;
+      if(q.laps&&q.laps.length){rec.reps=q.laps.slice(0,40).map(l=>({d:Math.round(l.dist),t:Math.round(l.time),hr:l.hr?Math.round(l.hr):null}))}else rec.noReps=true}}
 }
 /* Lecture des tours de la montre (bouton tour) : on cherche la suite « effort / récup » qui se répète,
    ex. échauffement en 2-3 tours, puis 400 m rapide / 1 min de récup × 8, puis retour au calme. */
@@ -1847,6 +1850,10 @@ function parseRepTimes(txt){return (String(txt).match(/\d+'\d{1,2}|\d+(?:[.,]\d+
 const fmtDur=sec=>{sec=Math.round(sec||0);const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60);return h?h+" h "+String(m).padStart(2,"0"):m+" min"};
 function garminLine(rec,s){
   if(!rec||!rec.garmin)return null;
+  if(isRunSport(rec.sport)&&isIntervalLog(rec)){
+    const all=[rec.dist?fr(rec.dist,2)+" km":"",rec.time?fmtDur(rec.time):"",rec.avgPace?fmtPace(rec.avgPace)+"/km":"",rec.hr?"FC "+rec.hr:""].filter(Boolean).join(" · ");
+    return el("p",{class:"garmin small",text:"⌚ "+rec.garmin.name+" · séance complète, échauffement et récup compris : "+all})}
+  if(rec.noReps&&s&&s.kind==="hard")return el("p",{class:"garmin",text:"⌚ "+rec.garmin.name+" : répétitions non repérées dans tes tours. Appuie sur Tour au début de chaque répétition et de chaque récup (ou lance la séance depuis la montre), ou note tes temps dans « Répétitions »."});
   const parts=[rec.garmin.name,rec.dist?fr(rec.dist,2)+" km":"",rec.time?fmtDur(rec.time):"",rec.hr?"FC "+rec.hr:"",rec.dplus?rec.dplus+" m D+":""];
   if(rec.pace&&isRunSport(rec.sport))parts.push(fmtPace(rec.pace)+"/km"+(rec.paceHow&&rec.paceHow!=="moyenne"?" ("+rec.paceHow+")":""));
   if(rec.kmh)parts.push(fr(rec.kmh)+" km/h");if(rec.p100)parts.push(fmtPace(rec.p100)+"/100 m");
@@ -1861,7 +1868,7 @@ async function garminSync(manual){
   if(typeof IS_PWA==="undefined"||!IS_PWA){if(manual)say("La synchro marche seulement dans l'appli en ligne (Netlify).");return}
   if(!key){if(manual)say("Entre d'abord la clé de l'appli.");return}
   if(syncing)return;syncing=true;if(manual)say("Synchronisation…");
-  if(store.get("gWin","")!=="5"){store.set("gLast","0");store.set("gWin","5")} /* resynchro complète : charge d'entraînement + données de forme */
+  if(store.get("gWin","")!=="6"){store.set("gLast","0");store.set("gWin","6")} /* resynchro complète : charge d'entraînement + données de forme */
   const last=+store.get("gLast","0");
   /* Synchro auto : depuis la dernière (−3 jours). Bouton « Synchroniser » : les 21 derniers jours, pour rattraper une montre arrivée en retard sur intervals.icu */
   const full=Math.floor(Date.parse(HISTORY_START+"T00:00:00Z")/1000);
@@ -2102,8 +2109,8 @@ function fillCard(c,date,withWeek){
     c.append(el("div",{class:"homesw"},seg,dflt))}}
   c.append(el("p",{text:s.text}));
   if(s.note)c.append(el("p",{class:"note",text:s.note}));
-  {const gl=garminLine(logs[iso(date)],s);if(gl)c.append(gl)}
   if(s.kind==="hard"||repsOf(logs[iso(date)])){const rb=repsBox(date,s);if(rb)c.append(rb)}
+  {const gl=garminLine(logs[iso(date)],s);if(gl)c.append(gl)}
   {const n=sessionNutrition(s,date);if(n&&date>=addDays(TODAY,-1))c.append(el("div",{class:"nutri"},el("b",{text:"🍌 Nutrition du jour"+(n.temp!=null?" · "+Math.round(n.temp)+" °C":"")}),el("span",{text:n.line}),el("span",{class:"small",text:n.before+" · "+n.after})))}
   if(s.routineLink)c.append(el("a",{href:"#routine",class:"goto",text:s.kind==="race"?"Routine du jour de course →":(/Veille/.test(s.title)?"Routine de la veille →":"Routine de la semaine avant course →")}));
   if(s.kind==="race"&&s.raceDate){const ri=raceInfo(s.raceDate);const pr=ri&&predictRace(ri);
@@ -2389,7 +2396,7 @@ function chart(host,o){
 }
 
 /* ---------- Progression ---------- */
-function runLogs(sport){return Object.entries(logs).filter(([k,v])=>v.done&&v.pace&&v.sport===sport).map(([k,v])=>({k,v,d:kd(k)})).sort((a,b)=>a.k<b.k?-1:1)}
+function runLogs(sport){return Object.entries(logs).filter(([k,v])=>v.done&&v.pace&&v.sport===sport&&!isIntervalLog(v)).map(([k,v])=>({k,v,d:kd(k)})).sort((a,b)=>a.k<b.k?-1:1)}
 function weekStats(){
   const res=[];const W=PLAN.weeksFor(mode);
   for(const w of W){const s0=parse(w[1]);if(s0>TODAY)break;
@@ -2500,7 +2507,7 @@ function initProgressForms(){
 }
 
 /* ---------- Temps théoriques ---------- */
-function routeRefs(){return Object.entries(logs).filter(([k,v])=>v.done&&v.pace&&v.sport==="route"&&v.dist).map(([k,v])=>({key:k,date:kd(k),dist:v.dist,sec:v.pace*v.dist,rpe:v.rpe||null,title:v.title||"Séance"}))}
+function routeRefs(){return Object.entries(logs).filter(([k,v])=>v.done&&v.pace&&v.sport==="route"&&v.dist&&!isIntervalLog(v)).map(([k,v])=>({key:k,date:kd(k),dist:v.dist,sec:v.pace*v.dist,rpe:v.rpe||null,title:v.title||"Séance"}))}
 function bestTen(){const t=PREDICT.tenKm(routeRefs(),TODAY);return t.length?t[0]:null}
 function predictRace(ri){const b=bestTen();if(!b||!ri||!ri.dist)return null;return PREDICT.timeFor(b.t10,ri.dist,ri.dplus||0,ri.terrain||"roulant")}
 const terrainSel=(id,val)=>{const s=el("select",{id});Object.entries(PREDICT.TERRAINS).forEach(([k,t])=>s.append(el("option",{value:k,text:t.name})));s.value=val||"roulant";return s};
