@@ -298,7 +298,7 @@ function garminLine(rec,s){
   if(rec.pace&&isRunSport(rec.sport))parts.push(fmtPace(rec.pace)+"/km"+(rec.paceHow&&rec.paceHow!=="moyenne"?" ("+rec.paceHow+")":""));
   if(rec.kmh)parts.push(fr(rec.kmh)+" km/h");if(rec.p100)parts.push(fmtPace(rec.p100)+"/100 m");
   if(s)parts.push("prévu "+(s.dur&&s.dur!=="—"?s.dur:s.title));
-  return el("p",{class:"garmin",text:"⌚ Garmin : "+parts.filter(Boolean).join(" · ")});
+  return el("p",{class:"garmin",text:"⌚ Montre : "+parts.filter(Boolean).join(" · ")});
 }
 let syncing=false;
 async function garminSync(manual){
@@ -310,7 +310,9 @@ async function garminSync(manual){
   if(syncing)return;syncing=true;if(manual)say("Synchronisation…");
   if(store.get("gWin","")!=="5"){store.set("gLast","0");store.set("gWin","5")} /* resynchro complète : charge d'entraînement + données de forme */
   const last=+store.get("gLast","0");
-  const after=last?Math.floor(last/1000)-3*86400:Math.floor(Date.parse(HISTORY_START+"T00:00:00Z")/1000);
+  /* Synchro auto : depuis la dernière (−3 jours). Bouton « Synchroniser » : les 21 derniers jours, pour rattraper une montre arrivée en retard sur intervals.icu */
+  const full=Math.floor(Date.parse(HISTORY_START+"T00:00:00Z")/1000);
+  const after=!last?full:manual?Math.max(full,Math.floor(Date.now()/1000)-21*86400):Math.floor(last/1000)-3*86400;
   try{
     const r=await fetch("/api/sync",{method:"POST",headers:{"content-type":"application/json","x-app-key":key},body:JSON.stringify({after})});
     let d={};try{d=await r.json()}catch(e){}
@@ -1100,8 +1102,8 @@ function renderForme(){
   chart(document.getElementById("ch-tsb"),{type:"bar",label:"Fraîcheur",yFmt:v=>(v>0?"+":"")+Math.round(v),empty:"Pas encore de séances.",
     series:[{name:"Fraîcheur",color:c1,points:last.filter((x,i)=>i%2===0||last.length<60).map(x=>({x:parse(x.d),y:Math.round(x.tsb),color:x.tsb<-30?bad:x.tsb<-10?c1:good,tip:"Fraîcheur "+(x.tsb>=0?"+":"")+Math.round(x.tsb)+" · "+PRO.tsbZone(x.tsb).name}))}]});
   const wl=wellList().filter(w=>w.date>=PRO.shift(iso(TODAY),-90));
-  chart(document.getElementById("ch-hrv"),{type:"line",label:"VFC",dots:false,yFmt:v=>Math.round(v)+" ms",empty:"La VFC arrive avec la synchro Garmin si ta montre la mesure la nuit.",series:[{name:"VFC",color:c1,points:wl.filter(w=>w.hrv).map(w=>({x:parse(w.date),y:w.hrv,tip:"VFC "+Math.round(w.hrv)+" ms"}))}]});
-  chart(document.getElementById("ch-rhr"),{type:"line",label:"FC au repos",dots:false,yFmt:v=>Math.round(v)+"",empty:"La FC au repos arrive avec la synchro Garmin.",series:[{name:"FC repos",color:c2,points:wl.filter(w=>w.rhr).map(w=>({x:parse(w.date),y:w.rhr,tip:"FC repos "+Math.round(w.rhr)}))}]});
+  chart(document.getElementById("ch-hrv"),{type:"line",label:"VFC",dots:false,yFmt:v=>Math.round(v)+" ms",empty:"La VFC arrive avec la synchro de la montre si elle la mesure la nuit.",series:[{name:"VFC",color:c1,points:wl.filter(w=>w.hrv).map(w=>({x:parse(w.date),y:w.hrv,tip:"VFC "+Math.round(w.hrv)+" ms"}))}]});
+  chart(document.getElementById("ch-rhr"),{type:"line",label:"FC au repos",dots:false,yFmt:v=>Math.round(v)+"",empty:"La FC au repos arrive avec la synchro de la montre.",series:[{name:"FC repos",color:c2,points:wl.filter(w=>w.rhr).map(w=>({x:parse(w.date),y:w.rhr,tip:"FC repos "+Math.round(w.rhr)}))}]});
   const rd=Object.keys(checkins).sort().filter(k=>k>=PRO.shift(iso(TODAY),-90)).map(k=>{const r=SCORE.compute({date:k,ans:checkins[k],well:wellList()});return{x:parse(k),y:r.score,tip:"Forme du jour "+r.score+"/100 ("+r.level+")"}});
   chart(document.getElementById("ch-ready"),{type:"line",label:"Forme du jour",yMin:0,yMax:100,yFmt:v=>Math.round(v)+"",empty:"Fais ton check-in du matin sur l'accueil pour suivre ta forme du jour.",series:[{name:"Forme du jour",color:c1,points:rd}]});
 }
@@ -1209,7 +1211,7 @@ const GROUPS=[
   {id:"entrainement",name:"Planning",views:[["planning","Calendrier"],["forme","Forme et charge"],["progres","Progression"],["routine","Routine course"]]},
   {id:"courses",name:"Courses",views:[["mescourses","Mes courses"],["temps","Temps théoriques"],["strategie","Stratégie de course"],["courses","Calendrier des courses"],["objectifs","Objectifs Diag"]]},
   {id:"nutrition",name:"Nutrition",views:[["calcul","Calcul nutrition"],["nutrition","Guide nutrition"]]},
-  {id:"infos",name:"Infos",views:[["reglages","Montre Garmin"],["materiel","Matériel"],["plan","Plan et règles"]]}
+  {id:"infos",name:"Infos",views:[["reglages","Montre"],["materiel","Matériel"],["plan","Plan et règles"]]}
 ];
 const VIEWS=GROUPS.flatMap(g=>g.views.map(v=>v[0]));
 const groupOf=v=>GROUPS.find(g=>g.views.some(x=>x[0]===v));
