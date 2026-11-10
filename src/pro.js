@@ -1,7 +1,8 @@
 /* ---------- Moteur « pro » (pur, testable) ----------
 Charge : modèle forme/fatigue (Banister ; CTL 42 j, ATL 7 j, TSB = CTL − ATL de la veille), charge de séance type TSS
 (durée × intensité², 100 = 1 h au seuil). Charge de la montre (intervals.icu) prioritaire, sinon estimée.
-Forme du jour : VFC et FC repos comparées à ta moyenne des 28 derniers jours, sommeil, check-in du matin, fraîcheur. */
+Forme du jour : VFC et FC repos comparées à ta moyenne des 28 derniers jours, sommeil, check-in du matin, fraîcheur.
+Récupération après course : durée selon le km-effort, raccourcie ou prolongée selon la VFC, la FC repos et le sommeil mesurés par la montre. */
 const PRO=(function(){
   const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
   const IF_RPE=r=>r<=3?.65:r===4?.72:r===5?.78:r===6?.83:r===7?.88:r===8?.93:1.0;
@@ -81,8 +82,53 @@ const PRO=(function(){
   }
   /* Jours de récupération après une course, selon le km-effort */
   const recoveryDays=ke=>clamp(Math.round(ke/6),2,28);
+  /* Récupération après course pilotée par la montre.
+     Base : N0 jours selon le km-effort. Chaque matin depuis la course, la VFC nocturne et la FC au repos sont comparées
+     à ta moyenne des 28 jours AVANT la course (la course elle-même fausse la moyenne glissante).
+     - Jour « récupéré » : VFC ≥ 95 % de la base, FC repos ≤ base + 2 bpm, sommeil correct, jambes ≥ 3/5, pas de douleur.
+       Deux matins récupérés de suite → la récup s'arrête là, mais jamais avant 60 % de N0 (75 % après un ultra) :
+       la montre ne voit pas les dégâts musculaires.
+     - Jour « pas récupéré » : VFC < 88 % de la base, FC repos ≥ base + 5 bpm, jambes lourdes ou douleur.
+       S'il tombe le dernier jour prévu → un jour de plus, jusqu'à N0 + 50 %.
+     asOf : dernier jour dont on connaît les données (aujourd'hui pour une date future). */
+  function recoveryPlan({raceDate,ke,asOf,well,checkins}){
+    const N0=recoveryDays(ke),min=Math.max(2,Math.ceil(N0*(ke>=60?0.75:0.6))),max=N0+Math.max(1,Math.ceil(N0*0.5));
+    const W=well||[],bh=baseline(W,"hrv",raceDate,28),br=baseline(W,"rhr",raceDate,28);
+    const by={};for(const w of W)if(w&&w.date)by[w.date]=w;
+    const lim=Math.round((new Date(asOf+"T00:00:00Z")-new Date(raceDate+"T00:00:00Z"))/864e5);
+    let N=N0,okRun=0,last=null,watchDays=0;
+    for(let i=1;i<=lim&&i<=N;i++){
+      const d=shift(raceDate,i),w=by[d]||{},c=(checkins&&checkins[d])||{};
+      const hr=w.hrv>0&&bh?w.hrv/bh.mean:null,dr=w.rhr>0&&br?w.rhr-br.mean:null;
+      const sleepBad=w.sleepScore>0?w.sleepScore<60:(w.sleepSecs>0&&w.sleepSecs<6*3600);
+      const legsBad=c.legs>=1&&c.legs<=2,pain=+c.pain||0;
+      const hasWatch=hr!=null||dr!=null;if(hasWatch)watchDays++;
+      const bad=(hr!=null&&hr<0.88)||(dr!=null&&dr>=5)||legsBad||pain>=2;
+      const ok=hasWatch&&!bad&&(hr==null||hr>=0.95)&&(dr==null||dr<=2)&&!sleepBad&&pain<1;
+      okRun=ok?okRun+1:0;
+      last={i,date:d,hr,dr,hrv:w.hrv||null,rhr:w.rhr||null,sleepBad:!!sleepBad,legsBad,pain,ok,bad,hasWatch};
+      if(ok&&okRun>=2&&i>=min&&i<N){N=i;break}
+      if(bad&&i>=N&&N<max)N=i+1;
+    }
+    return{N0,N,min,max,delta:N-N0,hasBase:!!(bh||br),watchDays,last,base:{hrv:bh?bh.mean:null,rhr:br?br.mean:null}};
+  }
+  /* Phrase courte sur les signaux du jour (pour l'appli) */
+  function recoveryNote(rp){
+    if(!rp)return"";const l=rp.last,t=[];
+    if(l&&l.hr!=null)t.push("VFC à "+Math.round(l.hr*100)+" % de ta base d'avant-course");
+    if(l&&l.dr!=null){const r=Math.round(l.dr);t.push(r?"FC repos "+(r>0?"+":"−")+Math.abs(r)+" bpm":"FC repos à ta base")}
+    if(l&&l.sleepBad)t.push("sommeil court");
+    if(l&&l.legsBad)t.push("jambes lourdes");
+    if(l&&l.pain>=1)t.push("douleur signalée");
+    let v="";
+    if(rp.delta<0)v="récup raccourcie de "+(-rp.delta)+" j (2 matins revenus à ta base)";
+    else if(rp.delta>0)v="récup prolongée de "+rp.delta+" j (pas encore revenu à ta base)";
+    else if(!rp.hasBase)v="pas assez de nuits mesurées avant la course : durée standard";
+    else if(!rp.watchDays)v="en attente des données de la montre";
+    return t.concat(v?[v]:[]).join(" · ");
+  }
   /* Cible de fraîcheur le jour J */
   const taperTarget=(ke,prio)=>prio==="C"?null:ke<=45?{lo:5,hi:15}:{lo:10,hi:25};
-  return{parseMin,loadOf,pmc,tsbZone,baseline,readiness,scaleText,adapt,recoveryDays,taperTarget,shift,IF_RPE};
+  return{parseMin,loadOf,pmc,tsbZone,baseline,readiness,scaleText,adapt,recoveryDays,recoveryPlan,recoveryNote,taperTarget,shift,IF_RPE};
 })();
 if(typeof module!=="undefined"&&module.exports)module.exports=PRO;

@@ -98,14 +98,6 @@ function baseSession(w,dow,site){
   const [n,,phase,h,dp,tue,sat,sun]=w;
   const light=/Allégée|Récup|Affûtage|Course|Reprise/.test(phase);
   const P=site==="p";
-  if(n===34){
-    if(dow===0) return S("rest","Repos","—","Repos complet. Prépare le sac et vérifie la liste du matériel obligatoire.");
-    if(dow===1) return S("hard","Rappel d'allure","40 min","15 min Z1, puis "+tue+", retour au calme 10 min.","","Rappel d'allure · "+tue);
-    if(dow===2) return S("easy","Footing court","30 min","30 min Z1 très facile. Voyage vers Andorre si besoin.");
-    if(dow===3) return S("race","Andorra Trail 80K","14-16 h","79 km, 3 900 m D+. Objectif : finir en 14-16 h, nutrition selon l'onglet Calcul nutrition.","Date exacte du départ (10 ou 11 juin) à confirmer sur le site officiel.","COURSE · Andorra Trail 80K");
-    if(dow===4) return S("race","Andorra (si départ le 11)","—","Si ton départ est le 11 juin, c'est le jour de course. Sinon, repos.","","Andorra (si départ le 11)");
-    return S("rest","Récupération","—","Marche tranquille, sommeil, repas complets.");
-  }
   if(dow===0) return S("rest","Repos","—","Repos. Option : 15 min de mobilité chevilles et hanches.");
   if(dow===1){
     if(tue.startsWith("EASY:")) return S("easy","Footing facile","45 min",tue.slice(5));
@@ -150,7 +142,7 @@ function sessionFor(date,ctx){
   if(r){ s=S("race",r[1],"Course",r[2],"La veille : repas riche en glucides. Le lendemain : Z1 ou repos.","COURSE · "+r[1]); s.raceDate=r[0]; }
   if(!s){
     const wr=raceInWeek(w,ctx);
-    if(wr && !/^RACE:/.test(w[6]+w[7]) && w[0]!==34){
+    if(wr && !/^RACE:/.test(w[6]+w[7])){
       const rd=(parse(wr[0])-parse(w[1]))/864e5;
       if(dow===5 && rd===6) s=S("easy","Veille de course","40 min","40 min Z1 + 4 lignes droites de 20 s. Prépare ton sac et ta nutrition.","","Veille de course · 40 min Z1");
       else if(dow===6 && rd===5) s=S("rest","Lendemain de course","—","Repos ou 30 min Z1 très facile.");
@@ -170,7 +162,7 @@ function sessionFor(date,ctx){
   else s.sport="route";
   /* allure de référence (s/km) pour pré-remplir la molette */
   s.refPace=s.kind==="race"?(s.sport==="route"?252:540):s.kind==="hard"?260:(s.sport==="trail"?420:330);
-  s.routineLink=s.kind==="race"||/Veille de course/.test(s.title)||w[0]===34||/Affûtage|Course/.test(w[2])||!!raceInWeek(w,ctx);
+  s.routineLink=s.kind==="race"||/Veille de course/.test(s.title)||/Affûtage|Course/.test(w[2])||!!raceInWeek(w,ctx);
   return s;
 }
 /* Nombre de séances (hors repos) prévues sur une semaine */

@@ -17,14 +17,17 @@ if(store.get("seeded","")!=="2"){
 }
 const kd=k=>parse(k.slice(0,10));
 /* ---------- Courses : conseillées (modifiables) + ajoutées ---------- */
-const RACE_INFO={"2026-11-08":{dist:30,dplus:900,terrain:"roulant",est:true},"2026-12-06":{dist:10,dplus:0,terrain:"route",prio:"B"},"2027-01-24":{dist:32,dplus:900,terrain:"roulant",est:true},
- "2027-02-21":{dist:33.5,dplus:1000,terrain:"roulant",est:true},"2027-03-21":{dist:42,dplus:1600,terrain:"roulant",est:true},"2027-04-18":{dist:31,dplus:1500,terrain:"montagne",est:true,prio:"B"},
- "2027-06-10":{dist:79,dplus:3900,terrain:"montagne",prio:"A"},"2027-07-10":{dist:32,dplus:2100,terrain:"montagne"},"2027-10-17":{dist:80.4,dplus:3443,terrain:"montagne",prio:"A"}};
+const RACE_INFO={"2026-11-08":{dist:30,dplus:900,terrain:"roulant",est:true},"2026-12-06":{dist:10,dplus:0,terrain:"route",prio:"B"},
+ "2027-01-17":{dist:21,dplus:350,terrain:"roulant",est:true},"2027-02-21":{dist:20,dplus:600,terrain:"roulant"},
+ "2027-03-28":{dist:40,dplus:2000,terrain:"montagne",prio:"B"},"2027-04-18":{dist:22,dplus:600,terrain:"roulant"},
+ "2027-05-01":{dist:49,dplus:2000,terrain:"roulant",prio:"B"},"2027-06-13":{dist:21,dplus:1800,terrain:"montagne"},
+ "2027-07-10":{dist:69,dplus:3950,terrain:"technique",prio:"A"},"2027-08-22":{dist:21.8,dplus:530,terrain:"roulant"},
+ "2027-09-25":{dist:56,dplus:2800,terrain:"roulant",prio:"B"}};
 let raceEdits=store.json("raceEdits",{});
 let userRaces=store.json("userRaces",[]);
 const saveRaces=()=>{store.setJson("raceEdits",raceEdits);store.setJson("userRaces",userRaces)};
 function raceInfo(date){const u=userRaces.find(r=>r.date===date);if(u)return Object.assign({user:true},u);
-  const r=RACES.find(x=>x[0]===date);if(!r)return null;return Object.assign({date,name:r[1],est:false},RACE_INFO[date]||{dist:null,dplus:0,terrain:"roulant"},raceEdits[date]||{})}
+  const r=RACES.find(x=>x[0]===date);if(!r)return null;return Object.assign({date,name:r[1],est:false,url:r[5]||"",urlLabel:r[6]||""},RACE_INFO[date]||{dist:null,dplus:0,terrain:"roulant"},raceEdits[date]||{})}
 function allRaceInfos(){return RACES.map(r=>raceInfo(r[0])).concat(userRaces.map(u=>Object.assign({user:true},u))).sort((a,b)=>a.date<b.date?-1:1)}
 const saveLogs=()=>{store.setJson("logs",logs);_pmc=null};
 const saveWeights=()=>store.setJson("weights",weights);
@@ -168,7 +171,7 @@ function gymWidget(k,s,onAny,preview){
 }
 
 
-/* ---------- Montre Garmin (via intervals.icu et la fonction Netlify /api/sync) ---------- */
+/* ---------- Montre COROS ou Garmin (via intervals.icu et la fonction Netlify /api/sync) ---------- */
 const RUN_T=new Set(["Run","TrailRun","VirtualRun"]),BIKE_T=new Set(["Ride","VirtualRide","GravelRide","MountainBikeRide","EBikeRide"]),SWIM_T=new Set(["Swim","OpenWaterSwim"]);
 const PLAN_START="2026-10-19";
 const HISTORY_START="2026-09-01"; /* 1re synchro : on récupère aussi l'historique récent */
@@ -407,10 +410,13 @@ function weekFactor(w){
   return{f,why:why.join(", ")};
 }
 function raceKe(ri){return ri&&ri.dist?ri.dist+(ri.dplus||0)/100:10}
+/* Récupération après course : durée de base selon le km-effort, ajustée par la montre (VFC, FC repos, sommeil) et le check-in */
 function recoveryState(date){
-  const k=iso(date);let best=null;
-  PLAN.activeRaces(ctxFor(date)).forEach(r=>{if(r[0]>=k)return;const ri=raceInfo(r[0]);const N=PRO.recoveryDays(raceKe(ri));const i=Math.round((date-parse(r[0]))/864e5);
-    if(i>=1&&i<=N&&(!best||r[0]>best.date))best={date:r[0],name:r[1],i,N}});
+  const k=iso(date),today=iso(TODAY),asOf=k<today?k:today;let best=null,wl=null;
+  PLAN.activeRaces(ctxFor(date)).forEach(r=>{if(r[0]>=k)return;const i=Math.round((date-parse(r[0]))/864e5);if(i<1||i>42)return;
+    const ke=raceKe(raceInfo(r[0]));const N0=PRO.recoveryDays(ke);if(i>N0+Math.max(1,Math.ceil(N0*0.5)))return;
+    const rp=PRO.recoveryPlan({raceDate:r[0],ke,asOf,well:wl||(wl=wellList()),checkins});
+    if(i<=rp.N&&(!best||r[0]>best.date))best={date:r[0],name:r[1],i,N:rp.N,rp,note:PRO.recoveryNote(rp)}});
   return best;
 }
 /* Séance effective : plan + récup après course + volume ajusté + forme du jour */
@@ -424,7 +430,7 @@ function effSession(date,noReady){
     if(s.kind==="hard")Object.assign(s,{kind:"easy",title:"Footing de récupération",dur:"35 min",text:"Récupération après "+rec.name+" : 30-40 min en Z1, sans intensité."});
     else if(s.kind==="gym"&&early)Object.assign(s,{title:"Mobilité (récup)",dur:"20 min",text:"Récupération après course : mobilité douce, pas de charge."});
     else if(s.kind==="easy")Object.assign(s,{dur:PRO.scaleText(s.dur,early?0.5:0.75),text:PRO.scaleText(s.text,early?0.5:0.75)+" En Z1-Z2 seulement."});
-    s.banners.push(["warn","Récupération après "+rec.name+" : jour "+rec.i+"/"+rec.N+" (pas d'intensité)"]);
+    s.banners.push(["warn","Récupération après "+rec.name+" : jour "+rec.i+"/"+rec.N+" (pas d'intensité)"+(rec.rp.delta?" · ⌚ "+(rec.rp.delta<0?"raccourcie de "+(-rec.rp.delta):"prolongée de "+rec.rp.delta)+" j d'après ta montre":"")]);
   }
   const xb=date>=TODAY&&!rec?extraBefore(date):null;
   if(xb&&s.kind==="hard"){s.planned={title:s.title,dur:s.dur};Object.assign(s,{kind:"easy",title:"Footing facile",dur:"40 min",text:"Hier : « "+xb.name+" » ("+xb.why+") en plus du plan. La séance intense est remplacée par 40 min en Z1-Z2 pour ne pas empiler la fatigue. Elle n'est pas rattrapée : la suivante reprend normalement."});
@@ -510,6 +516,7 @@ function buildIcs(){
     let desc=(sp==="t"?"Tarbes (école)":"Périgueux (entreprise)")+" · semaine "+w[0]+" · "+w[2]+"\n"+s.text;
     (s.banners||[]).forEach(b=>desc+="\n"+b[1]);
     if(s.note)desc+="\n"+s.note;
+    if(s.raceDate){const ru=raceInfo(s.raceDate);if(ru&&ru.url&&d>=TODAY)desc+="\n🔗 "+(ru.urlLabel||"Inscription")+" : "+ru.url}
     if(s.kind==="gym"){const gp=gymPlan(s);desc+="\n\n💪 Exercices"+(gp.light?" (semaine allégée)":"")+" :";
       gp.ex.forEach(e=>{const t=gymTarget(e,iso(d),gp.light);desc+="\n- "+e.name+" : "+t.sets+" × "+(t.lo===t.hi?t.lo:t.lo+"-"+t.hi)+" "+e.unit+(t.kg>0?" · "+fmtKg(t.kg)+" kg":e.inc>0?" · poids du corps":"")})}
     if(n)desc+="\n\n🍌 Nutrition"+(n.temp!=null?" ("+Math.round(n.temp)+" °C prévus)":"")+" : "+n.line+"\n"+n.before+"\n"+n.after;
@@ -556,6 +563,7 @@ function fillCard(c,date,withWeek){
     c.append(el("div",{class:"homesw"},seg,dflt))}}
   c.append(el("p",{text:s.text}));
   if(s.note)c.append(el("p",{class:"note",text:s.note}));
+  if(s.raceDate){const ru=raceInfo(s.raceDate);if(ru&&ru.url&&date>=TODAY)c.append(el("p",{class:"note"},"🔗 ",el("a",{href:ru.url,target:"_blank",rel:"noopener",text:ru.urlLabel||"Inscription"})))}
   if(s.kind==="hard"||repsOf(logs[iso(date)])){const rb=repsBox(date,s);if(rb)c.append(rb)}
   {const gl=garminLine(logs[iso(date)],s);if(gl)c.append(gl)}
   {const n=sessionNutrition(s,date);if(n&&date>=addDays(TODAY,-1))c.append(el("div",{class:"nutri"},el("b",{text:"🍌 Nutrition du jour"+(n.temp!=null?" · "+Math.round(n.temp)+" °C":"")}),el("span",{text:n.line}),el("span",{class:"small",text:n.before+" · "+n.after})))}
@@ -586,8 +594,8 @@ function renderPlanning(){
   document.getElementById("site-t").setAttribute("aria-pressed",site==="t");
   document.getElementById("site-p").setAttribute("aria-pressed",site==="p");
   document.getElementById("mode-desc").textContent=mode==="race"
-    ?"Avec mes courses : les 9 courses conseillées remplacent la sortie longue de leur semaine, et le plan continue jusqu'aux Templiers (oct. 2027)."
-    :"Plan de base : seulement le 10 km, la course de prépa et Andorra. Il s'arrête fin juin 2027.";
+    ?"Avec mes courses : un trail par mois ("+RACES.length+" courses) remplace la sortie longue de sa semaine, et le plan continue jusqu'au X-Trail Corrèze Dordogne (fin sept. 2027)."
+    :"Plan de base : seulement le 10 km, Voutezac (course de prépa) et la Restonica. Il s'arrête fin juillet 2027.";
   document.getElementById("month").textContent=MONTHS[view.m]+" "+view.y;
   const g=document.getElementById("grid");g.innerHTML="";
   ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].forEach(x=>g.append(el("div",{class:"dow",text:x})));
@@ -609,7 +617,7 @@ function renderPlanning(){
   document.getElementById("next").disabled=!(new Date(Date.UTC(view.y,view.m+1,1))<=LAST);
   fillCard(document.getElementById("card"),selected,true);
   const rl=document.getElementById("racelist");rl.innerHTML="";
-  PLAN.activeRaces(ctx()).forEach(r=>{const d=parse(r[0]);rl.append(el("div",{},el("b",{text:shortDate(d)+" "+d.getUTCFullYear()}),el("span",{text:r[1]+(r[4]?" (date estimée)":"")})))});
+  PLAN.activeRaces(ctx()).forEach(r=>{const d=parse(r[0]);const sp=el("span",{text:r[1]+(r[4]?" (date estimée)":"")});if(r[5])sp.append(" · ",el("a",{href:r[5],target:"_blank",rel:"noopener",text:parse(r[0])<TODAY?"Site":"Inscription"}));rl.append(el("div",{},el("b",{text:shortDate(d)+" "+d.getUTCFullYear()}),sp))});
   renderIcs();
 }
 function renderIcs(){
@@ -650,8 +658,8 @@ function renderHome(){
   if(nr){const d2=parse(nr[0]);const days=Math.round((d2-TODAY)/864e5);
     document.getElementById("next-race").textContent=days===0?"Aujourd'hui":"J-"+days;
     document.getElementById("next-race-d").textContent=nr[1]+" · "+d2.getUTCDate()+" "+MONTHS[d2.getUTCMonth()]+(nr[4]?" (date estimée)":"");}
-  const da=Math.round((parse("2027-06-10")-TODAY)/864e5);
-  document.getElementById("cd-andorra").textContent=da>0?"J-"+da:"Courue";
+  const da=Math.round((parse("2027-07-10")-TODAY)/864e5);
+  document.getElementById("cd-main").textContent=da>0?"J-"+da:da===0?"Aujourd'hui":"Courue";
 }
 
 
@@ -674,8 +682,10 @@ function renderCourses(){
   const tb=document.getElementById("course-rows");tb.innerHTML="";
   COURSES.forEach(c=>{const tr=document.createElement("tr");if(c[6])tr.className="key";
     c.slice(0,6).forEach((v,i)=>{const td=document.createElement("td");
-      if(i===3||i===4){const t=document.createElement("span");t.className="tag "+(/^Oui|Doubl/.test(v)?"ok":/^Non|—/.test(v)?"no":"");t.innerHTML=v;td.appendChild(t)}else td.innerHTML=v;
-      tr.appendChild(td)});tb.appendChild(tr)});
+      if(i===3||i===4){const t=document.createElement("span");t.className="tag "+(/^Oui|Doubl|^\d/.test(v)?"ok":/^Non|—/.test(v)?"no":"");t.innerHTML=v;td.appendChild(t)}else td.innerHTML=v;
+      tr.appendChild(td)});
+    const td=document.createElement("td");if(c[7])td.append(el("a",{href:c[7],target:"_blank",rel:"noopener",text:c[8]||"Lien"}));else td.textContent="—";tr.appendChild(td);
+    tb.appendChild(tr)});
 }
 let pk=store.get("pk","qp");if(!PACKS[pk])pk="qp";
 function renderPack(){
@@ -697,8 +707,8 @@ const PRESETS=[
   ["Semi",{sport:"route",dist:21.1,dplus:0,pace:270,effort:"competition",context:"course"}],
   ["Marathon",{sport:"route",dist:42.195,dplus:0,pace:300,effort:"competition",context:"course"}],
   ["SL trail 3 h",{sport:"trail",dist:24,dplus:1200,pace:450,effort:"endurance",context:"entrainement"}],
-  ["Andorra 80K",{sport:"trail",dist:79,dplus:3900,pace:679,effort:"competition",context:"course"}],
-  ["Templiers",{sport:"trail",dist:80.4,dplus:3443,pace:560,effort:"competition",context:"course"}],
+  ["Restonica 69 km",{sport:"trail",dist:69,dplus:3950,pace:730,effort:"competition",context:"course"}],
+  ["X-Trail 56 km",{sport:"trail",dist:56,dplus:2800,pace:610,effort:"competition",context:"course"}],
   ["Diagonale",{sport:"trail",dist:180,dplus:10200,pace:660,effort:"competition",context:"course"}],
   ["Vélo 2 h",{sport:"velo",dist:60,dplus:600,pace:120,effort:"endurance",context:"entrainement"}],
   ["Natation 2 km",{sport:"natation",dist:2,dplus:0,pace:1200,effort:"endurance",context:"entrainement"}]
@@ -1065,6 +1075,8 @@ function renderFormPanel(){
   box.append(head);
   const watch=[];if(r.rhr)watch.push("FC réveil "+r.rhr+(r.rhrAvg?" (moy. "+r.rhrAvg+")":""));if(r.hrv)watch.push("VFC "+Math.round(r.hrv)+" ms"+(r.hrvAvg?" (moy. "+r.hrvAvg+")":""));if(r.sleepH)watch.push("sommeil "+String(r.sleepH).replace(".",",")+" h");if(r.sleepScore)watch.push("score "+r.sleepScore);
   if(watch.length)box.append(el("p",{class:"watch",text:"⌚ "+watch.join(" · ")}));
+  const rec=recoveryState(TODAY);
+  if(rec)box.append(el("p",{class:"watch",text:"🔄 Récup après "+rec.name+" : jour "+rec.i+"/"+rec.N+(rec.note?" · "+rec.note:"")}));
   if(c&&!editCheckin){
     if(r.reasons.length){const ul=el("ul",{class:"why"});r.reasons.forEach(t=>ul.append(el("li",{class:r.level==="rouge"?"bad":"warn",text:t})));box.append(ul)}
     box.append(el("button",{type:"button",class:"linkbtn",text:"Modifier mes réponses",onclick:()=>{editCheckin=true;renderFormPanel()}}));return;
@@ -1177,6 +1189,7 @@ function renderMesCourses(){
     const res=raceResults[r.date];
     if(res){const diff=p?Math.round((res.sec/p.sec-1)*100):null;info.append(el("span",{class:"rpred",text:"Réalisé "+PREDICT.fmtLong(res.sec)+(res.rank?" · "+res.rank:"")+(diff!=null?" · "+(diff>0?"+":"")+diff+" % vs théorique":"")}))}
     if(!past&&!r.hidden&&r.dist){const tp=taperFor(r);if(tp&&!tp.far)info.append(el("span",{class:"small "+(tp.ok?"ok":"warnt"),text:"Fraîcheur prévue le jour J : "+(tp.tsb>=0?"+":"")+Math.round(tp.tsb)+" (cible +"+tp.tg.lo+" à +"+tp.tg.hi+")"}))}
+    if(r.url&&!past&&!r.hidden)info.append(el("span",{class:"small"},"🔗 ",el("a",{href:r.url,target:"_blank",rel:"noopener",text:r.urlLabel||"Inscription"})));
     row.append(info);
     const act=el("div",{class:"ract"});
     act.append(el("button",{type:"button",class:"btn",text:"Modifier",onclick:()=>editRace(r,row)}));

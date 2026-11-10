@@ -1,5 +1,5 @@
 /* ---------- Forme du jour : score et adaptation (partagé entre l'appli, les fonctions Netlify et le calendrier) ----------
-Score /100 : sommeil 30 pts (réponse, sinon montre : score Garmin ou heures), jambes 40 pts, douleur 30 pts.
+Score /100 : sommeil 30 pts (réponse, sinon montre : score de sommeil ou heures), jambes 40 pts, douleur 30 pts.
 Pénalités : FC repos ≥ +5 bpm (−15) ou ≥ +8 (−25) vs moyenne des 7 jours précédents ; VFC < 85 % (−15) ou < 75 % (−25) de sa moyenne ;
 pénalité totale plafonnée à −30. Vert ≥ 70, orange 50-69, rouge < 50 ou douleur ≥ 2. */
 const SCORE=(function(){
@@ -12,7 +12,7 @@ const SCORE=(function(){
     /* sommeil */
     let sleep,sleepSrc;
     if(a.sleep>=1){sleep=(a.sleep-1)/4*30;sleepSrc="réponse"}
-    else if(w.sleepScore>0){sleep=clamp(w.sleepScore,0,100)*0.3;sleepSrc="score Garmin "+Math.round(w.sleepScore)}
+    else if(w.sleepScore>0){sleep=clamp(w.sleepScore,0,100)*0.3;sleepSrc="score montre "+Math.round(w.sleepScore)}
     else if(w.sleepSecs>0){const h=w.sleepSecs/3600;sleep=clamp((h-5)/3,0,1)*30;sleepSrc=h.toFixed(1).replace(".",",")+" h (montre)"}
     else{sleep=20;sleepSrc="inconnu"}
     const legs=a.legs>=1?(a.legs-1)/4*40:24;

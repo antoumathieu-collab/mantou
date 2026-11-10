@@ -131,7 +131,7 @@ tr.key td{background:var(--race-soft)}
     <div class="panel today" id="today-panel"></div>
     <div class="cols countdown">
       <div class="panel stat"><span>Prochaine course</span><b id="next-race">—</b><span id="next-race-d"></span></div>
-      <div class="panel stat"><span>Andorra 80K</span><b id="cd-andorra">—</b><span>10-11 juin 2027</span></div>
+      <div class="panel stat"><span>Restonica 69 km</span><b id="cd-main">—</b><span>10 juillet 2027</span></div>
       <div class="panel stat"><span>Diagonale</span><b>2030</b><span>objectif 33 h</span></div>
     </div>
   </section>
@@ -180,33 +180,33 @@ tr.key td{background:var(--race-soft)}
   <!-- COURSES -->
   <section class="view" id="v-courses" hidden>
     <div class="panel">
-      <h2>Une course toutes les 2 semaines</h2>
-      <p>Pour chaque date, il y a une option côté Pyrénées et une option côté Périgueux / Limousin : tu choisis selon ton bloc d'alternance. Celles que je te conseille sont surlignées. Ce sont les mêmes que dans le planning « Avec mes courses ».</p>
+      <h2>Un trail par mois jusqu'en septembre 2027</h2>
+      <p>Une course par mois, placée selon tes blocs d'alternance, avec une alternative quand il y en a une. Trois se courent à fond (Citadelles, Voutezac, Restonica) : ce sont tes étapes d'évaluation, les autres sont des entraînements avec dossard. Ce sont les mêmes que dans le planning « Avec mes courses ». Les dates suivies d'un astérisque ne sont pas encore confirmées par l'organisateur.</p>
       <ul>
-        <li><b>UTMB Index</b> : ta cote de performance. Elle compte sur toute course publiée sur utmb.world. Pour les courses « à vérifier », contrôle sur <a href="https://utmb.world" target="_blank" rel="noopener">utmb.world</a> avant de t'inscrire.</li>
-        <li><b>Running Stones</b> : seulement les courses « by UTMB ». Dans ta zone, ce sont Andorra et Val d'Aran (Stones doublées).</li>
+        <li><b>UTMB Index</b> : ta cote de performance, valable 24 mois après une course. Sans Index, tu pars dans la dernière vague à la Restonica : les Citadelles te le donnent dès mars. Elle compte sur toute course publiée sur utmb.world. Pour les courses « à vérifier », contrôle sur <a href="https://utmb.world" target="_blank" rel="noopener">utmb.world</a> avant de t'inscrire.</li>
+        <li><b>Running Stones</b> : seulement les courses « by UTMB ». Dans ton plan : Andorra 21K (1 Stone) et Restonica 69 km (3 Stones).</li>
         <li><b>Points Grand Raid</b> : km + D+/100, utiles à partir de 75 points (Trail de Bourbon).</li>
       </ul>
       <h3>Les règles pour choisir</h3>
       <ol>
         <li>Une course remplace la sortie longue de la semaine ; le lendemain se fait en Z1 ou repos.</li>
-        <li>Pas plus d'une course de plus de 40 km toutes les 6 semaines, Andorra comprise.</li>
-        <li>Rien de plus long que 25 km dans les 4 semaines avant Andorra, ni dans les 3 semaines après.</li>
+        <li>Pas plus d'une course de plus de 40 km toutes les 6 semaines, Restonica comprise.</li>
+        <li>Rien de plus long que 25 km dans les 4 semaines avant la Restonica (l'Andorra 21K est le dernier test), ni dans les 3 semaines après.</li>
         <li>Avant mars, une course courte se court en Z3 au maximum : c'est de l'entraînement.</li>
       </ol>
     </div>
     <div class="tbl"><table>
-      <thead><tr><th>Date</th><th>Option Pyrénées / Occitanie / Espagne</th><th>Option Périgueux / Limousin</th><th>UTMB Index</th><th>Stones</th><th>Points GR</th></tr></thead>
+      <thead><tr><th>Date</th><th>Course retenue</th><th>Alternative</th><th>UTMB Index</th><th>Stones</th><th>Points GR</th><th>Inscription</th></tr></thead>
       <tbody id="course-rows"></tbody>
     </table></div>
-    <p class="small">Sources : calendriers <a href="https://fr.milesrepublic.com/trail/hautes-pyrenees" target="_blank" rel="noopener">Miles Republic</a> (Hautes-Pyrénées, Pyrénées-Atlantiques, Occitanie, Dordogne, Haute-Vienne), <a href="https://utmb.world/open-registrations" target="_blank" rel="noopener">UTMB World Series</a>, <a href="https://gotrail.run/fr/evenement/val-daran-by-utmb" target="_blank" rel="noopener">Val d'Aran</a>, <a href="https://gotrail.run/en/event/festival-des-templiers" target="_blank" rel="noopener">Templiers</a>, <a href="https://gotrail.run/en/event/grand-raid-des-pyrenees" target="_blank" rel="noopener">Grand Raid des Pyrénées</a>. Relevé le 18 octobre 2026.</p>
+    <p class="small">Sources : calendriers <a href="https://fr.milesrepublic.com/trail/hautes-pyrenees" target="_blank" rel="noopener">Miles Republic</a> (Hautes-Pyrénées, Pyrénées-Atlantiques, Occitanie, Dordogne, Haute-Vienne), <a href="https://utmb.world/open-registrations" target="_blank" rel="noopener">UTMB World Series</a>, <a href="https://gotrail.run/fr/evenement/val-daran-by-utmb" target="_blank" rel="noopener">Val d'Aran</a>, <a href="https://gotrail.run/en/event/festival-des-templiers" target="_blank" rel="noopener">Templiers</a>, <a href="https://gotrail.run/en/event/grand-raid-des-pyrenees" target="_blank" rel="noopener">Grand Raid des Pyrénées</a>. Calendrier et liens d'inscription relevés le 10 novembre 2026 : <a href="https://utmb.world/fr/open-registrations" target="_blank" rel="noopener">inscriptions UTMB World Series</a>, <a href="https://www.klikego.com/inscription/trail-et-rando-des-coteaux-voutezac-2027/running-course-a-pied/1643665602486-10" target="_blank" rel="noopener">Klikego (Voutezac)</a>, <a href="https://werun.world/?p=4865" target="_blank" rel="noopener">WeRun (Citadelles)</a>. Grand Raid Ventoux et Trail Alsace by UTMB : complets.</p>
   </section>
 
   <!-- MATERIEL -->
   <section class="view" id="v-materiel" hidden>
     <div class="panel">
       <h2>Trois packages, un conseillé</h2>
-      <p>Je recommande le package <b>Rapport qualité-prix</b> (~720 €). Il couvre tout le matériel d'Andorra et servira encore pour la Diag, en changeant les chaussures entre-temps.</p>
+      <p>Je recommande le package <b>Rapport qualité-prix</b> (~720 €). Il couvre tout le matériel de la Restonica et servira encore pour la Diag, en changeant les chaussures entre-temps.</p>
       <div class="seg" role="group" aria-label="Package">
         <button data-pk="ess" aria-pressed="false">Essentiel ~455 €</button>
         <button data-pk="qp" aria-pressed="true">Qualité-prix ~720 €</button>
@@ -225,7 +225,7 @@ tr.key td{background:var(--race-soft)}
         <li><b>Février-mars</b> : sac et veste, rodés sur toutes les sorties longues du printemps.</li>
         <li><b>Avril</b> : couverture de survie, gobelet, gants, bonnet.</li>
       </ol>
-      <p class="small">Prix relevés le 18 octobre 2026. Ceux notés « environ » n'ont pas pu être vérifiés sur une page produit française. La liste obligatoire officielle d'Andorra prime sur cette liste.</p>
+      <p class="small">Prix relevés le 18 octobre 2026. Ceux notés « environ » n'ont pas pu être vérifiés sur une page produit française. La liste obligatoire officielle de chaque course prime sur cette liste.</p>
     </div>
   </section>
 
@@ -234,7 +234,7 @@ tr.key td{background:var(--race-soft)}
   <section class="view" id="v-routine" hidden>
     <div class="panel">
       <h2>La routine avant et pendant chaque course</h2>
-      <p>Tu suis la même routine à chaque course, pour que le jour d'Andorra ou des Templiers rien ne soit nouveau. Les points marqués <span class="sz">ultra</span> concernent les courses de plus de 40 km ; les autres valent pour toutes.</p>
+      <p>Tu suis la même routine à chaque course, pour que le jour de la Restonica ou du X-Trail rien ne soit nouveau. Les points marqués <span class="sz">ultra</span> concernent les courses de plus de 40 km ; les autres valent pour toutes.</p>
     </div>
     <div class="panel steps">
       <div class="phase">
@@ -314,19 +314,19 @@ tr.key td{background:var(--race-soft)}
       <thead><tr><th>Période</th><th>Courses</th><th>Glucides/h</th><th>Eau/h</th><th>Sodium/h</th><th>Ce qu'on travaille</th></tr></thead>
       <tbody>
         <tr><td>Nov.-févr.</td><td>Trails de 15-30 km</td><td>30-40 g</td><td>400-500 ml</td><td>200-300 mg</td><td>Trouver les produits qui passent</td></tr>
-        <tr><td>Mars-avril</td><td>Trails de 30-45 km, prépa</td><td>50-60 g</td><td>500-600 ml</td><td>300-500 mg</td><td>Manger en courant, en montée</td></tr>
-        <tr><td>Juin 2027</td><td>Andorra 80K</td><td>70-90 g</td><td>500-750 ml</td><td>400-700 mg</td><td>Tenir 15 h, salé aux ravitos</td></tr>
-        <tr><td>Oct. 2027</td><td>Templiers</td><td>80-90 g</td><td>500-750 ml</td><td>400-700 mg</td><td>Haut de la fourchette</td></tr>
+        <tr><td>Mars-mai</td><td>Citadelles 40 km, Voutezac 49 km</td><td>50-60 g</td><td>500-600 ml</td><td>300-500 mg</td><td>Manger en courant, en montée</td></tr>
+        <tr><td>Juil. 2027</td><td>Restonica 69 km</td><td>60-90 g</td><td>500-750 ml</td><td>400-700 mg</td><td>Tenir 14 h, salé aux ravitos</td></tr>
+        <tr><td>Sept. 2027</td><td>X-Trail 56 km</td><td>80-90 g</td><td>500-750 ml</td><td>400-700 mg</td><td>Haut de la fourchette</td></tr>
         <tr><td>2028-2030</td><td>Bourbon, GRP, Diag</td><td>80-90 g</td><td>500-750 ml</td><td>500-800 mg</td><td>Nuit, caféine, vraie nourriture</td></tr>
       </tbody>
     </table></div>
     <div class="cols">
       <div class="panel"><h3>10 km du 6 décembre</h3><ul><li>Veille : repas habituel, un peu plus de féculents.</li><li>Petit-déjeuner riche en glucides 3 h avant.</li><li>Pendant : rien, quelques gorgées d'eau.</li></ul></div>
       <div class="panel"><h3>Trails courts de l'hiver</h3><ul><li>Un gel ou une pâte de fruits toutes les 40-45 min dès la 1re heure.</li><li>500 ml de boisson d'effort + eau aux ravitos.</li><li>Noter ce qui passe et ce qui écœure.</li></ul></div>
-      <div class="panel"><h3>Prépa du 18 avril</h3><ul><li>Répétition générale d'Andorra : mêmes produits, même sac.</li><li>Une prise toutes les 20 min, cible 60 g/h.</li><li>1 pastille de sel par heure s'il fait chaud.</li></ul></div>
+      <div class="panel"><h3>Voutezac, 1er mai</h3><ul><li>Répétition générale de la Restonica : mêmes produits, même sac.</li><li>Une prise toutes les 20 min, cible 60 g/h.</li><li>1 pastille de sel par heure s'il fait chaud.</li></ul></div>
     </div>
     <div class="panel">
-      <h3>Andorra Trail 80K (14-16 h)</h3>
+      <h3>Restonica 69 km (13-15 h)</h3>
       <div class="tbl"><table><tbody>
         <tr><td>J-2 et J-1</td><td>Repas riches en glucides, peu de fibres et de gras la veille au soir</td></tr>
         <tr><td>Matin</td><td>Petit-déjeuner testé à l'entraînement, 3 h avant le départ</td></tr>
@@ -336,7 +336,7 @@ tr.key td{background:var(--race-soft)}
         <tr><td>Nausée</td><td>Ralentir, eau, salé 20-30 min, puis reprendre doucement</td></tr>
         <tr><td>Arrivée</td><td>Boisson de récup ou repas complet dans l'heure</td></tr>
       </tbody></table></div>
-      <p class="small">Total : environ 1 100-1 400 g de glucides. Val d'Aran : même rythme qu'en prépa, à 60-70 g/h. Templiers : plan d'Andorra en visant 80-90 g/h, c'est le test de la Diag. Ces valeurs sont des ordres de grandeur courants en ultra, à ajuster à tes sensations ; en cas de troubles digestifs répétés, consulte un diététicien du sport.</p>
+      <p class="small">Total : environ 1 000-1 300 g de glucides. Andorra 21K : même rythme qu'en prépa, à 60-70 g/h. X-Trail : plan de la Restonica en visant 80-90 g/h, c'est le test de la Diag. Ces valeurs sont des ordres de grandeur courants en ultra, à ajuster à tes sensations ; en cas de troubles digestifs répétés, consulte un diététicien du sport.</p>
     </div>
   </section>
 
@@ -348,8 +348,9 @@ tr.key td{background:var(--race-soft)}
       <div class="tbl"><table>
         <thead><tr><th>Quand</th><th>Étape</th><th>Rôle</th></tr></thead>
         <tbody>
-          <tr><td>Juin 2027</td><td>Andorra Trail 80K (79 km, 3 900 m D+)</td><td>Premier ultra, qualifie pour le Trail de Bourbon 2028</td></tr>
-          <tr><td>Oct. 2027</td><td>Les Templiers (80,4 km, 3 443 m D+)</td><td>Deuxième ultra, test nutrition à 80-90 g/h</td></tr>
+          <tr><td>Mars-juin 2027</td><td>Citadelles 40 km, Voutezac 49 km, Andorra 21K</td><td>Étapes d'évaluation : premier UTMB Index, répétition générale, test en altitude</td></tr>
+          <tr><td>Juil. 2027</td><td>Restonica Trail by UTMB (69 km, 3 950 m D+)</td><td>Premier ultra, 108 points : au-dessus des 75 demandés pour le Trail de Bourbon</td></tr>
+          <tr><td>Sept. 2027</td><td>X-Trail Corrèze Dordogne (56 km, ou 81 km)</td><td>Deuxième course longue, test nutrition à 80-90 g/h</td></tr>
           <tr><td>Oct. 2028</td><td>Trail de Bourbon (106 km, 6 200 m D+), plan B GRP 120 km</td><td>Découvrir le terrain réunionnais et la nuit</td></tr>
           <tr><td>2029</td><td>Andorra 80K (juin) + GRP Ultra 160 km (août)</td><td>Les 2 qualificatives Diag (85 points chacune)</td></tr>
           <tr><td>Janv.-mars 2030</td><td>Inscription Diag</td><td>Package Bourbon Voyages ou tirage au sort</td></tr>
@@ -365,10 +366,11 @@ tr.key td{background:var(--race-soft)}
       <thead><tr><th>Course</th><th>Format</th><th>km-effort</th><th>Objectif réaliste</th><th>Niveau top 100 Diag</th></tr></thead>
       <tbody>
         <tr><td>10 km, 6 déc. 2026</td><td>10 km route</td><td>—</td><td>41'30-42'30</td><td>37-38 min d'ici 2029</td></tr>
-        <tr><td>Prépa, avril 2027</td><td>30-40 km</td><td>45-65</td><td>4 h 30-6 h</td><td>12,5 km-e/h</td></tr>
-        <tr class="key"><td>Andorra 80K, juin 2027</td><td>79 km, 3 900 m</td><td>118</td><td>14-16 h</td><td>11 h-11 h 30</td></tr>
-        <tr><td>Val d'Aran EXP, juil. 2027</td><td>32 km, 2 100 m</td><td>53</td><td>5 h-5 h 30</td><td>4 h 15</td></tr>
-        <tr class="key"><td>Templiers, oct. 2027</td><td>80,4 km, 3 443 m</td><td>114</td><td>12-13 h</td><td>10 h 30</td></tr>
+        <tr><td>Citadelles, mars 2027</td><td>40 km, 2 000 m</td><td>60</td><td>6 h-7 h</td><td>4 h 45</td></tr>
+        <tr><td>Voutezac, mai 2027</td><td>49 km, 2 000 m</td><td>69</td><td>6 h 30-7 h 30</td><td>5 h 30</td></tr>
+        <tr><td>Andorra 21K, juin 2027</td><td>21 km, 1 800 m</td><td>39</td><td>3 h 15-3 h 45</td><td>3 h</td></tr>
+        <tr class="key"><td>Restonica, juil. 2027</td><td>69 km, 3 950 m</td><td>108</td><td>13-15 h</td><td>10 h-10 h 30</td></tr>
+        <tr><td>X-Trail, sept. 2027</td><td>56 km, 2 800 m</td><td>84</td><td>9-10 h</td><td>7 h 30</td></tr>
         <tr><td>Trail de Bourbon, oct. 2028</td><td>106 km, 6 200 m</td><td>168</td><td>19-21 h</td><td>17 h 30-18 h</td></tr>
         <tr><td>GRP 120 km (plan B), août 2028</td><td>120 km, 7 000 m</td><td>190</td><td>22-24 h</td><td>20 h</td></tr>
         <tr><td>Andorra 80K, juin 2029</td><td>79 km, 3 900 m</td><td>118</td><td>11 h 30-12 h 30</td><td>11 h-11 h 30</td></tr>
@@ -388,7 +390,7 @@ tr.key td{background:var(--race-soft)}
       <h2>Accès à la Diagonale (règlement 2026)</h2>
       <ul>
         <li>2 trails d'au moins 85 points chacun (1 km = 1 point, 100 m D+ = 1 point), sans addition entre courses.</li>
-        <li>Fenêtre 2026 : du 1er janvier 2025 au 31 juillet 2026. Pour 2030, ce serait probablement janvier 2029-juillet 2030 : <b>Andorra 2027 ne comptera pas</b>, tes qualificatives se courent en 2029.</li>
+        <li>Fenêtre 2026 : du 1er janvier 2025 au 31 juillet 2026. Pour 2030, ce serait probablement janvier 2029-juillet 2030 : <b>la Restonica 2027 ne comptera pas</b>, tes qualificatives se courent en 2029.</li>
         <li>Pré-inscriptions de fin janvier à début mars, tirage mi-mars. Pour la métropole : 300 places au tirage, 950 en package Bourbon Voyages (sans tirage).</li>
         <li>Certificat médical type du Grand Raid + PPS de la FFA, entre mai et août.</li>
       </ul>

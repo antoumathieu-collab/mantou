@@ -35,7 +35,6 @@ must('  </section>\n\n  <!-- COURSES -->',`    <div class="panel">
 
   <!-- COURSES -->`);
 must('  <!-- ROUTINE COURSE -->',read("_new_sections.html")+'\n  <!-- ROUTINE COURSE -->');
-must('<td>Andorra 80K</td><td>70-90 g</td>','<td>Andorra 80K</td><td>60-90 g</td>');
 must('<h2>Entraîner l\'estomac jusqu\'à la Diag</h2>','<h2>Entraîner l\'estomac jusqu\'à la Diag</h2>\n      <p><a href="#calcul">Calcule ta nutrition pour n\'importe quel effort dans l\'onglet Calcul nutrition →</a></p>');
 
 const scripts=(pwa)=>`<script>const IS_PWA=${pwa};</script>\n<script>\n${planJs}\n</script>\n<script>\n${nutriJs}\n</script>\n<script>\n${appJs}\n</script>\n`;
@@ -104,6 +103,7 @@ function ics(mode){
     const summary=st.short+(st.dur&&st.dur!=="—"&&!st.short.includes(st.dur)&&st.kind!=="race"?" ("+st.dur+")":"");
     let desc=where?(where==="t"?"À Tarbes (semaine école) : ":"À Périgueux (semaine entreprise) : ")+st.text:(st.text===sp.text?st.text:"Tarbes : "+st.text+"\n\nPérigueux : "+sp.text);
     if(st.note)desc+="\n\n"+st.note;
+    {const rr=mode==="race"&&P.RACES.find(x=>x[0]===k);if(rr&&rr[5])desc+="\n\nInscription ("+rr[6]+") : "+rr[5]}
     const dpt=w[4],dpp=Math.round(w[4]/2/100)*100;
     desc+="\n\nSemaine "+w[0]+" · "+w[2]+" · "+(Number.isInteger(w[3])?w[3]+" h":Math.floor(w[3])+" h 30")+" · D+ "+(where==="t"?dpt+" m":where==="p"?dpp+" m":dpt+" m (Tarbes) / "+dpp+" m (Périgueux)");
     if(st.routineLink)desc+="\nRoutine course : onglet Routine course de l'appli.";
