@@ -90,7 +90,7 @@ function gymLines(type,light){let ex=GYM[type];if(light&&type==="A")ex=ex.filter
   return ex.map(e=>e.name+" "+(light?Math.max(2,e.sets-1):e.sets)+" × "+(e.lo===e.hi?e.lo:e.lo+"-"+e.hi)+" "+e.unit).join(" · ")}
 function weeksFor(mode){return mode==="race"?BASE.concat(EXT):BASE}
 /* Courses actives : conseillées (mode « avec courses », sauf masquées) + courses ajoutées par l'utilisateur (tous modes) */
-function activeRaces(ctx){const h=ctx.hidden||[];const rec=ctx.mode==="race"?RACES.filter(r=>!h.includes(r[0])):[];return rec.concat(ctx.extra||[]).sort((a,b)=>a[0]<b[0]?-1:1)}
+function activeRaces(ctx){const h=ctx.hidden||[];const rec=ctx.mode==="race"?RACES.filter(r=>!h.includes(r[0])):RACES.filter(r=>r[0]==="2027-07-08");return rec.concat(ctx.extra||[]).sort((a,b)=>a[0]<b[0]?-1:1)}
 function raceOn(d,ctx){const k=iso(d);return activeRaces(ctx).find(r=>r[0]===k)||null}
 function raceInWeek(w,ctx){const s=parse(w[1]);return activeRaces(ctx).find(r=>{const x=(parse(r[0])-s)/864e5;return x>=0&&x<7})||null}
 

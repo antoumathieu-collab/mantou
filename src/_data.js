@@ -5,7 +5,7 @@ const BASE=[
 [4,"2026-11-09","Allégée",5.5,600,"8 × 300 m vifs, récup 1'","SL 1 h 30","45 min Z2"],
 [5,"2026-11-16","Base + 10 km",8,1000,"3 × 3 km à 4'20, récup 2'","SL 2 h 15","1 h 15 Z2"],
 [6,"2026-11-23","Base + 10 km",8,900,"6 × 1 km à 4'00, récup 1'30","SL 2 h","1 h Z2"],
-[7,"2026-11-30","Affûtage 10 km",6,500,"4 × 1 km à 4'00, récup 2'","40 min Z2 + 4 lignes droites","RACE:10 km route|Objectif 41'30-42'30, départ à 4'12-4'15 sur les 3 premiers km."],
+[7,"2026-11-30","Développement",7,600,"6 × 3 min en côte","SL 2 h 30 Z2","1 h Z2"],
 [8,"2026-12-07","Récup",5,400,"EASY:Footing 45 min Z2, pas de qualité","SL 1 h 30 Z2","Repos"],
 [9,"2026-12-14","Récup",6,700,"8 × 30 s en côte","SL 1 h 45","1 h Z2"],
 [10,"2026-12-21","Base trail",7,900,"10 × 45 s en côte, descente trottinée","SL 2 h","1 h Z2"],
@@ -26,18 +26,18 @@ const BASE=[
 [25,"2027-04-05","Développement",8,1600,"4 × 5 min en côte","SL 3 h","1 h Z2"],
 [26,"2027-04-12","Allégée + course",6,900,"6 × 2 min en côte","SL 1 h 45","1 h Z2"],
 [27,"2027-04-19","Spécifique",8.5,2000,"3 × 12 min seuil en montée","SL 3 h 30","1 h Z2"],
-[28,"2027-04-26","Allégée + course",5.5,900,"3 × 5 min à allure course","RACE:Trail des Coteaux de Voutezac, 49 km|49 km, 2 000 m D+, UTMB Index 50K. Répétition générale de la Restonica : matériel, nutrition à 60 g/h, départ prudent.","Repos"],
+[28,"2027-04-26","Allégée + course",5.5,900,"3 × 5 min à allure course","RACE:Trail des Coteaux de Voutezac, 49 km|49 km, 2 000 m D+, UTMB Index 50K. Répétition générale de l'UTC : matériel, nutrition à 60 g/h, départ prudent.","Repos"],
 [29,"2027-05-03","Récup",5.5,600,"EASY:Footing 45 min Z2, pas de qualité","SL 1 h 30 Z2","45 min Z2"],
-[30,"2027-05-10","Spécifique",9,2500,"3 × 12 min seuil en montée","SL 4 h 30","1 h 30 Z2"],
-[31,"2027-05-17","Spécifique (choc)",9.5,3000,"5 × 6 min en côte","SL 5 h","2 h Z2"],
-[32,"2027-05-24","Allégée",6.5,1200,"4 × 4 min en côte","SL 2 h 30","1 h Z2"],
-[33,"2027-05-31","Spécifique (choc)",9.5,3200,"2 × 20 min tempo en montée","SL 5 h 30 avec tout le matériel et la nutrition de course","2 h Z2"],
-[34,"2027-06-07","Spécifique + test",7.5,2200,"3 × 8 min seuil en montée","SL 2 h","1 h 30 Z2"],
-[35,"2027-06-14","Spécifique (répétition générale)",9,2800,"4 × 6 min en côte","SL 5 h avec tout le matériel et la nutrition de course","1 h 30 Z2"],
-[36,"2027-06-21","Affûtage",7,1500,"3 × 8 min seuil","SL 3 h","1 h Z2"],
-[37,"2027-06-28","Affûtage",5.5,800,"4 × 4 min à allure course","SL 1 h 45","45 min Z2"],
-[38,"2027-07-05","Course",3,300,"3 × 3 min de rappel (court)","RACE:Restonica Trail by UTMB, 69 km|Corte (Corse). 69 km, 3 950 m D+, 3 Running Stones, 108 points Grand Raid. Premier ultra : objectif finir, environ 13-15 h, nutrition selon l'onglet Calcul nutrition.","Repos"],
-[39,"2027-07-12","Récup après Restonica",2,0,"EASY:Marche ou vélo léger 45 min","Marche libre","Repos"],
+[30,"2027-05-10","Spécifique",10,3000,"3 × 12 min seuil en montée","SL 5 h","1 h 30 Z2"],
+[31,"2027-05-17","Spécifique (choc)",11,3600,"5 × 6 min en côte","SL 6 h","2 h Z2"],
+[32,"2027-05-24","Allégée",7,1500,"4 × 4 min en côte","SL 2 h 30","1 h Z2"],
+[33,"2027-05-31","Spécifique (choc)",12,4200,"2 × 20 min tempo en montée","SL 7 h avec tout le matériel et la nutrition de course","2 h Z2"],
+[34,"2027-06-07","Spécifique + test",8,2500,"3 × 8 min seuil en montée","SL 2 h 30","1 h 30 Z2"],
+[35,"2027-06-14","Spécifique (répétition générale)",12,4500,"4 × 6 min en côte","SL 7 h avec tout le matériel et la nutrition de course (dont une partie de nuit)","2 h Z2"],
+[36,"2027-06-21","Affûtage",9,2500,"3 × 8 min seuil","SL 4 h","1 h Z2"],
+[37,"2027-06-28","Affûtage",6,1000,"4 × 4 min à allure course","SL 2 h","45 min Z2"],
+[38,"2027-07-05","Course (jeudi 8)",3,300,"3 × 3 min de rappel (court)","Repos","Repos"],
+[39,"2027-07-12","Récup après l'UTC",2,0,"EASY:Marche ou vélo léger 45 min","Marche libre","Repos"],
 [40,"2027-07-19","Reprise",3,200,"EASY:Footing 30-40 min Z1-Z2","Footing 40 min Z2","Repos"]
 ];
 /* Prolongation jusqu'au X-Trail Corrèze Dordogne (plan avec courses uniquement) */
@@ -58,27 +58,23 @@ const EXT=[
    Liens relevés le 10 novembre 2026. */
 const RACES=[
 ["2026-11-08","Le Montagrier Trail, 30 km","Montagrier (24). En Z2-Z3, c'est une sortie longue en compétition. Si tu es à Tarbes ce week-end-là : sortie longue normale à la place.",true,false,"",""],
-["2026-12-06","10 km route","Objectif 41'30-42'30, départ à 4'12-4'15.",false,false,"",""],
 ["2027-01-17","Trail de Pécharmant, 21 km","Creysse (24), 21 km, environ 300-400 m D+. Course de reprise, Z3 maximum. La noctambule de 11 km du samedi soir est possible à la place. Date à confirmer (16-17 janvier).",false,true,"https://www.spiridonperigordpourpre.fr/","Site de l'organisateur · inscriptions à venir"],
 ["2027-02-21","Hivernal Trail Grand-Brassac, 20 km","Grand-Brassac (24), 20 km de jour, 600 m D+. Course d'entraînement, test des produits de nutrition. Le 20 km de nuit de la veille est possible à la place. Date à confirmer : 13-14 ou 20-21 février selon les calendriers.",false,true,"https://fr.milesrepublic.com/event/hivernal-trail-grand-brassac-htgb-15725","Fiche de la course · inscriptions vers le 20 janvier"],
 ["2027-03-28","Trail des Citadelles, 40 km","Lavelanet (09). 40 km, 2 000 m D+, UTMB Index 50K : ta première cote. Premier vrai test montagne, 50-60 g/h. Week-end de Pâques, date à confirmer sur le site officiel.",true,true,"https://www.trailcitadelles.com","Site officiel · inscriptions à venir"],
 ["2027-04-18","Trail nature d'Isle, 22 km","Isle (87), 22 km, 600 m D+. En Z3 maximum : c'est de l'entraînement, deux semaines avant Voutezac. Date à confirmer (mi-avril).",false,true,"https://tni.jourdetrail.fr/","Site officiel · inscriptions à venir"],
-["2027-05-01","Trail des Coteaux de Voutezac, 49 km","Voutezac (19). 49 km, 2 000 m D+, UTMB Index 50K. Répétition générale de la Restonica : matériel, nutrition à 60 g/h, rythme. 550 dossards pour les trois trails.",true,false,"https://www.klikego.com/inscription/trail-et-rando-des-coteaux-voutezac-2027/running-course-a-pied/1643665602486-10","S'inscrire · ouvert sur Klikego"],
-["2027-06-13","Trail 100 Andorra by UTMB, Trail 21K","Ordino (Andorre). 21 km, 1 800 m D+, 1 Running Stone. Dernier test en haute montagne, quatre semaines avant la Restonica : à courir en contrôle.",false,false,"https://andorra.utmb.world/registration","S'inscrire · événement ouvert"],
-["2027-07-10","Restonica Trail by UTMB, 69 km","Corte (Corse). 69 km, 3 950 m D+, 3 Running Stones, 108 points Grand Raid. Premier ultra : objectif finir, environ 13-15 h.",true,false,"https://restonica.utmb.world/races/RT100K","Page de la course · ouverture à venir (alerte sur restonica.utmb.world/get-notified)"],
-["2027-08-22","Trail de Peyrignac, 21,8 km","Peyrignac (24), 21,8 km, 530 m D+. Reprise en douceur après la Restonica, sans objectif de temps. Date à confirmer (23 août en 2026).",false,true,"https://fr.milesrepublic.com/event/trail-de-peyrignac-7394","Fiche de la course · inscriptions à venir"],
-["2027-09-25","X-Trail Corrèze Dordogne, Grand Trail des Tours 56 km","Argentat (19). 56 km, 2 800 m D+, UTMB Index. Le 81 km (3 632 m D+) si la Restonica s'est bien passée, le 29 km sinon : à décider en août. Date estimée (26 sept. en 2026).",true,true,"https://www.xtrail-correze-dordogne.com/x-trail-correze-dordogne/","Site officiel · inscriptions à venir"]
+["2027-05-01","Trail des Coteaux de Voutezac, 49 km","Voutezac (19). 49 km, 2 000 m D+, UTMB Index 50K. Répétition générale de l'UTC : matériel, nutrition à 60 g/h, rythme. 550 dossards pour les trois trails.",true,false,"https://www.klikego.com/inscription/trail-et-rando-des-coteaux-voutezac-2027/running-course-a-pied/1643665602486-10","S'inscrire · ouvert sur Klikego"],
+["2027-07-08","Ultra-Trail di Corsica (UTC100M), 110 km","Corte (Corse). 110 km, 7 200 m D+, 4 Running Stones, 182 points Grand Raid. Objectif de la saison : finir, environ 24-28 h (limite 48 h), deux nuits. Départ jeudi 8 juillet à 23 h, cours Paoli (horaire 2026, à confirmer pour 2027). Dors le plus possible la veille. Repli possible : Restonica 69 km (10 juillet) si les points de contrôle de fin avril et de fin mai ne sont pas bons.",true,false,"https://restonica.utmb.world/races/UTC100M","Page de la course"],
+["2027-08-22","Trail de Peyrignac, 21,8 km","Peyrignac (24), 21,8 km, 530 m D+. Reprise en douceur après l'UTC, sans objectif de temps. Date à confirmer (23 août en 2026).",false,true,"https://fr.milesrepublic.com/event/trail-de-peyrignac-7394","Fiche de la course · inscriptions à venir"],
+["2027-09-25","X-Trail Corrèze Dordogne, Grand Trail des Tours 56 km","Argentat (19). 56 km, 2 800 m D+, UTMB Index. Le 81 km (3 632 m D+) si l'UTC s'est bien passée, le 29 km sinon : à décider en août. Date estimée (26 sept. en 2026).",true,true,"https://www.xtrail-correze-dordogne.com/x-trail-correze-dordogne/","Site officiel · inscriptions à venir"]
 ];
 /* Calendrier « un trail par mois » : date, course retenue, alternative, UTMB Index, Stones, points Grand Raid, surlignée, lien, libellé */
 const COURSES=[
-["6 déc. 2026","<b>10 km route (repère)</b>","—","Non","Non","—",1,"",""],
 ["17 janv. 2027 *","<b>Trail de Pécharmant, Creysse (24), 21 km</b>","Roc'trail, Paussac (24), 30-31 janv.","À vérifier","Non","&lt; 75",1,"https://www.spiridonperigordpourpre.fr/","Organisateur"],
 ["20-21 févr. 2027 *","<b>Hivernal Trail Grand-Brassac (24), 20 km, 600 m D+</b>","Trail de la Pierre du Loup, Sauviat (87), 25 km","À vérifier","Non","&lt; 75",1,"https://fr.milesrepublic.com/event/hivernal-trail-grand-brassac-htgb-15725","Fiche"],
 ["28 mars 2027 *","<b>Trail des Citadelles, Lavelanet (09), 40 km, 2 000 m D+</b>","Trail des Mouflons, Cherveix-Cubas (24), 44 km, 4 avril","Oui (50K)","Non","60",1,"https://www.trailcitadelles.com","Site officiel"],
 ["18 avril 2027 *","<b>Trail nature d'Isle (87), 22 km, 600 m D+</b>","Trail de la forêt de Lenfant, Saint-Gence (87), 20 km","À vérifier","Non","&lt; 75",1,"https://tni.jourdetrail.fr/","Site officiel"],
 ["1er mai 2027","<b>Trail des Coteaux, Voutezac (19), 49 km, 2 000 m D+</b>","Oh Meu Deus by UTMB (Portugal), 52 km, 30 avril","Oui (50K)","Non","69",1,"https://www.klikego.com/inscription/trail-et-rando-des-coteaux-voutezac-2027/running-course-a-pied/1643665602486-10","S'inscrire"],
-["13 juin 2027","<b>Trail 100 Andorra by UTMB, 21 km, 1 800 m D+</b>","—","Oui (20K)","1","39",1,"https://andorra.utmb.world/registration","S'inscrire"],
-["10 juil. 2027","<b>Restonica Trail by UTMB, Corte, 69 km, 3 950 m D+</b>","Verbier St-Bernard by UTMB, X-Traversée 77 km, 5 300 m D+","Oui (100K)","3","108",1,"https://restonica.utmb.world/races/RT100K","Ouverture à venir"],
+["8 juil. 2027","<b>Ultra-Trail di Corsica (UTC100M), Corte, 110 km, 7 200 m D+</b> · objectif de la saison","Repli : Restonica Trail by UTMB, 69 km, 3 950 m D+ (10 juil.)","Oui (100M)","4","182",1,"https://restonica.utmb.world/races/UTC100M","Page de la course"],
 ["22 août 2027 *","<b>Trail de Peyrignac (24), 21,8 km, 530 m D+</b>","Grand Raid des Pyrénées, Tour du Moudang 60 km (tirage au sort)","À vérifier","Non","&lt; 75",1,"https://fr.milesrepublic.com/event/trail-de-peyrignac-7394","Fiche"],
 ["25 sept. 2027 *","<b>X-Trail Corrèze Dordogne, Argentat (19), 56 km, 2 800 m D+</b> (ou 29 km / 81 km)","—","Oui","Non","84 (117 sur le 81 km)",1,"https://www.xtrail-correze-dordogne.com/x-trail-correze-dordogne/","Site officiel"]
 ];

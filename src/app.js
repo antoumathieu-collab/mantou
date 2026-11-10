@@ -17,11 +17,11 @@ if(store.get("seeded","")!=="2"){
 }
 const kd=k=>parse(k.slice(0,10));
 /* ---------- Courses : conseillées (modifiables) + ajoutées ---------- */
-const RACE_INFO={"2026-11-08":{dist:30,dplus:900,terrain:"roulant",est:true},"2026-12-06":{dist:10,dplus:0,terrain:"route",prio:"B"},
+const RACE_INFO={"2026-11-08":{dist:30,dplus:900,terrain:"roulant",est:true},
  "2027-01-17":{dist:21,dplus:350,terrain:"roulant",est:true},"2027-02-21":{dist:20,dplus:600,terrain:"roulant"},
  "2027-03-28":{dist:40,dplus:2000,terrain:"montagne",prio:"B"},"2027-04-18":{dist:22,dplus:600,terrain:"roulant"},
- "2027-05-01":{dist:49,dplus:2000,terrain:"roulant",prio:"B"},"2027-06-13":{dist:21,dplus:1800,terrain:"montagne"},
- "2027-07-10":{dist:69,dplus:3950,terrain:"technique",prio:"A"},"2027-08-22":{dist:21.8,dplus:530,terrain:"roulant"},
+ "2027-05-01":{dist:49,dplus:2000,terrain:"roulant",prio:"B"},
+ "2027-07-08":{dist:110,dplus:7200,terrain:"technique",prio:"A"},"2027-08-22":{dist:21.8,dplus:530,terrain:"roulant"},
  "2027-09-25":{dist:56,dplus:2800,terrain:"roulant",prio:"B"}};
 let raceEdits=store.json("raceEdits",{});
 let userRaces=store.json("userRaces",[]);
@@ -595,7 +595,7 @@ function renderPlanning(){
   document.getElementById("site-p").setAttribute("aria-pressed",site==="p");
   document.getElementById("mode-desc").textContent=mode==="race"
     ?"Avec mes courses : un trail par mois ("+RACES.length+" courses) remplace la sortie longue de sa semaine, et le plan continue jusqu'au X-Trail Corrèze Dordogne (fin sept. 2027)."
-    :"Plan de base : seulement le 10 km, Voutezac (course de prépa) et la Restonica. Il s'arrête fin juillet 2027.";
+    :"Plan de base : seulement Voutezac (course de prépa) et l'UTC 110 km. Il s'arrête fin juillet 2027.";
   document.getElementById("month").textContent=MONTHS[view.m]+" "+view.y;
   const g=document.getElementById("grid");g.innerHTML="";
   ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].forEach(x=>g.append(el("div",{class:"dow",text:x})));
@@ -658,7 +658,7 @@ function renderHome(){
   if(nr){const d2=parse(nr[0]);const days=Math.round((d2-TODAY)/864e5);
     document.getElementById("next-race").textContent=days===0?"Aujourd'hui":"J-"+days;
     document.getElementById("next-race-d").textContent=nr[1]+" · "+d2.getUTCDate()+" "+MONTHS[d2.getUTCMonth()]+(nr[4]?" (date estimée)":"");}
-  const da=Math.round((parse("2027-07-10")-TODAY)/864e5);
+  const da=Math.round((parse("2027-07-08")-TODAY)/864e5);
   document.getElementById("cd-main").textContent=da>0?"J-"+da:da===0?"Aujourd'hui":"Courue";
 }
 
@@ -707,15 +707,15 @@ const PRESETS=[
   ["Semi",{sport:"route",dist:21.1,dplus:0,pace:270,effort:"competition",context:"course"}],
   ["Marathon",{sport:"route",dist:42.195,dplus:0,pace:300,effort:"competition",context:"course"}],
   ["SL trail 3 h",{sport:"trail",dist:24,dplus:1200,pace:450,effort:"endurance",context:"entrainement"}],
-  ["Restonica 69 km",{sport:"trail",dist:69,dplus:3950,pace:730,effort:"competition",context:"course"}],
+  ["UTC 110 km",{sport:"trail",dist:110,dplus:7200,pace:800,effort:"competition",context:"course"}],
   ["X-Trail 56 km",{sport:"trail",dist:56,dplus:2800,pace:610,effort:"competition",context:"course"}],
   ["Diagonale",{sport:"trail",dist:180,dplus:10200,pace:660,effort:"competition",context:"course"}],
   ["Vélo 2 h",{sport:"velo",dist:60,dplus:600,pace:120,effort:"endurance",context:"entrainement"}],
   ["Natation 2 km",{sport:"natation",dist:2,dplus:0,pace:1200,effort:"endurance",context:"entrainement"}]
 ];
-const RACE_PRESET={"2026-11-08":{sport:"trail",dist:30,dplus:900,pace:420},"2026-12-06":{sport:"route",dist:10,dplus:0,pace:252},"2027-01-24":{sport:"trail",dist:32,dplus:900,pace:420},
+const RACE_PRESET={"2026-11-08":{sport:"trail",dist:30,dplus:900,pace:420},"2027-01-24":{sport:"trail",dist:32,dplus:900,pace:420},
  "2027-02-21":{sport:"trail",dist:33.5,dplus:1000,pace:430},"2027-03-21":{sport:"trail",dist:42,dplus:1600,pace:480},"2027-04-18":{sport:"trail",dist:31,dplus:1500,pace:500},
- "2027-06-10":{sport:"trail",dist:79,dplus:3900,pace:679},"2027-07-10":{sport:"trail",dist:32,dplus:2100,pace:580},"2027-10-17":{sport:"trail",dist:80.4,dplus:3443,pace:560}};
+ "2027-06-10":{sport:"trail",dist:79,dplus:3900,pace:679},"2027-07-08":{sport:"trail",dist:110,dplus:7200,pace:800},"2027-10-17":{sport:"trail",dist:80.4,dplus:3443,pace:560}};
 let NI=Object.assign({sport:"trail",dist:24,dplus:1200,pace:450,effort:"endurance",temp:"doux",context:"entrainement",gut:"debutant",sweat:"",unit:"minkm",weight:null},store.json("nutri",{}));
 function presetFromRace(k){const ri=raceInfo(k);if(!ri||!ri.dist)return;const pr=predictRace(ri);
   Object.assign(NI,{sport:ri.terrain==="route"?"route":"trail",dist:ri.dist,dplus:ri.dplus||0,pace:pr?pr.pace:(RACE_PRESET[k]||{}).pace||420,effort:"competition",context:"course",unit:"minkm"});store.setJson("nutri",NI)}

@@ -366,7 +366,7 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
     <div class="panel today" id="today-panel"></div>
     <div class="cols countdown">
       <div class="panel stat"><span>Prochaine course</span><b id="next-race">—</b><span id="next-race-d"></span></div>
-      <div class="panel stat"><span>Restonica 69 km</span><b id="cd-main">—</b><span>10 juillet 2027</span></div>
+      <div class="panel stat"><span>UTC 110 km</span><b id="cd-main">—</b><span>8 juillet 2027, 23 h</span></div>
       <div class="panel stat"><span>Diagonale</span><b>2030</b><span>objectif 33 h</span></div>
     </div>
   </section>
@@ -426,17 +426,17 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
   <section class="view" id="v-courses" hidden>
     <div class="panel">
       <h2>Un trail par mois jusqu'en septembre 2027</h2>
-      <p>Une course par mois, placée selon tes blocs d'alternance, avec une alternative quand il y en a une. Trois se courent à fond (Citadelles, Voutezac, Restonica) : ce sont tes étapes d'évaluation, les autres sont des entraînements avec dossard. Ce sont les mêmes que dans le planning « Avec mes courses ». Les dates suivies d'un astérisque ne sont pas encore confirmées par l'organisateur.</p>
+      <p>Une course par mois, placée selon tes blocs d'alternance, avec une alternative quand il y en a une. Trois se courent à fond (Citadelles, Voutezac, UTC) : ce sont tes étapes d'évaluation, les autres sont des entraînements avec dossard. Ce sont les mêmes que dans le planning « Avec mes courses ». Les dates suivies d'un astérisque ne sont pas encore confirmées par l'organisateur.</p>
       <ul>
-        <li><b>UTMB Index</b> : ta cote de performance, valable 24 mois après une course. Sans Index, tu pars dans la dernière vague à la Restonica : les Citadelles te le donnent dès mars. Elle compte sur toute course publiée sur utmb.world. Pour les courses « à vérifier », contrôle sur <a href="https://utmb.world" target="_blank" rel="noopener">utmb.world</a> avant de t'inscrire.</li>
-        <li><b>Running Stones</b> : seulement les courses « by UTMB ». Dans ton plan : Andorra 21K (1 Stone) et Restonica 69 km (3 Stones).</li>
+        <li><b>UTMB Index</b> : ta cote de performance, valable 24 mois après une course. Sans Index, tu pars dans la dernière vague à l'UTC : les Citadelles te le donnent dès mars. Elle compte sur toute course publiée sur utmb.world. Pour les courses « à vérifier », contrôle sur <a href="https://utmb.world" target="_blank" rel="noopener">utmb.world</a> avant de t'inscrire.</li>
+        <li><b>Running Stones</b> : seulement les courses « by UTMB ». Dans ton plan : l'UTC 110 km (4 Stones). Repli : Restonica 69 km (3 Stones).</li>
         <li><b>Points Grand Raid</b> : km + D+/100, utiles à partir de 75 points (Trail de Bourbon).</li>
       </ul>
       <h3>Les règles pour choisir</h3>
       <ol>
         <li>Une course remplace la sortie longue de la semaine ; le lendemain se fait en Z1 ou repos.</li>
-        <li>Pas plus d'une course de plus de 40 km toutes les 6 semaines, Restonica comprise.</li>
-        <li>Rien de plus long que 25 km dans les 4 semaines avant la Restonica (l'Andorra 21K est le dernier test), ni dans les 3 semaines après.</li>
+        <li>Pas plus d'une course de plus de 40 km toutes les 6 semaines, UTC comprise.</li>
+        <li>Aucune course dans les 6 semaines avant l'UTC (la dernière est Voutezac, début mai), ni dans les 4 semaines après.</li>
         <li>Avant mars, une course courte se court en Z3 au maximum : c'est de l'entraînement.</li>
       </ol>
     </div>
@@ -451,7 +451,7 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
   <section class="view" id="v-materiel" hidden>
     <div class="panel">
       <h2>Trois packages, un conseillé</h2>
-      <p>Je recommande le package <b>Rapport qualité-prix</b> (~720 €). Il couvre tout le matériel de la Restonica et servira encore pour la Diag, en changeant les chaussures entre-temps.</p>
+      <p>Je recommande le package <b>Rapport qualité-prix</b> (~720 €). Il couvre tout le matériel de l'UTC et servira encore pour la Diag, en changeant les chaussures entre-temps.</p>
       <div class="seg" role="group" aria-label="Package">
         <button data-pk="ess" aria-pressed="false">Essentiel ~455 €</button>
         <button data-pk="qp" aria-pressed="true">Qualité-prix ~720 €</button>
@@ -648,7 +648,7 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
   <section class="view" id="v-routine" hidden>
     <div class="panel">
       <h2>La routine avant et pendant chaque course</h2>
-      <p>Tu suis la même routine à chaque course, pour que le jour de la Restonica ou du X-Trail rien ne soit nouveau. Les points marqués <span class="sz">ultra</span> concernent les courses de plus de 40 km ; les autres valent pour toutes.</p>
+      <p>Tu suis la même routine à chaque course, pour que le jour de l'UTC ou du X-Trail rien ne soit nouveau. Les points marqués <span class="sz">ultra</span> concernent les courses de plus de 40 km ; les autres valent pour toutes.</p>
     </div>
     <div class="panel steps">
       <div class="phase">
@@ -730,18 +730,17 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
       <tbody>
         <tr><td>Nov.-févr.</td><td>Trails de 15-30 km</td><td>30-40 g</td><td>400-500 ml</td><td>200-300 mg</td><td>Trouver les produits qui passent</td></tr>
         <tr><td>Mars-mai</td><td>Citadelles 40 km, Voutezac 49 km</td><td>50-60 g</td><td>500-600 ml</td><td>300-500 mg</td><td>Manger en courant, en montée</td></tr>
-        <tr><td>Juil. 2027</td><td>Restonica 69 km</td><td>60-90 g</td><td>500-750 ml</td><td>400-700 mg</td><td>Tenir 14 h, salé aux ravitos</td></tr>
+        <tr><td>Juil. 2027</td><td>UTC 110 km</td><td>60-90 g</td><td>500-750 ml</td><td>400-700 mg</td><td>Tenir 24-28 h, salé aux ravitos, caféine dosée pour la 2e nuit</td></tr>
         <tr><td>Sept. 2027</td><td>X-Trail 56 km</td><td>80-90 g</td><td>500-750 ml</td><td>400-700 mg</td><td>Haut de la fourchette</td></tr>
         <tr><td>2028-2030</td><td>Bourbon, GRP, Diag</td><td>80-90 g</td><td>500-750 ml</td><td>500-800 mg</td><td>Nuit, caféine, vraie nourriture</td></tr>
       </tbody>
     </table></div>
     <div class="cols">
-      <div class="panel"><h3>10 km du 6 décembre</h3><ul><li>Veille : repas habituel, un peu plus de féculents.</li><li>Petit-déjeuner riche en glucides 3 h avant.</li><li>Pendant : rien, quelques gorgées d'eau.</li></ul></div>
       <div class="panel"><h3>Trails courts de l'hiver</h3><ul><li>Un gel ou une pâte de fruits toutes les 40-45 min dès la 1re heure.</li><li>500 ml de boisson d'effort + eau aux ravitos.</li><li>Noter ce qui passe et ce qui écœure.</li></ul></div>
-      <div class="panel"><h3>Voutezac, 1er mai</h3><ul><li>Répétition générale de la Restonica : mêmes produits, même sac.</li><li>Une prise toutes les 20 min, cible 60 g/h.</li><li>1 pastille de sel par heure s'il fait chaud.</li></ul></div>
+      <div class="panel"><h3>Voutezac, 1er mai</h3><ul><li>Répétition générale de l'UTC : mêmes produits, même sac.</li><li>Une prise toutes les 20 min, cible 60 g/h.</li><li>1 pastille de sel par heure s'il fait chaud.</li></ul></div>
     </div>
     <div class="panel">
-      <h3>Restonica 69 km (13-15 h)</h3>
+      <h3>UTC 110 km (24-28 h)</h3>
       <div class="tbl"><table><tbody>
         <tr><td>J-2 et J-1</td><td>Repas riches en glucides, peu de fibres et de gras la veille au soir</td></tr>
         <tr><td>Matin</td><td>Petit-déjeuner testé à l'entraînement, 3 h avant le départ</td></tr>
@@ -751,7 +750,7 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
         <tr><td>Nausée</td><td>Ralentir, eau, salé 20-30 min, puis reprendre doucement</td></tr>
         <tr><td>Arrivée</td><td>Boisson de récup ou repas complet dans l'heure</td></tr>
       </tbody></table></div>
-      <p class="small">Total : environ 1 000-1 300 g de glucides. Andorra 21K : même rythme qu'en prépa, à 60-70 g/h. X-Trail : plan de la Restonica en visant 80-90 g/h, c'est le test de la Diag. Ces valeurs sont des ordres de grandeur courants en ultra, à ajuster à tes sensations ; en cas de troubles digestifs répétés, consulte un diététicien du sport.</p>
+      <p class="small">Total : environ 1 800-2 300 g de glucides sur 24-28 h. X-Trail : plan de l'UTC en visant 80-90 g/h, c'est le test de la Diag. Ces valeurs sont des ordres de grandeur courants en ultra, à ajuster à tes sensations ; en cas de troubles digestifs répétés, consulte un diététicien du sport.</p>
     </div>
   </section>
 
@@ -763,8 +762,8 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
       <div class="tbl"><table>
         <thead><tr><th>Quand</th><th>Étape</th><th>Rôle</th></tr></thead>
         <tbody>
-          <tr><td>Mars-juin 2027</td><td>Citadelles 40 km, Voutezac 49 km, Andorra 21K</td><td>Étapes d'évaluation : premier UTMB Index, répétition générale, test en altitude</td></tr>
-          <tr><td>Juil. 2027</td><td>Restonica Trail by UTMB (69 km, 3 950 m D+)</td><td>Premier ultra, 108 points : au-dessus des 75 demandés pour le Trail de Bourbon</td></tr>
+          <tr><td>Mars-juin 2027</td><td>Citadelles 40 km, Voutezac 49 km, puis blocs de sorties longues de 5 à 7 h</td><td>Étapes d'évaluation : premier UTMB Index, répétition générale, matériel et nutrition</td></tr>
+          <tr><td>Juil. 2027</td><td>Ultra-Trail di Corsica, UTC100M (110 km, 7 200 m D+)</td><td>Premier ultra de catégorie 100M UTMB, 182 points, 4 Stones : bien au-dessus des 75 demandés pour le Trail de Bourbon</td></tr>
           <tr><td>Sept. 2027</td><td>X-Trail Corrèze Dordogne (56 km, ou 81 km)</td><td>Deuxième course longue, test nutrition à 80-90 g/h</td></tr>
           <tr><td>Oct. 2028</td><td>Trail de Bourbon (106 km, 6 200 m D+), plan B GRP 120 km</td><td>Découvrir le terrain réunionnais et la nuit</td></tr>
           <tr><td>2029</td><td>Andorra 80K (juin) + GRP Ultra 160 km (août)</td><td>Les 2 qualificatives Diag (85 points chacune)</td></tr>
@@ -780,11 +779,9 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
     <div class="tbl"><table>
       <thead><tr><th>Course</th><th>Format</th><th>km-effort</th><th>Objectif réaliste</th><th>Niveau top 100 Diag</th></tr></thead>
       <tbody>
-        <tr><td>10 km, 6 déc. 2026</td><td>10 km route</td><td>—</td><td>41'30-42'30</td><td>37-38 min d'ici 2029</td></tr>
         <tr><td>Citadelles, mars 2027</td><td>40 km, 2 000 m</td><td>60</td><td>6 h-7 h</td><td>4 h 45</td></tr>
         <tr><td>Voutezac, mai 2027</td><td>49 km, 2 000 m</td><td>69</td><td>6 h 30-7 h 30</td><td>5 h 30</td></tr>
-        <tr><td>Andorra 21K, juin 2027</td><td>21 km, 1 800 m</td><td>39</td><td>3 h 15-3 h 45</td><td>3 h</td></tr>
-        <tr class="key"><td>Restonica, juil. 2027</td><td>69 km, 3 950 m</td><td>108</td><td>13-15 h</td><td>10 h-10 h 30</td></tr>
+        <tr class="key"><td>UTC, juil. 2027</td><td>110 km, 7 200 m</td><td>182</td><td>24-28 h</td><td>—</td></tr>
         <tr><td>X-Trail, sept. 2027</td><td>56 km, 2 800 m</td><td>84</td><td>9-10 h</td><td>7 h 30</td></tr>
         <tr><td>Trail de Bourbon, oct. 2028</td><td>106 km, 6 200 m</td><td>168</td><td>19-21 h</td><td>17 h 30-18 h</td></tr>
         <tr><td>GRP 120 km (plan B), août 2028</td><td>120 km, 7 000 m</td><td>190</td><td>22-24 h</td><td>20 h</td></tr>
@@ -805,7 +802,7 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
       <h2>Accès à la Diagonale (règlement 2026)</h2>
       <ul>
         <li>2 trails d'au moins 85 points chacun (1 km = 1 point, 100 m D+ = 1 point), sans addition entre courses.</li>
-        <li>Fenêtre 2026 : du 1er janvier 2025 au 31 juillet 2026. Pour 2030, ce serait probablement janvier 2029-juillet 2030 : <b>la Restonica 2027 ne comptera pas</b>, tes qualificatives se courent en 2029.</li>
+        <li>Fenêtre 2026 : du 1er janvier 2025 au 31 juillet 2026. Pour 2030, ce serait probablement janvier 2029-juillet 2030 : <b>l'UTC 2027 ne comptera pas</b>, tes qualificatives se courent en 2029.</li>
         <li>Pré-inscriptions de fin janvier à début mars, tirage mi-mars. Pour la métropole : 300 places au tirage, 950 en package Bourbon Voyages (sans tirage).</li>
         <li>Certificat médical type du Grand Raid + PPS de la FFA, entre mai et août.</li>
       </ul>
@@ -823,7 +820,7 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
           <tr><td>Z5 VMA</td><td>3'50-3'55</td><td>9</td><td>Impossible de parler</td><td>30 s à 3 min</td></tr>
         </tbody>
       </table></div>
-      <p class="small">En montagne, on pilote à l'effort : tu marches dès qu'une montée te fait sortir de Z2. Allures à mettre à jour après le 10 km du 6 décembre.</p>
+      <p class="small">En montagne, on pilote à l'effort : tu marches dès qu'une montée te fait sortir de Z2. Allures à mettre à jour après un test à fond (5 ou 10 km).</p>
     </div>
     <div class="cols">
       <div class="panel"><h3>Salle A, mercredi</h3><ul><li>Squat 4 × 6-8, descente en 3 s</li><li>Fente bulgare 3 × 8 par jambe</li><li>Step-up lesté 3 × 10 par jambe</li><li>Soulevé de terre roumain 3 × 8</li><li>Descente de marche excentrique 3 × 10, 4 s</li><li>Mollets genou tendu puis fléchi, 3 × 12</li></ul></div>
@@ -863,7 +860,7 @@ const BASE=[
 [4,"2026-11-09","Allégée",5.5,600,"8 × 300 m vifs, récup 1'","SL 1 h 30","45 min Z2"],
 [5,"2026-11-16","Base + 10 km",8,1000,"3 × 3 km à 4'20, récup 2'","SL 2 h 15","1 h 15 Z2"],
 [6,"2026-11-23","Base + 10 km",8,900,"6 × 1 km à 4'00, récup 1'30","SL 2 h","1 h Z2"],
-[7,"2026-11-30","Affûtage 10 km",6,500,"4 × 1 km à 4'00, récup 2'","40 min Z2 + 4 lignes droites","RACE:10 km route|Objectif 41'30-42'30, départ à 4'12-4'15 sur les 3 premiers km."],
+[7,"2026-11-30","Développement",7,600,"6 × 3 min en côte","SL 2 h 30 Z2","1 h Z2"],
 [8,"2026-12-07","Récup",5,400,"EASY:Footing 45 min Z2, pas de qualité","SL 1 h 30 Z2","Repos"],
 [9,"2026-12-14","Récup",6,700,"8 × 30 s en côte","SL 1 h 45","1 h Z2"],
 [10,"2026-12-21","Base trail",7,900,"10 × 45 s en côte, descente trottinée","SL 2 h","1 h Z2"],
@@ -884,18 +881,18 @@ const BASE=[
 [25,"2027-04-05","Développement",8,1600,"4 × 5 min en côte","SL 3 h","1 h Z2"],
 [26,"2027-04-12","Allégée + course",6,900,"6 × 2 min en côte","SL 1 h 45","1 h Z2"],
 [27,"2027-04-19","Spécifique",8.5,2000,"3 × 12 min seuil en montée","SL 3 h 30","1 h Z2"],
-[28,"2027-04-26","Allégée + course",5.5,900,"3 × 5 min à allure course","RACE:Trail des Coteaux de Voutezac, 49 km|49 km, 2 000 m D+, UTMB Index 50K. Répétition générale de la Restonica : matériel, nutrition à 60 g/h, départ prudent.","Repos"],
+[28,"2027-04-26","Allégée + course",5.5,900,"3 × 5 min à allure course","RACE:Trail des Coteaux de Voutezac, 49 km|49 km, 2 000 m D+, UTMB Index 50K. Répétition générale de l'UTC : matériel, nutrition à 60 g/h, départ prudent.","Repos"],
 [29,"2027-05-03","Récup",5.5,600,"EASY:Footing 45 min Z2, pas de qualité","SL 1 h 30 Z2","45 min Z2"],
-[30,"2027-05-10","Spécifique",9,2500,"3 × 12 min seuil en montée","SL 4 h 30","1 h 30 Z2"],
-[31,"2027-05-17","Spécifique (choc)",9.5,3000,"5 × 6 min en côte","SL 5 h","2 h Z2"],
-[32,"2027-05-24","Allégée",6.5,1200,"4 × 4 min en côte","SL 2 h 30","1 h Z2"],
-[33,"2027-05-31","Spécifique (choc)",9.5,3200,"2 × 20 min tempo en montée","SL 5 h 30 avec tout le matériel et la nutrition de course","2 h Z2"],
-[34,"2027-06-07","Spécifique + test",7.5,2200,"3 × 8 min seuil en montée","SL 2 h","1 h 30 Z2"],
-[35,"2027-06-14","Spécifique (répétition générale)",9,2800,"4 × 6 min en côte","SL 5 h avec tout le matériel et la nutrition de course","1 h 30 Z2"],
-[36,"2027-06-21","Affûtage",7,1500,"3 × 8 min seuil","SL 3 h","1 h Z2"],
-[37,"2027-06-28","Affûtage",5.5,800,"4 × 4 min à allure course","SL 1 h 45","45 min Z2"],
-[38,"2027-07-05","Course",3,300,"3 × 3 min de rappel (court)","RACE:Restonica Trail by UTMB, 69 km|Corte (Corse). 69 km, 3 950 m D+, 3 Running Stones, 108 points Grand Raid. Premier ultra : objectif finir, environ 13-15 h, nutrition selon l'onglet Calcul nutrition.","Repos"],
-[39,"2027-07-12","Récup après Restonica",2,0,"EASY:Marche ou vélo léger 45 min","Marche libre","Repos"],
+[30,"2027-05-10","Spécifique",10,3000,"3 × 12 min seuil en montée","SL 5 h","1 h 30 Z2"],
+[31,"2027-05-17","Spécifique (choc)",11,3600,"5 × 6 min en côte","SL 6 h","2 h Z2"],
+[32,"2027-05-24","Allégée",7,1500,"4 × 4 min en côte","SL 2 h 30","1 h Z2"],
+[33,"2027-05-31","Spécifique (choc)",12,4200,"2 × 20 min tempo en montée","SL 7 h avec tout le matériel et la nutrition de course","2 h Z2"],
+[34,"2027-06-07","Spécifique + test",8,2500,"3 × 8 min seuil en montée","SL 2 h 30","1 h 30 Z2"],
+[35,"2027-06-14","Spécifique (répétition générale)",12,4500,"4 × 6 min en côte","SL 7 h avec tout le matériel et la nutrition de course (dont une partie de nuit)","2 h Z2"],
+[36,"2027-06-21","Affûtage",9,2500,"3 × 8 min seuil","SL 4 h","1 h Z2"],
+[37,"2027-06-28","Affûtage",6,1000,"4 × 4 min à allure course","SL 2 h","45 min Z2"],
+[38,"2027-07-05","Course (jeudi 8)",3,300,"3 × 3 min de rappel (court)","Repos","Repos"],
+[39,"2027-07-12","Récup après l'UTC",2,0,"EASY:Marche ou vélo léger 45 min","Marche libre","Repos"],
 [40,"2027-07-19","Reprise",3,200,"EASY:Footing 30-40 min Z1-Z2","Footing 40 min Z2","Repos"]
 ];
 /* Prolongation jusqu'au X-Trail Corrèze Dordogne (plan avec courses uniquement) */
@@ -916,27 +913,23 @@ const EXT=[
    Liens relevés le 10 novembre 2026. */
 const RACES=[
 ["2026-11-08","Le Montagrier Trail, 30 km","Montagrier (24). En Z2-Z3, c'est une sortie longue en compétition. Si tu es à Tarbes ce week-end-là : sortie longue normale à la place.",true,false,"",""],
-["2026-12-06","10 km route","Objectif 41'30-42'30, départ à 4'12-4'15.",false,false,"",""],
 ["2027-01-17","Trail de Pécharmant, 21 km","Creysse (24), 21 km, environ 300-400 m D+. Course de reprise, Z3 maximum. La noctambule de 11 km du samedi soir est possible à la place. Date à confirmer (16-17 janvier).",false,true,"https://www.spiridonperigordpourpre.fr/","Site de l'organisateur · inscriptions à venir"],
 ["2027-02-21","Hivernal Trail Grand-Brassac, 20 km","Grand-Brassac (24), 20 km de jour, 600 m D+. Course d'entraînement, test des produits de nutrition. Le 20 km de nuit de la veille est possible à la place. Date à confirmer : 13-14 ou 20-21 février selon les calendriers.",false,true,"https://fr.milesrepublic.com/event/hivernal-trail-grand-brassac-htgb-15725","Fiche de la course · inscriptions vers le 20 janvier"],
 ["2027-03-28","Trail des Citadelles, 40 km","Lavelanet (09). 40 km, 2 000 m D+, UTMB Index 50K : ta première cote. Premier vrai test montagne, 50-60 g/h. Week-end de Pâques, date à confirmer sur le site officiel.",true,true,"https://www.trailcitadelles.com","Site officiel · inscriptions à venir"],
 ["2027-04-18","Trail nature d'Isle, 22 km","Isle (87), 22 km, 600 m D+. En Z3 maximum : c'est de l'entraînement, deux semaines avant Voutezac. Date à confirmer (mi-avril).",false,true,"https://tni.jourdetrail.fr/","Site officiel · inscriptions à venir"],
-["2027-05-01","Trail des Coteaux de Voutezac, 49 km","Voutezac (19). 49 km, 2 000 m D+, UTMB Index 50K. Répétition générale de la Restonica : matériel, nutrition à 60 g/h, rythme. 550 dossards pour les trois trails.",true,false,"https://www.klikego.com/inscription/trail-et-rando-des-coteaux-voutezac-2027/running-course-a-pied/1643665602486-10","S'inscrire · ouvert sur Klikego"],
-["2027-06-13","Trail 100 Andorra by UTMB, Trail 21K","Ordino (Andorre). 21 km, 1 800 m D+, 1 Running Stone. Dernier test en haute montagne, quatre semaines avant la Restonica : à courir en contrôle.",false,false,"https://andorra.utmb.world/registration","S'inscrire · événement ouvert"],
-["2027-07-10","Restonica Trail by UTMB, 69 km","Corte (Corse). 69 km, 3 950 m D+, 3 Running Stones, 108 points Grand Raid. Premier ultra : objectif finir, environ 13-15 h.",true,false,"https://restonica.utmb.world/races/RT100K","Page de la course · ouverture à venir (alerte sur restonica.utmb.world/get-notified)"],
-["2027-08-22","Trail de Peyrignac, 21,8 km","Peyrignac (24), 21,8 km, 530 m D+. Reprise en douceur après la Restonica, sans objectif de temps. Date à confirmer (23 août en 2026).",false,true,"https://fr.milesrepublic.com/event/trail-de-peyrignac-7394","Fiche de la course · inscriptions à venir"],
-["2027-09-25","X-Trail Corrèze Dordogne, Grand Trail des Tours 56 km","Argentat (19). 56 km, 2 800 m D+, UTMB Index. Le 81 km (3 632 m D+) si la Restonica s'est bien passée, le 29 km sinon : à décider en août. Date estimée (26 sept. en 2026).",true,true,"https://www.xtrail-correze-dordogne.com/x-trail-correze-dordogne/","Site officiel · inscriptions à venir"]
+["2027-05-01","Trail des Coteaux de Voutezac, 49 km","Voutezac (19). 49 km, 2 000 m D+, UTMB Index 50K. Répétition générale de l'UTC : matériel, nutrition à 60 g/h, rythme. 550 dossards pour les trois trails.",true,false,"https://www.klikego.com/inscription/trail-et-rando-des-coteaux-voutezac-2027/running-course-a-pied/1643665602486-10","S'inscrire · ouvert sur Klikego"],
+["2027-07-08","Ultra-Trail di Corsica (UTC100M), 110 km","Corte (Corse). 110 km, 7 200 m D+, 4 Running Stones, 182 points Grand Raid. Objectif de la saison : finir, environ 24-28 h (limite 48 h), deux nuits. Départ jeudi 8 juillet à 23 h, cours Paoli (horaire 2026, à confirmer pour 2027). Dors le plus possible la veille. Repli possible : Restonica 69 km (10 juillet) si les points de contrôle de fin avril et de fin mai ne sont pas bons.",true,false,"https://restonica.utmb.world/races/UTC100M","Page de la course"],
+["2027-08-22","Trail de Peyrignac, 21,8 km","Peyrignac (24), 21,8 km, 530 m D+. Reprise en douceur après l'UTC, sans objectif de temps. Date à confirmer (23 août en 2026).",false,true,"https://fr.milesrepublic.com/event/trail-de-peyrignac-7394","Fiche de la course · inscriptions à venir"],
+["2027-09-25","X-Trail Corrèze Dordogne, Grand Trail des Tours 56 km","Argentat (19). 56 km, 2 800 m D+, UTMB Index. Le 81 km (3 632 m D+) si l'UTC s'est bien passée, le 29 km sinon : à décider en août. Date estimée (26 sept. en 2026).",true,true,"https://www.xtrail-correze-dordogne.com/x-trail-correze-dordogne/","Site officiel · inscriptions à venir"]
 ];
 /* Calendrier « un trail par mois » : date, course retenue, alternative, UTMB Index, Stones, points Grand Raid, surlignée, lien, libellé */
 const COURSES=[
-["6 déc. 2026","<b>10 km route (repère)</b>","—","Non","Non","—",1,"",""],
 ["17 janv. 2027 *","<b>Trail de Pécharmant, Creysse (24), 21 km</b>","Roc'trail, Paussac (24), 30-31 janv.","À vérifier","Non","&lt; 75",1,"https://www.spiridonperigordpourpre.fr/","Organisateur"],
 ["20-21 févr. 2027 *","<b>Hivernal Trail Grand-Brassac (24), 20 km, 600 m D+</b>","Trail de la Pierre du Loup, Sauviat (87), 25 km","À vérifier","Non","&lt; 75",1,"https://fr.milesrepublic.com/event/hivernal-trail-grand-brassac-htgb-15725","Fiche"],
 ["28 mars 2027 *","<b>Trail des Citadelles, Lavelanet (09), 40 km, 2 000 m D+</b>","Trail des Mouflons, Cherveix-Cubas (24), 44 km, 4 avril","Oui (50K)","Non","60",1,"https://www.trailcitadelles.com","Site officiel"],
 ["18 avril 2027 *","<b>Trail nature d'Isle (87), 22 km, 600 m D+</b>","Trail de la forêt de Lenfant, Saint-Gence (87), 20 km","À vérifier","Non","&lt; 75",1,"https://tni.jourdetrail.fr/","Site officiel"],
 ["1er mai 2027","<b>Trail des Coteaux, Voutezac (19), 49 km, 2 000 m D+</b>","Oh Meu Deus by UTMB (Portugal), 52 km, 30 avril","Oui (50K)","Non","69",1,"https://www.klikego.com/inscription/trail-et-rando-des-coteaux-voutezac-2027/running-course-a-pied/1643665602486-10","S'inscrire"],
-["13 juin 2027","<b>Trail 100 Andorra by UTMB, 21 km, 1 800 m D+</b>","—","Oui (20K)","1","39",1,"https://andorra.utmb.world/registration","S'inscrire"],
-["10 juil. 2027","<b>Restonica Trail by UTMB, Corte, 69 km, 3 950 m D+</b>","Verbier St-Bernard by UTMB, X-Traversée 77 km, 5 300 m D+","Oui (100K)","3","108",1,"https://restonica.utmb.world/races/RT100K","Ouverture à venir"],
+["8 juil. 2027","<b>Ultra-Trail di Corsica (UTC100M), Corte, 110 km, 7 200 m D+</b> · objectif de la saison","Repli : Restonica Trail by UTMB, 69 km, 3 950 m D+ (10 juil.)","Oui (100M)","4","182",1,"https://restonica.utmb.world/races/UTC100M","Page de la course"],
 ["22 août 2027 *","<b>Trail de Peyrignac (24), 21,8 km, 530 m D+</b>","Grand Raid des Pyrénées, Tour du Moudang 60 km (tirage au sort)","À vérifier","Non","&lt; 75",1,"https://fr.milesrepublic.com/event/trail-de-peyrignac-7394","Fiche"],
 ["25 sept. 2027 *","<b>X-Trail Corrèze Dordogne, Argentat (19), 56 km, 2 800 m D+</b> (ou 29 km / 81 km)","—","Oui","Non","84 (117 sur le 81 km)",1,"https://www.xtrail-correze-dordogne.com/x-trail-correze-dordogne/","Site officiel"]
 ];
@@ -1040,7 +1033,7 @@ function gymLines(type,light){let ex=GYM[type];if(light&&type==="A")ex=ex.filter
   return ex.map(e=>e.name+" "+(light?Math.max(2,e.sets-1):e.sets)+" × "+(e.lo===e.hi?e.lo:e.lo+"-"+e.hi)+" "+e.unit).join(" · ")}
 function weeksFor(mode){return mode==="race"?BASE.concat(EXT):BASE}
 /* Courses actives : conseillées (mode « avec courses », sauf masquées) + courses ajoutées par l'utilisateur (tous modes) */
-function activeRaces(ctx){const h=ctx.hidden||[];const rec=ctx.mode==="race"?RACES.filter(r=>!h.includes(r[0])):[];return rec.concat(ctx.extra||[]).sort((a,b)=>a[0]<b[0]?-1:1)}
+function activeRaces(ctx){const h=ctx.hidden||[];const rec=ctx.mode==="race"?RACES.filter(r=>!h.includes(r[0])):RACES.filter(r=>r[0]==="2027-07-08");return rec.concat(ctx.extra||[]).sort((a,b)=>a[0]<b[0]?-1:1)}
 function raceOn(d,ctx){const k=iso(d);return activeRaces(ctx).find(r=>r[0]===k)||null}
 function raceInWeek(w,ctx){const s=parse(w[1]);return activeRaces(ctx).find(r=>{const x=(parse(r[0])-s)/864e5;return x>=0&&x<7})||null}
 
@@ -1599,11 +1592,11 @@ if(store.get("seeded","")!=="2"){
 }
 const kd=k=>parse(k.slice(0,10));
 /* ---------- Courses : conseillées (modifiables) + ajoutées ---------- */
-const RACE_INFO={"2026-11-08":{dist:30,dplus:900,terrain:"roulant",est:true},"2026-12-06":{dist:10,dplus:0,terrain:"route",prio:"B"},
+const RACE_INFO={"2026-11-08":{dist:30,dplus:900,terrain:"roulant",est:true},
  "2027-01-17":{dist:21,dplus:350,terrain:"roulant",est:true},"2027-02-21":{dist:20,dplus:600,terrain:"roulant"},
  "2027-03-28":{dist:40,dplus:2000,terrain:"montagne",prio:"B"},"2027-04-18":{dist:22,dplus:600,terrain:"roulant"},
- "2027-05-01":{dist:49,dplus:2000,terrain:"roulant",prio:"B"},"2027-06-13":{dist:21,dplus:1800,terrain:"montagne"},
- "2027-07-10":{dist:69,dplus:3950,terrain:"technique",prio:"A"},"2027-08-22":{dist:21.8,dplus:530,terrain:"roulant"},
+ "2027-05-01":{dist:49,dplus:2000,terrain:"roulant",prio:"B"},
+ "2027-07-08":{dist:110,dplus:7200,terrain:"technique",prio:"A"},"2027-08-22":{dist:21.8,dplus:530,terrain:"roulant"},
  "2027-09-25":{dist:56,dplus:2800,terrain:"roulant",prio:"B"}};
 let raceEdits=store.json("raceEdits",{});
 let userRaces=store.json("userRaces",[]);
@@ -2177,7 +2170,7 @@ function renderPlanning(){
   document.getElementById("site-p").setAttribute("aria-pressed",site==="p");
   document.getElementById("mode-desc").textContent=mode==="race"
     ?"Avec mes courses : un trail par mois ("+RACES.length+" courses) remplace la sortie longue de sa semaine, et le plan continue jusqu'au X-Trail Corrèze Dordogne (fin sept. 2027)."
-    :"Plan de base : seulement le 10 km, Voutezac (course de prépa) et la Restonica. Il s'arrête fin juillet 2027.";
+    :"Plan de base : seulement Voutezac (course de prépa) et l'UTC 110 km. Il s'arrête fin juillet 2027.";
   document.getElementById("month").textContent=MONTHS[view.m]+" "+view.y;
   const g=document.getElementById("grid");g.innerHTML="";
   ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].forEach(x=>g.append(el("div",{class:"dow",text:x})));
@@ -2240,7 +2233,7 @@ function renderHome(){
   if(nr){const d2=parse(nr[0]);const days=Math.round((d2-TODAY)/864e5);
     document.getElementById("next-race").textContent=days===0?"Aujourd'hui":"J-"+days;
     document.getElementById("next-race-d").textContent=nr[1]+" · "+d2.getUTCDate()+" "+MONTHS[d2.getUTCMonth()]+(nr[4]?" (date estimée)":"");}
-  const da=Math.round((parse("2027-07-10")-TODAY)/864e5);
+  const da=Math.round((parse("2027-07-08")-TODAY)/864e5);
   document.getElementById("cd-main").textContent=da>0?"J-"+da:da===0?"Aujourd'hui":"Courue";
 }
 
@@ -2289,15 +2282,15 @@ const PRESETS=[
   ["Semi",{sport:"route",dist:21.1,dplus:0,pace:270,effort:"competition",context:"course"}],
   ["Marathon",{sport:"route",dist:42.195,dplus:0,pace:300,effort:"competition",context:"course"}],
   ["SL trail 3 h",{sport:"trail",dist:24,dplus:1200,pace:450,effort:"endurance",context:"entrainement"}],
-  ["Restonica 69 km",{sport:"trail",dist:69,dplus:3950,pace:730,effort:"competition",context:"course"}],
+  ["UTC 110 km",{sport:"trail",dist:110,dplus:7200,pace:800,effort:"competition",context:"course"}],
   ["X-Trail 56 km",{sport:"trail",dist:56,dplus:2800,pace:610,effort:"competition",context:"course"}],
   ["Diagonale",{sport:"trail",dist:180,dplus:10200,pace:660,effort:"competition",context:"course"}],
   ["Vélo 2 h",{sport:"velo",dist:60,dplus:600,pace:120,effort:"endurance",context:"entrainement"}],
   ["Natation 2 km",{sport:"natation",dist:2,dplus:0,pace:1200,effort:"endurance",context:"entrainement"}]
 ];
-const RACE_PRESET={"2026-11-08":{sport:"trail",dist:30,dplus:900,pace:420},"2026-12-06":{sport:"route",dist:10,dplus:0,pace:252},"2027-01-24":{sport:"trail",dist:32,dplus:900,pace:420},
+const RACE_PRESET={"2026-11-08":{sport:"trail",dist:30,dplus:900,pace:420},"2027-01-24":{sport:"trail",dist:32,dplus:900,pace:420},
  "2027-02-21":{sport:"trail",dist:33.5,dplus:1000,pace:430},"2027-03-21":{sport:"trail",dist:42,dplus:1600,pace:480},"2027-04-18":{sport:"trail",dist:31,dplus:1500,pace:500},
- "2027-06-10":{sport:"trail",dist:79,dplus:3900,pace:679},"2027-07-10":{sport:"trail",dist:32,dplus:2100,pace:580},"2027-10-17":{sport:"trail",dist:80.4,dplus:3443,pace:560}};
+ "2027-06-10":{sport:"trail",dist:79,dplus:3900,pace:679},"2027-07-08":{sport:"trail",dist:110,dplus:7200,pace:800},"2027-10-17":{sport:"trail",dist:80.4,dplus:3443,pace:560}};
 let NI=Object.assign({sport:"trail",dist:24,dplus:1200,pace:450,effort:"endurance",temp:"doux",context:"entrainement",gut:"debutant",sweat:"",unit:"minkm",weight:null},store.json("nutri",{}));
 function presetFromRace(k){const ri=raceInfo(k);if(!ri||!ri.dist)return;const pr=predictRace(ri);
   Object.assign(NI,{sport:ri.terrain==="route"?"route":"trail",dist:ri.dist,dplus:ri.dplus||0,pace:pr?pr.pace:(RACE_PRESET[k]||{}).pace||420,effort:"competition",context:"course",unit:"minkm"});store.setJson("nutri",NI)}
