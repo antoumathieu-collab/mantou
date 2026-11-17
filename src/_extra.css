@@ -222,3 +222,7 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
 /* Salle ou maison */
 .homesw{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;margin:8px 0}
 .linkbtn{background:none;border:0;padding:4px 0;color:var(--accent);font:inherit;font-size:.82rem;text-decoration:underline;cursor:pointer}
+
+/* Barre de volume de la semaine */
+.volbar{height:8px;border-radius:99px;background:var(--rest);overflow:hidden;margin:10px 0 4px}
+.volbar i{display:block;height:100%;background:var(--s1,var(--accent));border-radius:99px}

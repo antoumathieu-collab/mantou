@@ -88,45 +88,62 @@ const GYM_NAMES={A:"Jambes et force",B:"Gainage et haut du corps",C:"Full body c
 const LIGHT_A=["squat","stepup","mollets"];
 function gymLines(type,light){let ex=GYM[type];if(light&&type==="A")ex=ex.filter(e=>LIGHT_A.includes(e.id));
   return ex.map(e=>e.name+" "+(light?Math.max(2,e.sets-1):e.sets)+" × "+(e.lo===e.hi?e.lo:e.lo+"-"+e.hi)+" "+e.unit).join(" · ")}
+/* Objectif de la saison : RT100K, samedi 10 juillet 2027. Le plan de base garde les 4 checkpoints et l'objectif. */
+const OBJ_DATE="2027-07-10";
 function weeksFor(mode){return mode==="race"?BASE.concat(EXT):BASE}
 /* Courses actives : conseillées (mode « avec courses », sauf masquées) + courses ajoutées par l'utilisateur (tous modes) */
-function activeRaces(ctx){const h=ctx.hidden||[];const rec=ctx.mode==="race"?RACES.filter(r=>!h.includes(r[0])):RACES.filter(r=>r[0]==="2027-07-08");return rec.concat(ctx.extra||[]).sort((a,b)=>a[0]<b[0]?-1:1)}
+function activeRaces(ctx){const h=ctx.hidden||[];const rec=ctx.mode==="race"?RACES.filter(r=>!h.includes(r[0])):RACES.filter(r=>r[0]<=OBJ_DATE);return rec.concat(ctx.extra||[]).sort((a,b)=>a[0]<b[0]?-1:1)}
 function raceOn(d,ctx){const k=iso(d);return activeRaces(ctx).find(r=>r[0]===k)||null}
 function raceInWeek(w,ctx){const s=parse(w[1]);return activeRaces(ctx).find(r=>{const x=(parse(r[0])-s)/864e5;return x>=0&&x<7})||null}
 
+/* Semaine type (5 sorties, footings d'au moins 1 h) :
+   lun repos · mar qualité · mer footing Z2 + salle A · jeu footing Z2 · ven salle (jusqu'à fin février) ou repos · sam sortie longue · dim sortie Z2.
+   Semaine allégée : mer salle seule (allégée), ven repos. Durées des sorties de semaine selon le volume horaire h. */
+const WINTER_END="2027-03-01";
+const hm=m=>{const H=Math.floor(m/60),M=m%60;return H?H+" h"+(M?" "+String(M).padStart(2,"0"):""):M+" min"};
+function weekDurs(h){return{q:h<7?60:h<10?75:90,wed:h<9?60:75,thu:h<7?60:h<10?75:90}}
 function baseSession(w,dow,site){
-  const [n,,phase,h,dp,tue,sat,sun]=w;
-  const light=/Allégée|Récup|Affûtage|Course|Reprise/.test(phase);
-  const P=site==="p";
+  const [n,mon,phase,h,dp,tue,sat,sun]=w;
+  const taper=/Affûtage/.test(phase);
+  const light=/Allégée|Récup|Course|Reprise/.test(phase);
+  const P=site==="p";const D=weekDurs(h);const winter=mon<WINTER_END;
+  const satRace=sat.startsWith("RACE:");
   if(dow===0) return S("rest","Repos","—","Repos. Option : 15 min de mobilité chevilles et hanches.");
   if(dow===1){
-    if(tue.startsWith("EASY:")) return S("easy","Footing facile","45 min",tue.slice(5));
-    return S("hard","Séance de qualité","1 h","Échauffement 20 min Z1-Z2, puis "+tue+", retour au calme 10 min. "+(P?"Sur le plat ou sur ta plus longue côte de Périgueux.":"En montée si la séance le dit, sinon sur le plat."),"Si les jambes ne sont pas revenues de la sortie longue, fais 45 min Z2 à la place.","Qualité · "+tue);
+    if(tue.startsWith("EASY:")) {const d=durOf(tue.slice(5));return S("easy","Footing facile",d==="—"?"1 h":d,tue.slice(5))}
+    const dq=light?60:D.q;
+    return S("hard","Séance de qualité",hm(dq),"Échauffement 20 min Z1-Z2, puis "+tue+", retour au calme 10-15 min"+(dq>60?" (complète en Z2 jusqu'à "+hm(dq)+")":"")+". "+(P?"Sur le plat ou sur ta plus longue côte de Périgueux.":"En montée si la séance le dit, sinon sur le plat."),"Si les jambes ne sont pas revenues de la sortie longue, fais 1 h Z2 à la place.","Qualité · "+tue);
   }
   if(dow===2){
     if(h<=3) return S("rest","Repos","—","Repos ou marche.");
-    const g=S("gym","Salle A · Jambes + footing",light?"45 min":"1 h 15",(light?"Jambes à 60 % de la charge : ":"Jambes et force : ")+gymLines("A",light)+". "+(P?"Puis 20 min de tapis incliné à 12-15 %.":"Puis 20 min de footing Z1."),"","💪 Salle A · Jambes + footing");g.gymType="A";return g;
+    /* salle A (jambes) toute l'année ; à partir de mars, une semaine sur deux full body coureur */
+    const t=winter||n%2===0?"A":"C";
+    if(light){const g=S("gym","Salle "+t+" · "+GYM_NAMES[t]+" (allégée)","45 min",(t==="A"?"Jambes à 60 % de la charge : ":"Full body allégé : ")+gymLines(t,true)+". Pas de footing : semaine allégée.","","💪 Salle "+t+" allégée");g.gymType=t;return g}
+    const g=S("gym","Footing + Salle "+t+" · "+GYM_NAMES[t]+(taper?" (allégée)":""),hm(D.wed+(taper?35:45)),"Footing "+hm(D.wed)+" en Z2 (le matin, ou juste avant la salle), puis "+GYM_NAMES[t].toLowerCase()+(taper?" à 60 % de la charge":"")+" : "+gymLines(t,taper)+". "+(P?"Option : finis par 10 min de tapis incliné à 12-15 %.":""),"Le footing compte dans ton volume : ne le saute pas, même si la salle est courte.","💪 Footing "+hm(D.wed)+" + Salle "+t);g.gymType=t;g.withRun=true;return g;
   }
   if(dow===3){
-    if(h<=3) return S("easy","Footing libre","30 min","Au ressenti, Z1-Z2.");
-    return S("easy","Endurance fondamentale",h<=6?"45 min":"1 h","Z2, aisance respiratoire. "+(P?"Ajoute 6-8 lignes droites de 20 s.":"Parcours vallonné."),"Toujours facile, même si tu te sens bien.","Endurance Z2 · "+(h<=6?"45 min":"1 h"));
+    if(h<=3) return S("easy","Footing libre","40 min","Au ressenti, Z1-Z2.");
+    const d=light?60:D.thu;
+    return S("easy","Footing Z2",hm(d),"Z2, aisance respiratoire, "+hm(d)+" minimum. "+(P?"Parcours vallonné, avec 6-8 lignes droites de 20 s à la fin.":"Parcours vallonné : marche dans les montées qui te font sortir de Z2."),"Toujours facile, même si tu te sens bien : c'est le volume qui construit l'endurance.","Footing Z2 · "+hm(d));
   }
   if(dow===4){
-    if(light||h<=3) return S("rest","Repos","—","Repos (semaine allégée : une seule séance de salle).");
-    /* rotation sur les vendredis réellement travaillés (les semaines allégées n'en ont pas) */
-    const k=BASE.concat(EXT).filter(x=>x[0]<n&&!/Allégée|Récup|Affûtage|Course|Reprise/.test(x[2])&&x[3]>3).length;
+    if(satRace) return S("easy","Veille de course","40 min","40 min Z1 + 4 lignes droites de 20 s. Prépare ton sac et ta nutrition.","","Veille de course · 40 min Z1");
+    if(light||taper||h<=3||!winter) return S("rest","Repos","—",winter?"Repos (semaine allégée : une seule séance de salle).":"Repos : à partir de mars, une seule séance de salle par semaine pour laisser la place au volume de course.");
+    /* rotation sur les vendredis réellement travaillés de l'hiver */
+    const k=BASE.filter(x=>x[0]<n&&x[1]<WINTER_END&&!/Allégée|Récup|Affûtage|Course|Reprise/.test(x[2])&&x[3]>3).length;
     const t=["C","D","E","B"][k%4];
     const g=S("gym","Salle · "+GYM_NAMES[t],t==="C"?"50 min":"45 min",GYM_NAMES[t]+" : "+gymLines(t,false)+". Puis 10 min de mobilité.","","💪 Salle · "+GYM_NAMES[t]);g.gymType=t;return g;
   }
   const val=dow===5?sat:sun;
   if(val.startsWith("RACE:")){const [t,txt]=val.slice(5).split("|");return S("race",t,"Course",txt||t,"La veille : repas riche en glucides. Le lendemain : Z1 ou repos.","COURSE · "+t)}
-  if(val==="Repos") return S("rest","Repos","—","Repos.");
+  if(val==="Repos") return S("rest",dow===6&&satRace?"Lendemain de course":"Repos","—",dow===6&&satRace?"Repos ou 30 min de marche / Z1 très facile.":"Repos.");
   const dplus=P?Math.round(dp/2/100)*100:dp;
   if(dow===5){
     const isSL=val.startsWith("SL");
-    return S("easy",isSL?"Sortie longue":"Sortie",durOf(val),val.replace(/^SL /,"Sortie longue de ")+". "+(dp>0?(P?"Parcours le plus vallonné, avec des répétitions de côtes, pour viser ~"+dplus+" m D+ sur la semaine.":"En montagne : vise ~"+dplus+" m D+ sur la semaine, marche dès que tu sors de Z2."):""),h>=8?"Mange dès la 1re heure : la cible est dans l'onglet Calcul nutrition.":"",(isSL?"Sortie longue ":"Sortie ")+durOf(val));
+    return S("easy",isSL?"Sortie longue":"Sortie",durOf(val),val.replace(/^SL /,"Sortie longue de ")+". "+(dp>0?(P?"Parcours le plus vallonné, avec des répétitions de côtes, pour viser ~"+dplus+" m D+ sur la semaine.":"En montagne : vise ~"+dplus+" m D+ sur la semaine, marche dès que tu sors de Z2."):""),h>=8?"Mange dès la 1re heure : la cible est dans l'onglet Calcul nutrition.":"",(isSL?"SL · ":"Sortie · ")+val.replace(/^SL /,""));
   }
-  return S("easy","Sortie moyenne",durOf(val),val+(P?", sur parcours vallonné.":", en montagne sur jambes fatiguées."),"","Sortie moyenne · "+val);
+  const enchain=/enchaînement/.test(val);
+  return S("easy",enchain?"Sortie Z2 (enchaînement)":"Sortie Z2",durOf(val),val.replace(/ \(enchaînement\)/,"")+(enchain?" sur les jambes de la sortie longue de la veille : c'est le cœur de la prépa ultra.":"")+(P?" Parcours vallonné.":" En montagne si possible."),"","Sortie Z2 · "+val.replace(/ \(enchaînement\)/,""));
 }
 function lookup(d,mode){
   for(const w of weeksFor(mode)){const diff=Math.round((d-parse(w[1]))/864e5);if(diff>=0&&diff<7)return{w,dow:diff}}
@@ -150,11 +167,11 @@ function sessionFor(date,ctx){
   }
   if(!s && dow===1){
     const pr=raceOn(addDays(date,-2),ctx)||raceOn(addDays(date,-3),ctx);
-    if(pr && pr[3] && pr[1]!=="10 km route") s=S("easy","Footing de récupération","45 min","Lendemain de course longue : 45 min Z1-Z2 à la place de la qualité.","On reprend la séance de qualité la semaine suivante.","Récup · footing 45 min");
+    if(pr && pr[3] && pr[1]!=="10 km route") s=S("easy","Footing de récupération","1 h","Après une course longue : 1 h en Z1-Z2 à la place de la qualité, en marchant dans les montées.","On reprend la séance de qualité la semaine suivante.","Récup · footing 1 h");
   }
   if(!s) s=baseSession(w,dow,ctx.site);
   s.week=w;s.dow=dow;
-  s.run=(s.kind==="easy"||s.kind==="hard"||s.kind==="race") && s.dur!=="—";
+  s.run=((s.kind==="easy"||s.kind==="hard"||s.kind==="race") && s.dur!=="—")||!!s.withRun;
   /* sport par défaut pour la saisie de vitesse */
   if(s.kind==="race") s.sport=/10 km route/.test(s.title)?"route":"trail";
   else if(s.kind==="hard") s.sport="route";
@@ -168,4 +185,4 @@ function sessionFor(date,ctx){
 /* Nombre de séances (hors repos) prévues sur une semaine */
 function plannedInWeek(w,ctx){let n=0;for(let i=0;i<7;i++){const s=sessionFor(addDays(parse(w[1]),i),ctx);if(s&&s.kind!=="rest")n++}return n}
 
-return {GYM,HOME,LIGHT_HA,homeLines,GYM_NAMES,gymLines,ENIT_BLOCKS,activeRaces,BASE,EXT,RACES,COURSES,PACKS,CHECK,parse,iso,addDays,MONTHS,DAYS,SITE,weeksFor,raceOn,raceInWeek,lookup,range,sessionFor,plannedInWeek};
+return {OBJ_DATE,WINTER_END,GYM,HOME,LIGHT_HA,homeLines,GYM_NAMES,gymLines,ENIT_BLOCKS,activeRaces,BASE,EXT,RACES,COURSES,PACKS,CHECK,parse,iso,addDays,MONTHS,DAYS,SITE,weeksFor,raceOn,raceInWeek,lookup,range,sessionFor,plannedInWeek};

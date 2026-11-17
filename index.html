@@ -342,6 +342,10 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
 .homesw{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;margin:8px 0}
 .linkbtn{background:none;border:0;padding:4px 0;color:var(--accent);font:inherit;font-size:.82rem;text-decoration:underline;cursor:pointer}
 
+/* Barre de volume de la semaine */
+.volbar{height:8px;border-radius:99px;background:var(--rest);overflow:hidden;margin:10px 0 4px}
+.volbar i{display:block;height:100%;background:var(--s1,var(--accent));border-radius:99px}
+
 </style>
 
 </head>
@@ -366,7 +370,7 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
     <div class="panel today" id="today-panel"></div>
     <div class="cols countdown">
       <div class="panel stat"><span>Prochaine course</span><b id="next-race">—</b><span id="next-race-d"></span></div>
-      <div class="panel stat"><span>UTC 110 km</span><b id="cd-main">—</b><span>8 juillet 2027, 23 h</span></div>
+      <div class="panel stat"><span>RT100K 69 km</span><b id="cd-main">—</b><span>10 juillet 2027, 2 h</span></div>
       <div class="panel stat"><span>Diagonale</span><b>2030</b><span>objectif 33 h</span></div>
     </div>
   </section>
@@ -425,33 +429,34 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
   <!-- COURSES -->
   <section class="view" id="v-courses" hidden>
     <div class="panel">
-      <h2>Un trail par mois jusqu'en septembre 2027</h2>
-      <p>Une course par mois, placée selon tes blocs d'alternance, avec une alternative quand il y en a une. Trois se courent à fond (Citadelles, Voutezac, UTC) : ce sont tes étapes d'évaluation, les autres sont des entraînements avec dossard. Ce sont les mêmes que dans le planning « Avec mes courses ». Les dates suivies d'un astérisque ne sont pas encore confirmées par l'organisateur.</p>
+      <h2>4 checkpoints, puis le RT100K</h2>
+      <p>Chaque dossard valide (ou non) le bloc d'entraînement qui le précède. Les distances montent avec le volume : 25, 36, 42 puis 45 km, avant les 69 km de Corte le 10 juillet. Ce sont les mêmes courses que dans le planning. Les dates suivies d'un astérisque ne sont pas encore confirmées par l'organisateur.</p>
       <ul>
-        <li><b>UTMB Index</b> : ta cote de performance, valable 24 mois après une course. Sans Index, tu pars dans la dernière vague à l'UTC : les Citadelles te le donnent dès mars. Elle compte sur toute course publiée sur utmb.world. Pour les courses « à vérifier », contrôle sur <a href="https://utmb.world" target="_blank" rel="noopener">utmb.world</a> avant de t'inscrire.</li>
-        <li><b>Running Stones</b> : seulement les courses « by UTMB ». Dans ton plan : l'UTC 110 km (4 Stones). Repli : Restonica 69 km (3 Stones).</li>
-        <li><b>Points Grand Raid</b> : km + D+/100, utiles à partir de 75 points (Trail de Bourbon).</li>
+        <li><b>Checkpoint réussi</b> : tu finis en gardant une allure régulière (dernier tiers pas plus de 10 % plus lent que le premier) et tu récupères en moins d'une semaine. Le bloc suivant monte comme prévu.</li>
+        <li><b>Checkpoint raté</b> (grosse défaillance, douleur, plus de 10 jours pour récupérer) : le bloc suivant reprend le volume du bloc précédent au lieu de monter.</li>
+        <li><b>Running Stones</b> : seulement les courses « by UTMB ». Dans ton plan : le RT100K (catégorie 100K, 3 Stones). Il te donne aussi ton UTMB Index.</li>
+        <li><b>Points Grand Raid</b> : km + D+/100. Les qualificatives de la Diag se courront en 2029 : aucune course de 2027 ne compte pour l'inscription.</li>
       </ul>
-      <h3>Les règles pour choisir</h3>
+      <h3>Les règles</h3>
       <ol>
         <li>Une course remplace la sortie longue de la semaine ; le lendemain se fait en Z1 ou repos.</li>
-        <li>Pas plus d'une course de plus de 40 km toutes les 6 semaines, UTC comprise.</li>
-        <li>Aucune course dans les 6 semaines avant l'UTC (la dernière est Voutezac, début mai), ni dans les 4 semaines après.</li>
-        <li>Avant mars, une course courte se court en Z3 au maximum : c'est de l'entraînement.</li>
+        <li>Semaine de course allégée (environ 40 % de volume en moins), semaine d'après en récupération.</li>
+        <li>Aucune course dans les 6 semaines avant le RT100K (la dernière est le Hautacam, le 29 mai), ni dans les 4 semaines après.</li>
+        <li>Les checkpoints de l'hiver se courent en contrôle : départ en Z3, accélération seulement sur le dernier tiers.</li>
       </ol>
     </div>
     <div class="tbl"><table>
       <thead><tr><th>Date</th><th>Course retenue</th><th>Alternative</th><th>UTMB Index</th><th>Stones</th><th>Points GR</th><th>Inscription</th></tr></thead>
       <tbody id="course-rows"></tbody>
     </table></div>
-    <p class="small">Sources : calendriers <a href="https://fr.milesrepublic.com/trail/hautes-pyrenees" target="_blank" rel="noopener">Miles Republic</a> (Hautes-Pyrénées, Pyrénées-Atlantiques, Occitanie, Dordogne, Haute-Vienne), <a href="https://utmb.world/open-registrations" target="_blank" rel="noopener">UTMB World Series</a>, <a href="https://gotrail.run/fr/evenement/val-daran-by-utmb" target="_blank" rel="noopener">Val d'Aran</a>, <a href="https://gotrail.run/en/event/festival-des-templiers" target="_blank" rel="noopener">Templiers</a>, <a href="https://gotrail.run/en/event/grand-raid-des-pyrenees" target="_blank" rel="noopener">Grand Raid des Pyrénées</a>. Calendrier et liens d'inscription relevés le 10 novembre 2026 : <a href="https://utmb.world/fr/open-registrations" target="_blank" rel="noopener">inscriptions UTMB World Series</a>, <a href="https://www.klikego.com/inscription/trail-et-rando-des-coteaux-voutezac-2027/running-course-a-pied/1643665602486-10" target="_blank" rel="noopener">Klikego (Voutezac)</a>, <a href="https://werun.world/?p=4865" target="_blank" rel="noopener">WeRun (Citadelles)</a>. Grand Raid Ventoux et Trail Alsace by UTMB : complets.</p>
+    <p class="small">Sources, relevées le 17 novembre 2026 : <a href="https://fr.milesrepublic.com/event/trail-des-mouflons-912" target="_blank" rel="noopener">Trail des Mouflons</a>, <a href="https://www.athle.fr/competitions/406846631846617837896834960849108852" target="_blank" rel="noopener">Grands Couteliers (édition 2026)</a>, <a href="https://fr.milesrepublic.com/event/ultra-trail-causses-et-vallees-lot-dordogne-2761" target="_blank" rel="noopener">Causses et Vallées</a>, <a href="https://www.tourisme-occitanie.com/fr/fiche/fete-et-manifestation/trail-du-hautacam-beaucens_TFOFMAMIP065V500APC/" target="_blank" rel="noopener">Trail du Hautacam</a>, <a href="https://restonica.utmb.world/races/RT100K" target="_blank" rel="noopener">RT100K</a>. Vérifie la date officielle avant de t'inscrire.</p>
   </section>
 
   <!-- MATERIEL -->
   <section class="view" id="v-materiel" hidden>
     <div class="panel">
       <h2>Trois packages, un conseillé</h2>
-      <p>Je recommande le package <b>Rapport qualité-prix</b> (~720 €). Il couvre tout le matériel de l'UTC et servira encore pour la Diag, en changeant les chaussures entre-temps.</p>
+      <p>Je recommande le package <b>Rapport qualité-prix</b> (~720 €). Il couvre tout le matériel du RT100K et servira encore pour la Diag, en changeant les chaussures entre-temps.</p>
       <div class="seg" role="group" aria-label="Package">
         <button data-pk="ess" aria-pressed="false">Essentiel ~455 €</button>
         <button data-pk="qp" aria-pressed="true">Qualité-prix ~720 €</button>
@@ -479,6 +484,7 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
   <!-- PROGRESSION -->
   <section class="view" id="v-progres" hidden>
     <div class="tiles" id="prog-tiles"></div>
+    <div class="panel"><h3>Montée de volume</h3><p class="small">Heures de course par semaine : le plan (de 5 h 30 à 13 h 30 en juin) et ce que tu as couru. Les semaines en creux sont les semaines allégées et de course.</p><p class="small" id="hours-note"></p><div id="ch-hours"></div></div>
     <div class="cols2">
       <div class="panel"><h3>Fractionné</h3><p class="small">Allure de tes répétitions, séance par séance, pour un même type (400 m, 1 km…). Plus haut = plus rapide.</p><label class="small" for="q-type">Type de séance</label><select id="q-type" class="strsel"></select><p class="small" id="q-note"></p><div id="ch-q"></div><div id="q-list" class="hlist"></div></div>
       <div class="panel"><h3>Allure sur route</h3><p class="small">Plus haut = plus rapide. Une séance validée avec sa vitesse = un point.</p><div id="ch-route"></div></div>
@@ -648,7 +654,7 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
   <section class="view" id="v-routine" hidden>
     <div class="panel">
       <h2>La routine avant et pendant chaque course</h2>
-      <p>Tu suis la même routine à chaque course, pour que le jour de l'UTC ou du X-Trail rien ne soit nouveau. Les points marqués <span class="sz">ultra</span> concernent les courses de plus de 40 km ; les autres valent pour toutes.</p>
+      <p>Tu suis la même routine à chaque course, pour que le jour du RT100K rien ne soit nouveau. Les points marqués <span class="sz">ultra</span> concernent les courses de plus de 40 km ; les autres valent pour toutes.</p>
     </div>
     <div class="panel steps">
       <div class="phase">
@@ -728,19 +734,19 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
     <div class="tbl"><table>
       <thead><tr><th>Période</th><th>Courses</th><th>Glucides/h</th><th>Eau/h</th><th>Sodium/h</th><th>Ce qu'on travaille</th></tr></thead>
       <tbody>
-        <tr><td>Nov.-févr.</td><td>Trails de 15-30 km</td><td>30-40 g</td><td>400-500 ml</td><td>200-300 mg</td><td>Trouver les produits qui passent</td></tr>
-        <tr><td>Mars-mai</td><td>Citadelles 40 km, Voutezac 49 km</td><td>50-60 g</td><td>500-600 ml</td><td>300-500 mg</td><td>Manger en courant, en montée</td></tr>
-        <tr><td>Juil. 2027</td><td>UTC 110 km</td><td>60-90 g</td><td>500-750 ml</td><td>400-700 mg</td><td>Tenir 24-28 h, salé aux ravitos, caféine dosée pour la 2e nuit</td></tr>
+        <tr><td>Janv.-févr.</td><td>Mouflons 25 km, Couteliers 36 km</td><td>30-50 g</td><td>400-500 ml</td><td>200-300 mg</td><td>Trouver les produits qui passent</td></tr>
+        <tr><td>Mai</td><td>Cahors 42 km, Hautacam 45 km</td><td>60-70 g</td><td>500-600 ml</td><td>300-500 mg</td><td>Manger en courant, en montée, avec le sac de Corte</td></tr>
+        <tr><td>Juil. 2027</td><td>RT100K 69 km</td><td>60-80 g</td><td>500-750 ml</td><td>400-700 mg</td><td>Tenir 12-15 h en partant de nuit, salé aux ravitos, caféine dosée en fin de nuit</td></tr>
         <tr><td>Sept. 2027</td><td>X-Trail 56 km</td><td>80-90 g</td><td>500-750 ml</td><td>400-700 mg</td><td>Haut de la fourchette</td></tr>
         <tr><td>2028-2030</td><td>Bourbon, GRP, Diag</td><td>80-90 g</td><td>500-750 ml</td><td>500-800 mg</td><td>Nuit, caféine, vraie nourriture</td></tr>
       </tbody>
     </table></div>
     <div class="cols">
       <div class="panel"><h3>Trails courts de l'hiver</h3><ul><li>Un gel ou une pâte de fruits toutes les 40-45 min dès la 1re heure.</li><li>500 ml de boisson d'effort + eau aux ravitos.</li><li>Noter ce qui passe et ce qui écœure.</li></ul></div>
-      <div class="panel"><h3>Voutezac, 1er mai</h3><ul><li>Répétition générale de l'UTC : mêmes produits, même sac.</li><li>Une prise toutes les 20 min, cible 60 g/h.</li><li>1 pastille de sel par heure s'il fait chaud.</li></ul></div>
+      <div class="panel"><h3>Hautacam, 29 mai</h3><ul><li>Répétition générale du RT100K : mêmes produits, même sac.</li><li>Une prise toutes les 20 min, cible 60 g/h.</li><li>1 pastille de sel par heure s'il fait chaud.</li></ul></div>
     </div>
     <div class="panel">
-      <h3>UTC 110 km (24-28 h)</h3>
+      <h3>RT100K 69 km (12-15 h)</h3>
       <div class="tbl"><table><tbody>
         <tr><td>J-2 et J-1</td><td>Repas riches en glucides, peu de fibres et de gras la veille au soir</td></tr>
         <tr><td>Matin</td><td>Petit-déjeuner testé à l'entraînement, 3 h avant le départ</td></tr>
@@ -750,7 +756,7 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
         <tr><td>Nausée</td><td>Ralentir, eau, salé 20-30 min, puis reprendre doucement</td></tr>
         <tr><td>Arrivée</td><td>Boisson de récup ou repas complet dans l'heure</td></tr>
       </tbody></table></div>
-      <p class="small">Total : environ 1 800-2 300 g de glucides sur 24-28 h. X-Trail : plan de l'UTC en visant 80-90 g/h, c'est le test de la Diag. Ces valeurs sont des ordres de grandeur courants en ultra, à ajuster à tes sensations ; en cas de troubles digestifs répétés, consulte un diététicien du sport.</p>
+      <p class="small">Total : environ 800-1 100 g de glucides sur 12-15 h. Départ à 2 h du matin : dîner tôt la veille, collation 2 h avant le départ. Ces valeurs sont des ordres de grandeur courants en ultra, à ajuster à tes sensations ; en cas de troubles digestifs répétés, consulte un diététicien du sport.</p>
     </div>
   </section>
 
@@ -758,12 +764,13 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
   <section class="view" id="v-objectifs" hidden>
     <div class="panel">
       <h2>Le plan en bref</h2>
-      <p class="lead">4 saisons, une marche par an, 7 à 9 h d'entraînement par semaine tenues sans trou.</p>
+      <p class="lead">4 saisons, une marche par an. En 2027 : passer de 5 h à 13 h de course par semaine sans se blesser, en validant chaque bloc par un dossard.</p>
       <div class="tbl"><table>
         <thead><tr><th>Quand</th><th>Étape</th><th>Rôle</th></tr></thead>
         <tbody>
-          <tr><td>Mars-juin 2027</td><td>Citadelles 40 km, Voutezac 49 km, puis blocs de sorties longues de 5 à 7 h</td><td>Étapes d'évaluation : premier UTMB Index, répétition générale, matériel et nutrition</td></tr>
-          <tr><td>Juil. 2027</td><td>Ultra-Trail di Corsica, UTC100M (110 km, 7 200 m D+)</td><td>Premier ultra de catégorie 100M UTMB, 182 points, 4 Stones : bien au-dessus des 75 demandés pour le Trail de Bourbon</td></tr>
+          <tr><td>Janv.-mai 2027</td><td>4 checkpoints : Mouflons 25 km, Couteliers 36 km, Cahors 42 km, Hautacam 45 km</td><td>Chaque dossard valide le bloc précédent ; volume de 5 h à 13 h par semaine</td></tr>
+          <tr><td>Juil. 2027</td><td>Restonica Trail by UTMB, RT100K (69 km, 3 950 m D+)</td><td>Objectif de la saison, visé en performance ; premier UTMB Index et 3 Stones</td></tr>
+          <tr><td>2028</td><td>Premier 100-110 km de montagne</td><td>Le grand saut de distance, avec une saison de volume en plus</td></tr>
           <tr><td>Sept. 2027</td><td>X-Trail Corrèze Dordogne (56 km, ou 81 km)</td><td>Deuxième course longue, test nutrition à 80-90 g/h</td></tr>
           <tr><td>Oct. 2028</td><td>Trail de Bourbon (106 km, 6 200 m D+), plan B GRP 120 km</td><td>Découvrir le terrain réunionnais et la nuit</td></tr>
           <tr><td>2029</td><td>Andorra 80K (juin) + GRP Ultra 160 km (août)</td><td>Les 2 qualificatives Diag (85 points chacune)</td></tr>
@@ -779,9 +786,11 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
     <div class="tbl"><table>
       <thead><tr><th>Course</th><th>Format</th><th>km-effort</th><th>Objectif réaliste</th><th>Niveau top 100 Diag</th></tr></thead>
       <tbody>
-        <tr><td>Citadelles, mars 2027</td><td>40 km, 2 000 m</td><td>60</td><td>6 h-7 h</td><td>4 h 45</td></tr>
-        <tr><td>Voutezac, mai 2027</td><td>49 km, 2 000 m</td><td>69</td><td>6 h 30-7 h 30</td><td>5 h 30</td></tr>
-        <tr class="key"><td>UTC, juil. 2027</td><td>110 km, 7 200 m</td><td>182</td><td>24-28 h</td><td>—</td></tr>
+        <tr><td>Mouflons, janv. 2027</td><td>25 km, 700 m</td><td>32</td><td>2 h 45-3 h 05</td><td>2 h 15</td></tr>
+        <tr><td>Couteliers, févr. 2027</td><td>36 km, 850 m</td><td>45</td><td>3 h 50-4 h 20</td><td>3 h 15</td></tr>
+        <tr><td>Cahors, mai 2027</td><td>42 km, ≈ 1 800 m</td><td>60</td><td>5 h 15-6 h</td><td>4 h 30</td></tr>
+        <tr><td>Hautacam, mai 2027</td><td>45 km, ≈ 2 700 m</td><td>72</td><td>7 h 15-8 h 15</td><td>6 h</td></tr>
+        <tr class="key"><td>RT100K, juil. 2027</td><td>69 km, 3 950 m</td><td>108</td><td>12 h 30-14 h 30</td><td>10 h 30</td></tr>
         <tr><td>X-Trail, sept. 2027</td><td>56 km, 2 800 m</td><td>84</td><td>9-10 h</td><td>7 h 30</td></tr>
         <tr><td>Trail de Bourbon, oct. 2028</td><td>106 km, 6 200 m</td><td>168</td><td>19-21 h</td><td>17 h 30-18 h</td></tr>
         <tr><td>GRP 120 km (plan B), août 2028</td><td>120 km, 7 000 m</td><td>190</td><td>22-24 h</td><td>20 h</td></tr>
@@ -802,7 +811,7 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
       <h2>Accès à la Diagonale (règlement 2026)</h2>
       <ul>
         <li>2 trails d'au moins 85 points chacun (1 km = 1 point, 100 m D+ = 1 point), sans addition entre courses.</li>
-        <li>Fenêtre 2026 : du 1er janvier 2025 au 31 juillet 2026. Pour 2030, ce serait probablement janvier 2029-juillet 2030 : <b>l'UTC 2027 ne comptera pas</b>, tes qualificatives se courent en 2029.</li>
+        <li>Fenêtre 2026 : du 1er janvier 2025 au 31 juillet 2026. Pour 2030, ce serait probablement janvier 2029-juillet 2030 : <b>le RT100K 2027 ne comptera pas</b>, tes qualificatives se courent en 2029.</li>
         <li>Pré-inscriptions de fin janvier à début mars, tirage mi-mars. Pour la métropole : 300 places au tirage, 950 en package Bourbon Voyages (sans tirage).</li>
         <li>Certificat médical type du Grand Raid + PPS de la FFA, entre mai et août.</li>
       </ul>
@@ -822,9 +831,30 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
       </table></div>
       <p class="small">En montagne, on pilote à l'effort : tu marches dès qu'une montée te fait sortir de Z2. Allures à mettre à jour après un test à fond (5 ou 10 km).</p>
     </div>
+    <div class="panel">
+      <h2>Monter le volume sans se blesser</h2>
+      <p>De 5 h 30 par semaine aujourd'hui à 13 h 30 en juin : c'est le cœur de cette saison. Le volume monte de 5 à 10 % par semaine, par cycles de 3 semaines de charge et 1 semaine allégée (ou une semaine de checkpoint).</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Jour</th><th>Séance</th><th>Durée</th></tr></thead>
+        <tbody>
+          <tr><td>Lundi</td><td>Repos</td><td>—</td></tr>
+          <tr><td>Mardi</td><td>Qualité (côtes, seuil, fractionné)</td><td>1 h → 1 h 30</td></tr>
+          <tr><td>Mercredi</td><td>Footing Z2 + salle A (jambes) ; une semaine sur deux full body à partir de mars</td><td>1 h → 1 h 15 de course</td></tr>
+          <tr><td>Jeudi</td><td>Footing Z2 vallonné</td><td>1 h → 1 h 30</td></tr>
+          <tr><td>Vendredi</td><td>Salle (rotation) jusqu'à fin février, puis repos</td><td>45 min</td></tr>
+          <tr><td>Samedi</td><td>Sortie longue</td><td>1 h 45 → 6 h</td></tr>
+          <tr><td>Dimanche</td><td>Sortie Z2, en enchaînement à partir de mars</td><td>1 h → 3 h 15</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li>Aucun footing sous 1 h : en semaine allégée, on enlève une sortie plutôt que de raccourcir les autres.</li>
+        <li>Le volume monte par la sortie longue et la sortie du dimanche ; l'intensité reste à une séance par semaine.</li>
+        <li>Si tu cours moins de 65 % du volume prévu sur 3 semaines, ou si la charge monte trop vite, l'appli allège la semaine suivante de 15 % : on ne rattrape jamais un retard.</li>
+      </ul>
+    </div>
     <div class="cols">
       <div class="panel"><h3>Salle A, mercredi</h3><ul><li>Squat 4 × 6-8, descente en 3 s</li><li>Fente bulgare 3 × 8 par jambe</li><li>Step-up lesté 3 × 10 par jambe</li><li>Soulevé de terre roumain 3 × 8</li><li>Descente de marche excentrique 3 × 10, 4 s</li><li>Mollets genou tendu puis fléchi, 3 × 12</li></ul></div>
-      <div class="panel"><h3>Salle B, vendredi</h3><ul><li>Planche 3 × 45-60 s</li><li>Planche latérale 3 × 30-45 s</li><li>Dead bug 3 × 10</li><li>Rowing haltère 3 × 10</li><li>Pompes 3 × max propre</li><li>Pont fessier une jambe 3 × 12</li><li>Mobilité 10 min</li></ul></div>
+      <div class="panel"><h3>Salle B, vendredi (hiver)</h3><ul><li>Planche 3 × 45-60 s</li><li>Planche latérale 3 × 30-45 s</li><li>Dead bug 3 × 10</li><li>Rowing haltère 3 × 10</li><li>Pompes 3 × max propre</li><li>Pont fessier une jambe 3 × 12</li><li>Mobilité 10 min</li></ul></div>
     </div>
     <div class="panel">
       <h2>Santé et douleur</h2>
@@ -839,7 +869,7 @@ details.gymdet summary{cursor:pointer;font-weight:600;color:var(--accent);paddin
     </div>
     <div class="panel">
       <h2>Régularité</h2>
-      <p><b>Semaine minimum (3 h 30)</b> quand ça se complique : la qualité du mardi (45 min), la sortie longue à 60 %, une séance A courte de 25 min. Jamais plus de 7 jours sans séance clé.</p>
+      <p><b>Semaine minimum (4 h)</b> quand ça se complique : la qualité du mardi (1 h), la sortie longue à 60 %, un footing d'1 h, une séance A courte de 25 min. Jamais plus de 7 jours sans séance clé.</p>
       <ul>
         <li>Séance ratée en semaine : on ne la rattrape pas.</li>
         <li>1 semaine sans rien : reprendre 1 semaine en arrière.</li>
@@ -858,44 +888,44 @@ const BASE=[
 [2,"2026-10-26","Base + 10 km",7.5,900,"10 × 400 m à 3'50, récup 1'","SL 2 h","1 h Z2"],
 [3,"2026-11-02","Base + 10 km",8,1000,"3 × 2 km à 4'15-4'20, récup 2'","SL 2 h","1 h 15 Z2"],
 [4,"2026-11-09","Allégée",5.5,600,"8 × 300 m vifs, récup 1'","SL 1 h 30","45 min Z2"],
-[5,"2026-11-16","Base + 10 km",8,1000,"3 × 3 km à 4'20, récup 2'","SL 2 h 15","1 h 15 Z2"],
-[6,"2026-11-23","Base + 10 km",8,900,"6 × 1 km à 4'00, récup 1'30","SL 2 h","1 h Z2"],
-[7,"2026-11-30","Développement",7,600,"6 × 3 min en côte","SL 2 h 30 Z2","1 h Z2"],
-[8,"2026-12-07","Récup",5,400,"EASY:Footing 45 min Z2, pas de qualité","SL 1 h 30 Z2","Repos"],
-[9,"2026-12-14","Récup",6,700,"8 × 30 s en côte","SL 1 h 45","1 h Z2"],
-[10,"2026-12-21","Base trail",7,900,"10 × 45 s en côte, descente trottinée","SL 2 h","1 h Z2"],
-[11,"2026-12-28","Base trail",7.5,1000,"3 × 8 min seuil, récup 2'","SL 2 h 15","1 h Z2"],
-[12,"2027-01-04","Base trail",8,1200,"5 × 3 min en côte, récup en descente","SL 2 h 30","1 h 15 Z2"],
-[13,"2027-01-11","Allégée",6,700,"6 × 1 min vif","SL 1 h 45","45 min Z2"],
-[14,"2027-01-18","Base trail",8,1300,"3 × 10 min seuil, récup 2'","SL 2 h 45","1 h Z2"],
-[15,"2027-01-25","Base trail",8.5,1400,"6 × 3 min en côte","SL 3 h","1 h 15 Z2"],
-[16,"2027-02-01","Base trail",8.5,1500,"3 × 10 min seuil en montée","SL 3 h","1 h 30 Z2 (premier enchaînement)"],
-[17,"2027-02-08","Allégée",6,800,"8 × 1 min en côte","SL 2 h","1 h Z2"],
-[18,"2027-02-15","Développement",8.5,1600,"4 × 8 min seuil, récup 2'","SL 3 h 15","1 h 15 Z2"],
-[19,"2027-02-22","Développement",9,1800,"6 × 4 min en côte","SL 3 h 30","1 h 30 Z2"],
-[20,"2027-03-01","Développement",9,2000,"2 × 15 min tempo en montée, récup 4'","SL 3 h 45","1 h Z2"],
-[21,"2027-03-08","Allégée",6.5,1000,"6 × 2 min en côte","SL 2 h 15","1 h Z2"],
-[22,"2027-03-15","Développement",9,2000,"5 × 5 min en côte","SL 4 h","1 h Z2"],
-[23,"2027-03-22","Développement",9,2200,"2 × 15 min seuil","SL 3 h","2 h Z2 (enchaînement)"],
-[24,"2027-03-29","Développement",8.5,1800,"10 × 1 min VMA en côte","SL 3 h 30","1 h Z2"],
-[25,"2027-04-05","Développement",8,1600,"4 × 5 min en côte","SL 3 h","1 h Z2"],
-[26,"2027-04-12","Allégée + course",6,900,"6 × 2 min en côte","SL 1 h 45","1 h Z2"],
-[27,"2027-04-19","Spécifique",8.5,2000,"3 × 12 min seuil en montée","SL 3 h 30","1 h Z2"],
-[28,"2027-04-26","Allégée + course",5.5,900,"3 × 5 min à allure course","RACE:Trail des Coteaux de Voutezac, 49 km|49 km, 2 000 m D+, UTMB Index 50K. Répétition générale de l'UTC : matériel, nutrition à 60 g/h, départ prudent.","Repos"],
-[29,"2027-05-03","Récup",5.5,600,"EASY:Footing 45 min Z2, pas de qualité","SL 1 h 30 Z2","45 min Z2"],
-[30,"2027-05-10","Spécifique",10,3000,"3 × 12 min seuil en montée","SL 5 h","1 h 30 Z2"],
-[31,"2027-05-17","Spécifique (choc)",11,3600,"5 × 6 min en côte","SL 6 h","2 h Z2"],
-[32,"2027-05-24","Allégée",7,1500,"4 × 4 min en côte","SL 2 h 30","1 h Z2"],
-[33,"2027-05-31","Spécifique (choc)",12,4200,"2 × 20 min tempo en montée","SL 7 h avec tout le matériel et la nutrition de course","2 h Z2"],
-[34,"2027-06-07","Spécifique + test",8,2500,"3 × 8 min seuil en montée","SL 2 h 30","1 h 30 Z2"],
-[35,"2027-06-14","Spécifique (répétition générale)",12,4500,"4 × 6 min en côte","SL 7 h avec tout le matériel et la nutrition de course (dont une partie de nuit)","2 h Z2"],
-[36,"2027-06-21","Affûtage",9,2500,"3 × 8 min seuil","SL 4 h","1 h Z2"],
-[37,"2027-06-28","Affûtage",6,1000,"4 × 4 min à allure course","SL 2 h","45 min Z2"],
-[38,"2027-07-05","Course (jeudi 8)",3,300,"3 × 3 min de rappel (court)","Repos","Repos"],
-[39,"2027-07-12","Récup après l'UTC",2,0,"EASY:Marche ou vélo léger 45 min","Marche libre","Repos"],
-[40,"2027-07-19","Reprise",3,200,"EASY:Footing 30-40 min Z1-Z2","Footing 40 min Z2","Repos"]
+[5,"2026-11-16","Base + volume",5.5,500,"3 × 3 km à 4'20, récup 2'","SL 1 h 45","1 h Z2"],
+[6,"2026-11-23","Base + volume",6,700,"8 × 2 min en côte, récup en descente","SL 2 h","1 h Z2"],
+[7,"2026-11-30","Base + volume",6.5,900,"3 × 8 min seuil, récup 2'","SL 2 h 15","1 h 15 Z2"],
+[8,"2026-12-07","Base + volume",7,1000,"6 × 3 min en côte, récup en descente","SL 2 h 15","1 h 15 Z2"],
+[9,"2026-12-14","Allégée",5,500,"8 × 30 s vifs en côte","SL 1 h 45","1 h 15 Z2"],
+[10,"2026-12-21","Base + volume",7,700,"10 × 400 m à 3'50, récup 1'","SL 2 h 15","1 h 15 Z2"],
+[11,"2026-12-28","Base + volume",7.5,800,"3 × 10 min seuil, récup 2'","SL 2 h 30","1 h 30 Z2"],
+[12,"2027-01-04","Base + volume",8,900,"5 × 1 km à 4'00, récup 1'30","SL 2 h 45","1 h 45 Z2"],
+[13,"2027-01-11","Allégée",5.5,600,"6 × 1 min vif","SL 2 h","1 h 30 Z2"],
+[14,"2027-01-18","Développement",8.5,1000,"4 × 8 min seuil, récup 2'","SL 3 h","2 h Z2"],
+[15,"2027-01-25","Allégée + course",5.5,900,"3 × 5 min à allure seuil bas","40 min Z1 + 4 lignes droites","RACE:Trail des Mouflons, 25 km|Checkpoint 1 · Cherveix-Cubas (24), 25 km, 700 m D+. Valide le bloc de base : départ en Z3, dernier tiers à fond si les jambes sont là. 30-40 g de glucides par heure."],
+[16,"2027-02-01","Récup",6.5,700,"EASY:Footing 1 h Z2, pas de qualité","SL 2 h 15","1 h 30 Z2"],
+[17,"2027-02-08","Développement",9,1100,"6 × 4 min en côte, récup en descente","SL 3 h 15","2 h Z2"],
+[18,"2027-02-15","Développement",9.5,1200,"3 × 12 min seuil, récup 3'","SL 3 h 30","2 h 15 Z2"],
+[19,"2027-02-22","Allégée + course",6,1100,"3 × 5 min à allure course","40 min Z1 + 4 lignes droites","RACE:Grand Trail des Couteliers, 36 km|Checkpoint 2 · Nontron (24), 36 km, 850 m D+. Valide le bloc développement : allure régulière, test de 50 g de glucides par heure."],
+[20,"2027-03-01","Récup",6.5,900,"EASY:Footing 1 h Z2 + 6 lignes droites","SL 2 h 30","1 h 30 Z2"],
+[21,"2027-03-08","Développement",10,1800,"6 × 5 min en côte, récup en descente","SL 3 h 45","2 h Z2"],
+[22,"2027-03-15","Développement",10.5,2000,"3 × 12 min seuil en montée","SL 4 h","2 h 15 Z2"],
+[23,"2027-03-22","Développement",11,2200,"2 × 20 min tempo en montée, récup 4'","SL 4 h 15","2 h 30 Z2 (enchaînement)"],
+[24,"2027-03-29","Allégée",7,1200,"8 × 1 min en côte","SL 3 h","2 h Z2"],
+[25,"2027-04-05","Spécifique",11,1800,"5 × 6 min en côte","SL 4 h 15","2 h 30 Z2"],
+[26,"2027-04-12","Spécifique",11.5,2000,"3 × 15 min seuil, récup 3'","SL 4 h 30","2 h 45 Z2 (enchaînement)"],
+[27,"2027-04-19","Spécifique",12,2200,"8 × 3 min en côte + descente rapide contrôlée","SL 5 h","2 h 45 Z2 (enchaînement)"],
+[28,"2027-04-26","Allégée + course",6,1600,"3 × 5 min à allure course","RACE:Ultra Trail Causses et Vallées, L'Atypique 42 km|Checkpoint 3 · Cahors (46), 42 km, environ 1 800 m D+. Premier marathon trail : valide le bloc spécifique. Matériel complet, 60 g de glucides par heure.","Repos"],
+[29,"2027-05-03","Récup",7,900,"EASY:Footing 1 h Z2, pas de qualité","SL 3 h","2 h Z2"],
+[30,"2027-05-10","Spécifique",12,2600,"4 × 10 min seuil en montée","SL 5 h","2 h 45 Z2 (enchaînement)"],
+[31,"2027-05-17","Spécifique (choc)",13,3200,"2 × 25 min tempo en montée","SL 5 h 30 en montagne","3 h 15 Z2 (enchaînement)"],
+[32,"2027-05-24","Allégée + course",7,3000,"3 × 4 min à allure course","RACE:Trail du Hautacam, 45 km|Checkpoint 4 · Beaucens (65), 45 km, environ 2 700 m D+. Répétition générale du RT100K : même sac, mêmes produits (60-70 g/h), bâtons. Valide le bloc montagne.","Repos"],
+[33,"2027-05-31","Récup",7.5,1200,"EASY:Footing 1 h Z2, pas de qualité","SL 3 h","2 h Z2"],
+[34,"2027-06-07","Spécifique (choc)",13.5,3800,"5 × 6 min en côte","SL 6 h en montagne avec tout le matériel et la nutrition de course","3 h 15 Z2 (enchaînement)"],
+[35,"2027-06-14","Spécifique (choc)",13.5,4000,"3 × 15 min seuil en montée","SL 6 h, départ à 2 h du matin comme au RT100K","3 h 15 Z2 (enchaînement)"],
+[36,"2027-06-21","Affûtage",9.5,2000,"3 × 8 min seuil","SL 3 h 30","2 h 15 Z2"],
+[37,"2027-06-28","Affûtage",6.5,1000,"4 × 4 min à allure course","SL 2 h 30","1 h 30 Z2"],
+[38,"2027-07-05","Course (samedi 10)",3,300,"3 × 3 min de rappel (court)","RACE:Restonica Trail by UTMB (RT100K), 69 km|Objectif de la saison · Corte, 69 km, 3 950 m D+, départ samedi 10 juillet à 2 h. Visé en performance : départ maîtrisé, relances dans les descentes, 60-80 g de glucides par heure.","Repos"],
+[39,"2027-07-12","Récup après le RT100K",2,0,"EASY:Marche ou vélo léger 45 min","Marche libre","Repos"],
+[40,"2027-07-19","Reprise",3,200,"EASY:Footing 40 min Z1-Z2","Footing 1 h Z2","Repos"]
 ];
-/* Prolongation jusqu'au X-Trail Corrèze Dordogne (plan avec courses uniquement) */
+/* Prolongation après le RT100K jusqu'au X-Trail Corrèze Dordogne (plan avec courses uniquement) */
 const EXT=[
 [41,"2027-07-26","Reprise",6,800,"EASY:Footing 50 min Z2 + 6 lignes droites","SL 2 h Z2","1 h Z2"],
 [42,"2027-08-02","Base été",8,1500,"5 × 3 min en côte","SL 3 h","1 h Z2"],
@@ -910,28 +940,25 @@ const EXT=[
 [51,"2027-10-04","Reprise",3,200,"EASY:Footing 30-40 min Z1-Z2","Footing 40 min Z2","Repos"]
 ];
 /* Courses du plan « avec courses » : date ISO, nom, détail, longue (>= 30 km), date estimée, lien d'inscription (ou futur lien), libellé du lien.
-   Liens relevés le 10 novembre 2026. */
+   Calendrier revu le 17 novembre 2026 (4 checkpoints + RT100K). */
 const RACES=[
-["2026-11-08","Le Montagrier Trail, 30 km","Montagrier (24). En Z2-Z3, c'est une sortie longue en compétition. Si tu es à Tarbes ce week-end-là : sortie longue normale à la place.",true,false,"",""],
-["2027-01-17","Trail de Pécharmant, 21 km","Creysse (24), 21 km, environ 300-400 m D+. Course de reprise, Z3 maximum. La noctambule de 11 km du samedi soir est possible à la place. Date à confirmer (16-17 janvier).",false,true,"https://www.spiridonperigordpourpre.fr/","Site de l'organisateur · inscriptions à venir"],
-["2027-02-21","Hivernal Trail Grand-Brassac, 20 km","Grand-Brassac (24), 20 km de jour, 600 m D+. Course d'entraînement, test des produits de nutrition. Le 20 km de nuit de la veille est possible à la place. Date à confirmer : 13-14 ou 20-21 février selon les calendriers.",false,true,"https://fr.milesrepublic.com/event/hivernal-trail-grand-brassac-htgb-15725","Fiche de la course · inscriptions vers le 20 janvier"],
-["2027-03-28","Trail des Citadelles, 40 km","Lavelanet (09). 40 km, 2 000 m D+, UTMB Index 50K : ta première cote. Premier vrai test montagne, 50-60 g/h. Week-end de Pâques, date à confirmer sur le site officiel.",true,true,"https://www.trailcitadelles.com","Site officiel · inscriptions à venir"],
-["2027-04-18","Trail nature d'Isle, 22 km","Isle (87), 22 km, 600 m D+. En Z3 maximum : c'est de l'entraînement, deux semaines avant Voutezac. Date à confirmer (mi-avril).",false,true,"https://tni.jourdetrail.fr/","Site officiel · inscriptions à venir"],
-["2027-05-01","Trail des Coteaux de Voutezac, 49 km","Voutezac (19). 49 km, 2 000 m D+, UTMB Index 50K. Répétition générale de l'UTC : matériel, nutrition à 60 g/h, rythme. 550 dossards pour les trois trails.",true,false,"https://www.klikego.com/inscription/trail-et-rando-des-coteaux-voutezac-2027/running-course-a-pied/1643665602486-10","S'inscrire · ouvert sur Klikego"],
-["2027-07-08","Ultra-Trail di Corsica (UTC100M), 110 km","Corte (Corse). 110 km, 7 200 m D+, 4 Running Stones, 182 points Grand Raid. Objectif de la saison : finir, environ 24-28 h (limite 48 h), deux nuits. Départ jeudi 8 juillet à 23 h, cours Paoli (horaire 2026, à confirmer pour 2027). Dors le plus possible la veille. Repli possible : Restonica 69 km (10 juillet) si les points de contrôle de fin avril et de fin mai ne sont pas bons.",true,false,"https://restonica.utmb.world/races/UTC100M","Page de la course"],
-["2027-08-22","Trail de Peyrignac, 21,8 km","Peyrignac (24), 21,8 km, 530 m D+. Reprise en douceur après l'UTC, sans objectif de temps. Date à confirmer (23 août en 2026).",false,true,"https://fr.milesrepublic.com/event/trail-de-peyrignac-7394","Fiche de la course · inscriptions à venir"],
-["2027-09-25","X-Trail Corrèze Dordogne, Grand Trail des Tours 56 km","Argentat (19). 56 km, 2 800 m D+, UTMB Index. Le 81 km (3 632 m D+) si l'UTC s'est bien passée, le 29 km sinon : à décider en août. Date estimée (26 sept. en 2026).",true,true,"https://www.xtrail-correze-dordogne.com/x-trail-correze-dordogne/","Site officiel · inscriptions à venir"]
+["2027-01-31","Trail des Mouflons, 25 km","Checkpoint 1 · Cherveix-Cubas (24), Le petit mouflon : 25 km, 700 m D+, départ 9 h. Valide le bloc de base : départ en Z3, dernier tiers à fond si les jambes sont là. Date estimée (fin janvier, parfois le 1er février) : à confirmer.",false,true,"https://fr.milesrepublic.com/event/trail-des-mouflons-912","Fiche Miles Republic"],
+["2027-02-28","Grand Trail des Couteliers, 36 km","Checkpoint 2 · Nontron (24), 36 km, 850 m D+, départ 8 h 30. Valide le bloc développement, test à 50 g de glucides par heure. Date estimée (28 févr.-1er mars en 2026, certaines sources annoncent les 6-7 mars) : à confirmer.",true,true,"https://fr.milesrepublic.com/event/trail-des-grands-couteliers-15742","Fiche Miles Republic"],
+["2027-05-01","Ultra Trail Causses et Vallées, 42 km","Checkpoint 3 · Cahors (46), L'Atypique : 42 km, environ 1 800 m D+ (à confirmer). Premier marathon trail, matériel complet, 60 g/h. Date estimée (mai 2027, jour pas encore publié).",true,true,"https://fr.milesrepublic.com/event/ultra-trail-causses-et-vallees-lot-dordogne-2761","Fiche Miles Republic"],
+["2027-05-29","Trail du Hautacam, 45 km","Checkpoint 4 · Beaucens (65), samedi 29 mai : 45 km, environ 2 700 m D+. Répétition générale du RT100K : même sac, mêmes produits (60-70 g/h), bâtons.",true,false,"https://www.trails-hautacam.com/inscriptions/trail-du-hautacam","Inscriptions"],
+["2027-07-10","Restonica Trail by UTMB (RT100K), 69 km","Objectif de la saison · Corte (Corse), 69 km, 3 950 m D+, départ samedi 10 juillet à 2 h, cours Paoli, limite 19 h. Visé en performance.",true,false,"https://restonica.utmb.world/races/RT100K","Page de la course"],
+["2027-08-22","Trail de Peyrignac, 21,8 km","Peyrignac (24), 21,8 km, 530 m D+. Reprise en douceur après le RT100K, sans objectif de temps. Date à confirmer (23 août en 2026).",false,true,"https://fr.milesrepublic.com/event/trail-de-peyrignac-7394","Fiche Miles Republic"],
+["2027-09-25","X-Trail Corrèze Dordogne, Grand Trail des Tours 56 km","Argentat (19). 56 km, 2 800 m D+, UTMB Index. Le 81 km si l'été s'est bien passé, le 29 km sinon : à décider en août. Date estimée (26 sept. en 2026).",true,true,"https://www.xtrail-correze-dordogne.com/x-trail-correze-dordogne/","Site officiel"]
 ];
 /* Calendrier « un trail par mois » : date, course retenue, alternative, UTMB Index, Stones, points Grand Raid, surlignée, lien, libellé */
 const COURSES=[
-["17 janv. 2027 *","<b>Trail de Pécharmant, Creysse (24), 21 km</b>","Roc'trail, Paussac (24), 30-31 janv.","À vérifier","Non","&lt; 75",1,"https://www.spiridonperigordpourpre.fr/","Organisateur"],
-["20-21 févr. 2027 *","<b>Hivernal Trail Grand-Brassac (24), 20 km, 600 m D+</b>","Trail de la Pierre du Loup, Sauviat (87), 25 km","À vérifier","Non","&lt; 75",1,"https://fr.milesrepublic.com/event/hivernal-trail-grand-brassac-htgb-15725","Fiche"],
-["28 mars 2027 *","<b>Trail des Citadelles, Lavelanet (09), 40 km, 2 000 m D+</b>","Trail des Mouflons, Cherveix-Cubas (24), 44 km, 4 avril","Oui (50K)","Non","60",1,"https://www.trailcitadelles.com","Site officiel"],
-["18 avril 2027 *","<b>Trail nature d'Isle (87), 22 km, 600 m D+</b>","Trail de la forêt de Lenfant, Saint-Gence (87), 20 km","À vérifier","Non","&lt; 75",1,"https://tni.jourdetrail.fr/","Site officiel"],
-["1er mai 2027","<b>Trail des Coteaux, Voutezac (19), 49 km, 2 000 m D+</b>","Oh Meu Deus by UTMB (Portugal), 52 km, 30 avril","Oui (50K)","Non","69",1,"https://www.klikego.com/inscription/trail-et-rando-des-coteaux-voutezac-2027/running-course-a-pied/1643665602486-10","S'inscrire"],
-["8 juil. 2027","<b>Ultra-Trail di Corsica (UTC100M), Corte, 110 km, 7 200 m D+</b> · objectif de la saison","Repli : Restonica Trail by UTMB, 69 km, 3 950 m D+ (10 juil.)","Oui (100M)","4","182",1,"https://restonica.utmb.world/races/UTC100M","Page de la course"],
-["22 août 2027 *","<b>Trail de Peyrignac (24), 21,8 km, 530 m D+</b>","Grand Raid des Pyrénées, Tour du Moudang 60 km (tirage au sort)","À vérifier","Non","&lt; 75",1,"https://fr.milesrepublic.com/event/trail-de-peyrignac-7394","Fiche"],
-["25 sept. 2027 *","<b>X-Trail Corrèze Dordogne, Argentat (19), 56 km, 2 800 m D+</b> (ou 29 km / 81 km)","—","Oui","Non","84 (117 sur le 81 km)",1,"https://www.xtrail-correze-dordogne.com/x-trail-correze-dordogne/","Site officiel"]
+["31 janv. 2027 *","<b>Trail des Mouflons, Cherveix-Cubas (24), 25 km, 700 m D+</b> · checkpoint 1","Le grand mouflon 44 km, même jour (trop long à ce stade)","À vérifier","Non","32",1,"https://fr.milesrepublic.com/event/trail-des-mouflons-912","Fiche"],
+["28 févr. 2027 *","<b>Grand Trail des Couteliers, Nontron (24), 36 km, 850 m D+</b> · checkpoint 2","Trail 24 km, même jour","À vérifier","Non","44",1,"https://fr.milesrepublic.com/event/trail-des-grands-couteliers-15742","Fiche"],
+["1er mai 2027 *","<b>Ultra Trail Causses et Vallées, Cahors (46), 42 km</b> · checkpoint 3","—","À vérifier","Non","≈ 60",1,"https://fr.milesrepublic.com/event/ultra-trail-causses-et-vallees-lot-dordogne-2761","Fiche"],
+["29 mai 2027","<b>Trail du Hautacam, Beaucens (65), 45 km, ≈ 2 700 m D+</b> · checkpoint 4","Trail 24 km (1 600 m D+), même jour","À vérifier","Non","≈ 72",1,"https://www.trails-hautacam.com/inscriptions/trail-du-hautacam","Inscriptions"],
+["10 juil. 2027","<b>Restonica Trail by UTMB (RT100K), Corte, 69 km, 3 950 m D+</b> · objectif de la saison","—","Oui (100K)","3","108",1,"https://restonica.utmb.world/races/RT100K","Page de la course"],
+["22 août 2027 *","<b>Trail de Peyrignac (24), 21,8 km, 530 m D+</b>","—","À vérifier","Non","&lt; 75",0,"https://fr.milesrepublic.com/event/trail-de-peyrignac-7394","Fiche"],
+["25 sept. 2027 *","<b>X-Trail Corrèze Dordogne, Argentat (19), 56 km, 2 800 m D+</b> (ou 29 km / 81 km)","—","Oui","Non","84 (117 sur le 81 km)",0,"https://www.xtrail-correze-dordogne.com/x-trail-correze-dordogne/","Site officiel"]
 ];
 const PACKS={
 ess:[["Chaussures","Kiprun MT Cushion 2","environ 60 €","282 g, drop 4 mm, amortie"],["Sac","Kiprun Bag 900 10 L","79,99 €","240 g, poche à eau 1 L incluse"],["2 flasques 500 ml","Kiprun","environ 25 €","Non fournies avec ce sac"],["Bâtons","Kiprun aluminium 500","environ 75 €","Robustes pour apprendre"],["Frontale","Kiprun Ontrail 900","60 €","900 lumens, 139 g"],["Veste imperméable","Kiprun Run 900","99,99 €","2,5 couches, 20 000 Schmerber, 182 g"],["Couche chaude, bonnet, gants","Kiprun / Decathlon","environ 45 €","Obligatoires en altitude"],["Survie + gobelet","Decathlon","environ 10 €","Obligatoires"],["Total","","~455 €",""]],
@@ -1031,45 +1058,62 @@ const GYM_NAMES={A:"Jambes et force",B:"Gainage et haut du corps",C:"Full body c
 const LIGHT_A=["squat","stepup","mollets"];
 function gymLines(type,light){let ex=GYM[type];if(light&&type==="A")ex=ex.filter(e=>LIGHT_A.includes(e.id));
   return ex.map(e=>e.name+" "+(light?Math.max(2,e.sets-1):e.sets)+" × "+(e.lo===e.hi?e.lo:e.lo+"-"+e.hi)+" "+e.unit).join(" · ")}
+/* Objectif de la saison : RT100K, samedi 10 juillet 2027. Le plan de base garde les 4 checkpoints et l'objectif. */
+const OBJ_DATE="2027-07-10";
 function weeksFor(mode){return mode==="race"?BASE.concat(EXT):BASE}
 /* Courses actives : conseillées (mode « avec courses », sauf masquées) + courses ajoutées par l'utilisateur (tous modes) */
-function activeRaces(ctx){const h=ctx.hidden||[];const rec=ctx.mode==="race"?RACES.filter(r=>!h.includes(r[0])):RACES.filter(r=>r[0]==="2027-07-08");return rec.concat(ctx.extra||[]).sort((a,b)=>a[0]<b[0]?-1:1)}
+function activeRaces(ctx){const h=ctx.hidden||[];const rec=ctx.mode==="race"?RACES.filter(r=>!h.includes(r[0])):RACES.filter(r=>r[0]<=OBJ_DATE);return rec.concat(ctx.extra||[]).sort((a,b)=>a[0]<b[0]?-1:1)}
 function raceOn(d,ctx){const k=iso(d);return activeRaces(ctx).find(r=>r[0]===k)||null}
 function raceInWeek(w,ctx){const s=parse(w[1]);return activeRaces(ctx).find(r=>{const x=(parse(r[0])-s)/864e5;return x>=0&&x<7})||null}
 
+/* Semaine type (5 sorties, footings d'au moins 1 h) :
+   lun repos · mar qualité · mer footing Z2 + salle A · jeu footing Z2 · ven salle (jusqu'à fin février) ou repos · sam sortie longue · dim sortie Z2.
+   Semaine allégée : mer salle seule (allégée), ven repos. Durées des sorties de semaine selon le volume horaire h. */
+const WINTER_END="2027-03-01";
+const hm=m=>{const H=Math.floor(m/60),M=m%60;return H?H+" h"+(M?" "+String(M).padStart(2,"0"):""):M+" min"};
+function weekDurs(h){return{q:h<7?60:h<10?75:90,wed:h<9?60:75,thu:h<7?60:h<10?75:90}}
 function baseSession(w,dow,site){
-  const [n,,phase,h,dp,tue,sat,sun]=w;
-  const light=/Allégée|Récup|Affûtage|Course|Reprise/.test(phase);
-  const P=site==="p";
+  const [n,mon,phase,h,dp,tue,sat,sun]=w;
+  const taper=/Affûtage/.test(phase);
+  const light=/Allégée|Récup|Course|Reprise/.test(phase);
+  const P=site==="p";const D=weekDurs(h);const winter=mon<WINTER_END;
+  const satRace=sat.startsWith("RACE:");
   if(dow===0) return S("rest","Repos","—","Repos. Option : 15 min de mobilité chevilles et hanches.");
   if(dow===1){
-    if(tue.startsWith("EASY:")) return S("easy","Footing facile","45 min",tue.slice(5));
-    return S("hard","Séance de qualité","1 h","Échauffement 20 min Z1-Z2, puis "+tue+", retour au calme 10 min. "+(P?"Sur le plat ou sur ta plus longue côte de Périgueux.":"En montée si la séance le dit, sinon sur le plat."),"Si les jambes ne sont pas revenues de la sortie longue, fais 45 min Z2 à la place.","Qualité · "+tue);
+    if(tue.startsWith("EASY:")) {const d=durOf(tue.slice(5));return S("easy","Footing facile",d==="—"?"1 h":d,tue.slice(5))}
+    const dq=light?60:D.q;
+    return S("hard","Séance de qualité",hm(dq),"Échauffement 20 min Z1-Z2, puis "+tue+", retour au calme 10-15 min"+(dq>60?" (complète en Z2 jusqu'à "+hm(dq)+")":"")+". "+(P?"Sur le plat ou sur ta plus longue côte de Périgueux.":"En montée si la séance le dit, sinon sur le plat."),"Si les jambes ne sont pas revenues de la sortie longue, fais 1 h Z2 à la place.","Qualité · "+tue);
   }
   if(dow===2){
     if(h<=3) return S("rest","Repos","—","Repos ou marche.");
-    const g=S("gym","Salle A · Jambes + footing",light?"45 min":"1 h 15",(light?"Jambes à 60 % de la charge : ":"Jambes et force : ")+gymLines("A",light)+". "+(P?"Puis 20 min de tapis incliné à 12-15 %.":"Puis 20 min de footing Z1."),"","💪 Salle A · Jambes + footing");g.gymType="A";return g;
+    /* salle A (jambes) toute l'année ; à partir de mars, une semaine sur deux full body coureur */
+    const t=winter||n%2===0?"A":"C";
+    if(light){const g=S("gym","Salle "+t+" · "+GYM_NAMES[t]+" (allégée)","45 min",(t==="A"?"Jambes à 60 % de la charge : ":"Full body allégé : ")+gymLines(t,true)+". Pas de footing : semaine allégée.","","💪 Salle "+t+" allégée");g.gymType=t;return g}
+    const g=S("gym","Footing + Salle "+t+" · "+GYM_NAMES[t]+(taper?" (allégée)":""),hm(D.wed+(taper?35:45)),"Footing "+hm(D.wed)+" en Z2 (le matin, ou juste avant la salle), puis "+GYM_NAMES[t].toLowerCase()+(taper?" à 60 % de la charge":"")+" : "+gymLines(t,taper)+". "+(P?"Option : finis par 10 min de tapis incliné à 12-15 %.":""),"Le footing compte dans ton volume : ne le saute pas, même si la salle est courte.","💪 Footing "+hm(D.wed)+" + Salle "+t);g.gymType=t;g.withRun=true;return g;
   }
   if(dow===3){
-    if(h<=3) return S("easy","Footing libre","30 min","Au ressenti, Z1-Z2.");
-    return S("easy","Endurance fondamentale",h<=6?"45 min":"1 h","Z2, aisance respiratoire. "+(P?"Ajoute 6-8 lignes droites de 20 s.":"Parcours vallonné."),"Toujours facile, même si tu te sens bien.","Endurance Z2 · "+(h<=6?"45 min":"1 h"));
+    if(h<=3) return S("easy","Footing libre","40 min","Au ressenti, Z1-Z2.");
+    const d=light?60:D.thu;
+    return S("easy","Footing Z2",hm(d),"Z2, aisance respiratoire, "+hm(d)+" minimum. "+(P?"Parcours vallonné, avec 6-8 lignes droites de 20 s à la fin.":"Parcours vallonné : marche dans les montées qui te font sortir de Z2."),"Toujours facile, même si tu te sens bien : c'est le volume qui construit l'endurance.","Footing Z2 · "+hm(d));
   }
   if(dow===4){
-    if(light||h<=3) return S("rest","Repos","—","Repos (semaine allégée : une seule séance de salle).");
-    /* rotation sur les vendredis réellement travaillés (les semaines allégées n'en ont pas) */
-    const k=BASE.concat(EXT).filter(x=>x[0]<n&&!/Allégée|Récup|Affûtage|Course|Reprise/.test(x[2])&&x[3]>3).length;
+    if(satRace) return S("easy","Veille de course","40 min","40 min Z1 + 4 lignes droites de 20 s. Prépare ton sac et ta nutrition.","","Veille de course · 40 min Z1");
+    if(light||taper||h<=3||!winter) return S("rest","Repos","—",winter?"Repos (semaine allégée : une seule séance de salle).":"Repos : à partir de mars, une seule séance de salle par semaine pour laisser la place au volume de course.");
+    /* rotation sur les vendredis réellement travaillés de l'hiver */
+    const k=BASE.filter(x=>x[0]<n&&x[1]<WINTER_END&&!/Allégée|Récup|Affûtage|Course|Reprise/.test(x[2])&&x[3]>3).length;
     const t=["C","D","E","B"][k%4];
     const g=S("gym","Salle · "+GYM_NAMES[t],t==="C"?"50 min":"45 min",GYM_NAMES[t]+" : "+gymLines(t,false)+". Puis 10 min de mobilité.","","💪 Salle · "+GYM_NAMES[t]);g.gymType=t;return g;
   }
   const val=dow===5?sat:sun;
   if(val.startsWith("RACE:")){const [t,txt]=val.slice(5).split("|");return S("race",t,"Course",txt||t,"La veille : repas riche en glucides. Le lendemain : Z1 ou repos.","COURSE · "+t)}
-  if(val==="Repos") return S("rest","Repos","—","Repos.");
+  if(val==="Repos") return S("rest",dow===6&&satRace?"Lendemain de course":"Repos","—",dow===6&&satRace?"Repos ou 30 min de marche / Z1 très facile.":"Repos.");
   const dplus=P?Math.round(dp/2/100)*100:dp;
   if(dow===5){
     const isSL=val.startsWith("SL");
-    return S("easy",isSL?"Sortie longue":"Sortie",durOf(val),val.replace(/^SL /,"Sortie longue de ")+". "+(dp>0?(P?"Parcours le plus vallonné, avec des répétitions de côtes, pour viser ~"+dplus+" m D+ sur la semaine.":"En montagne : vise ~"+dplus+" m D+ sur la semaine, marche dès que tu sors de Z2."):""),h>=8?"Mange dès la 1re heure : la cible est dans l'onglet Calcul nutrition.":"",(isSL?"Sortie longue ":"Sortie ")+durOf(val));
+    return S("easy",isSL?"Sortie longue":"Sortie",durOf(val),val.replace(/^SL /,"Sortie longue de ")+". "+(dp>0?(P?"Parcours le plus vallonné, avec des répétitions de côtes, pour viser ~"+dplus+" m D+ sur la semaine.":"En montagne : vise ~"+dplus+" m D+ sur la semaine, marche dès que tu sors de Z2."):""),h>=8?"Mange dès la 1re heure : la cible est dans l'onglet Calcul nutrition.":"",(isSL?"SL · ":"Sortie · ")+val.replace(/^SL /,""));
   }
-  return S("easy","Sortie moyenne",durOf(val),val+(P?", sur parcours vallonné.":", en montagne sur jambes fatiguées."),"","Sortie moyenne · "+val);
+  const enchain=/enchaînement/.test(val);
+  return S("easy",enchain?"Sortie Z2 (enchaînement)":"Sortie Z2",durOf(val),val.replace(/ \(enchaînement\)/,"")+(enchain?" sur les jambes de la sortie longue de la veille : c'est le cœur de la prépa ultra.":"")+(P?" Parcours vallonné.":" En montagne si possible."),"","Sortie Z2 · "+val.replace(/ \(enchaînement\)/,""));
 }
 function lookup(d,mode){
   for(const w of weeksFor(mode)){const diff=Math.round((d-parse(w[1]))/864e5);if(diff>=0&&diff<7)return{w,dow:diff}}
@@ -1093,11 +1137,11 @@ function sessionFor(date,ctx){
   }
   if(!s && dow===1){
     const pr=raceOn(addDays(date,-2),ctx)||raceOn(addDays(date,-3),ctx);
-    if(pr && pr[3] && pr[1]!=="10 km route") s=S("easy","Footing de récupération","45 min","Lendemain de course longue : 45 min Z1-Z2 à la place de la qualité.","On reprend la séance de qualité la semaine suivante.","Récup · footing 45 min");
+    if(pr && pr[3] && pr[1]!=="10 km route") s=S("easy","Footing de récupération","1 h","Après une course longue : 1 h en Z1-Z2 à la place de la qualité, en marchant dans les montées.","On reprend la séance de qualité la semaine suivante.","Récup · footing 1 h");
   }
   if(!s) s=baseSession(w,dow,ctx.site);
   s.week=w;s.dow=dow;
-  s.run=(s.kind==="easy"||s.kind==="hard"||s.kind==="race") && s.dur!=="—";
+  s.run=((s.kind==="easy"||s.kind==="hard"||s.kind==="race") && s.dur!=="—")||!!s.withRun;
   /* sport par défaut pour la saisie de vitesse */
   if(s.kind==="race") s.sport=/10 km route/.test(s.title)?"route":"trail";
   else if(s.kind==="hard") s.sport="route";
@@ -1111,7 +1155,7 @@ function sessionFor(date,ctx){
 /* Nombre de séances (hors repos) prévues sur une semaine */
 function plannedInWeek(w,ctx){let n=0;for(let i=0;i<7;i++){const s=sessionFor(addDays(parse(w[1]),i),ctx);if(s&&s.kind!=="rest")n++}return n}
 
-return {GYM,HOME,LIGHT_HA,homeLines,GYM_NAMES,gymLines,ENIT_BLOCKS,activeRaces,BASE,EXT,RACES,COURSES,PACKS,CHECK,parse,iso,addDays,MONTHS,DAYS,SITE,weeksFor,raceOn,raceInWeek,lookup,range,sessionFor,plannedInWeek};
+return {OBJ_DATE,WINTER_END,GYM,HOME,LIGHT_HA,homeLines,GYM_NAMES,gymLines,ENIT_BLOCKS,activeRaces,BASE,EXT,RACES,COURSES,PACKS,CHECK,parse,iso,addDays,MONTHS,DAYS,SITE,weeksFor,raceOn,raceInWeek,lookup,range,sessionFor,plannedInWeek};
 
 })();
 if(typeof module!=="undefined"&&module.exports)module.exports=PLAN;
@@ -1592,11 +1636,11 @@ if(store.get("seeded","")!=="2"){
 }
 const kd=k=>parse(k.slice(0,10));
 /* ---------- Courses : conseillées (modifiables) + ajoutées ---------- */
-const RACE_INFO={"2026-11-08":{dist:30,dplus:900,terrain:"roulant",est:true},
- "2027-01-17":{dist:21,dplus:350,terrain:"roulant",est:true},"2027-02-21":{dist:20,dplus:600,terrain:"roulant"},
- "2027-03-28":{dist:40,dplus:2000,terrain:"montagne",prio:"B"},"2027-04-18":{dist:22,dplus:600,terrain:"roulant"},
- "2027-05-01":{dist:49,dplus:2000,terrain:"roulant",prio:"B"},
- "2027-07-08":{dist:110,dplus:7200,terrain:"technique",prio:"A"},"2027-08-22":{dist:21.8,dplus:530,terrain:"roulant"},
+const RACE_INFO={"2027-01-31":{dist:25,dplus:700,terrain:"roulant",est:true,prio:"B"},
+ "2027-02-28":{dist:36,dplus:850,terrain:"roulant",est:true,prio:"B"},
+ "2027-05-01":{dist:42,dplus:1800,terrain:"roulant",est:true,prio:"B"},
+ "2027-05-29":{dist:45,dplus:2700,terrain:"montagne",prio:"B"},
+ "2027-07-10":{dist:69,dplus:3950,terrain:"technique",prio:"A"},"2027-08-22":{dist:21.8,dplus:530,terrain:"roulant"},
  "2027-09-25":{dist:56,dplus:2800,terrain:"roulant",prio:"B"}};
 let raceEdits=store.json("raceEdits",{});
 let userRaces=store.json("userRaces",[]);
@@ -1978,9 +2022,11 @@ function weekFactor(w){
   if(iso(s0)!==iso(cur))return{f:1,why:""};
   const ws=weekStats();const prev=ws.filter(x=>x.d<s0).slice(-2);
   let f=1,why=[];
-  if(prev.length===2&&prev.every(x=>x.planned>=3)){const pct=(prev[0].done+prev[1].done)/(prev[0].planned+prev[1].planned);if(pct<0.6){f=0.85;why.push("2 semaines incomplètes ("+Math.round(pct*100)+" % des séances)")}}
+  {const W3=PLAN.weeksFor("base").filter(x=>parse(x[1])<s0&&parse(x[1])>=addDays(s0,-21));
+   if(W3.length===3&&W3[0][1]>="2026-11-16"){const pl=W3.reduce((a,x)=>a+x[3],0),dn=W3.reduce((a,x)=>a+weekHours(parse(x[1])),0);
+     if(pl>0&&dn/pl<0.65){f=0.85;why.push("volume des 3 dernières semaines à "+Math.round(dn/pl*100)+" % du prévu")}}}
   const p=_pmc||pmcNow();const row=p.find(x=>x.d===iso(addDays(s0,-1)));
-  if(row&&row.ctl>10&&row.atl/row.ctl>1.4){f=Math.min(f,0.85);why.push("charge qui monte trop vite (ratio "+(row.atl/row.ctl).toFixed(2).replace(".",",")+")")}
+  if(row&&row.ctl>10&&row.atl/row.ctl>1.5){f=Math.min(f,0.85);why.push("charge qui monte trop vite (ratio "+(row.atl/row.ctl).toFixed(2).replace(".",",")+")")}
   if(row&&row.tsb<-25){f=Math.min(f,0.85);why.push("fatigue accumulée (fraîcheur "+Math.round(row.tsb)+")")}
   return{f,why:why.join(", ")};
 }
@@ -2169,8 +2215,8 @@ function renderPlanning(){
   document.getElementById("site-t").setAttribute("aria-pressed",site==="t");
   document.getElementById("site-p").setAttribute("aria-pressed",site==="p");
   document.getElementById("mode-desc").textContent=mode==="race"
-    ?"Avec mes courses : un trail par mois ("+RACES.length+" courses) remplace la sortie longue de sa semaine, et le plan continue jusqu'au X-Trail Corrèze Dordogne (fin sept. 2027)."
-    :"Plan de base : seulement Voutezac (course de prépa) et l'UTC 110 km. Il s'arrête fin juillet 2027.";
+    ?"Avec mes courses : les 4 checkpoints et le RT100K, puis l'été jusqu'au X-Trail Corrèze Dordogne (fin sept. 2027)."
+    :"Plan de base : les 4 checkpoints et le RT100K. Il s'arrête fin juillet 2027.";
   document.getElementById("month").textContent=MONTHS[view.m]+" "+view.y;
   const g=document.getElementById("grid");g.innerHTML="";
   ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].forEach(x=>g.append(el("div",{class:"dow",text:x})));
@@ -2233,12 +2279,26 @@ function renderHome(){
   if(nr){const d2=parse(nr[0]);const days=Math.round((d2-TODAY)/864e5);
     document.getElementById("next-race").textContent=days===0?"Aujourd'hui":"J-"+days;
     document.getElementById("next-race-d").textContent=nr[1]+" · "+d2.getUTCDate()+" "+MONTHS[d2.getUTCMonth()]+(nr[4]?" (date estimée)":"");}
-  const da=Math.round((parse("2027-07-08")-TODAY)/864e5);
+  const da=Math.round((parse(PLAN.OBJ_DATE)-TODAY)/864e5);
   document.getElementById("cd-main").textContent=da>0?"J-"+da:da===0?"Aujourd'hui":"Courue";
 }
 
 
 /* ---------- Bande de la semaine (accueil) ---------- */
+/* ---------- Montée de volume : heures de course prévues / faites par semaine ---------- */
+const fmtH=h=>{const m=Math.round(h*60/5)*5;const H=Math.floor(m/60),M=m%60;return H+" h"+(M?" "+String(M).padStart(2,"0"):"")};
+function runSecOf(k,v){
+  if(!v||!v.done)return 0;
+  if(v.sport&&!isRunSport(v.sport))return 0;
+  if(v.time)return v.time;if(v.pace&&v.dist)return v.pace*v.dist;
+  if(k.includes("~"))return 0;
+  const d=parse(k);const s=PLAN.sessionFor(d,ctxFor(d));
+  if(!s||!(s.kind==="easy"||s.kind==="hard"||s.kind==="race"))return 0;
+  return (PRO.parseMin(s.dur)||0)*60;
+}
+function weekHours(mon){const lo=iso(mon),hi=iso(addDays(mon,7));let sec=0;
+  for(const[k,v]of Object.entries(logs)){const d=k.slice(0,10);if(d>=lo&&d<hi)sec+=runSecOf(k,v)}return sec/3600}
+function plannedHours(w){const f=weekFactor(w).f;return w[3]*f}
 function renderWeekStrip(){
   const box=document.getElementById("week-strip");if(!box)return;box.innerHTML="";
   const mon=addDays(TODAY,-((TODAY.getUTCDay()+6)%7));
@@ -2251,6 +2311,10 @@ function renderWeekStrip(){
     b.onclick=()=>{selected=d;view={y:d.getUTCFullYear(),m:d.getUTCMonth()};location.hash="#planning"};row.append(b)}
   const w=PLAN.lookup(TODAY,mode);
   box.append(el("div",{class:"wkhead"},el("b",{text:"Cette semaine"}),el("span",{class:"small",text:w?w.w[2]+" · "+SITE[siteFor(TODAY)]:""})),row);
+  if(w){const pl=plannedHours(w.w),dn=weekHours(mon);const pct=Math.min(100,Math.round(dn/pl*100));
+    const W=PLAN.weeksFor("base");const peak=W.reduce((a,x)=>x[3]>a[3]?x:a,W[0]);const nxt=W.find(x=>parse(x[1])>mon&&!/Allégée|Récup|Affûtage|Course|Reprise/.test(x[2]));
+    box.append(el("div",{class:"volbar",role:"img","aria-label":"Volume de course : "+fmtH(dn)+" sur "+fmtH(pl)+" prévues"},el("i",{style:"width:"+pct+"%"})),
+      el("p",{class:"small",text:"Course : "+fmtH(dn)+" / "+fmtH(pl)+" prévues"+(nxt?" · semaine pleine suivante : "+fmtH(nxt[3]):"")+" · pic : "+fmtH(peak[3])+" en juin"}))}
 }
 /* ---------- Courses, matériel, checklist ---------- */
 function renderCourses(){
@@ -2282,15 +2346,14 @@ const PRESETS=[
   ["Semi",{sport:"route",dist:21.1,dplus:0,pace:270,effort:"competition",context:"course"}],
   ["Marathon",{sport:"route",dist:42.195,dplus:0,pace:300,effort:"competition",context:"course"}],
   ["SL trail 3 h",{sport:"trail",dist:24,dplus:1200,pace:450,effort:"endurance",context:"entrainement"}],
-  ["UTC 110 km",{sport:"trail",dist:110,dplus:7200,pace:800,effort:"competition",context:"course"}],
+  ["RT100K 69 km",{sport:"trail",dist:69,dplus:3950,pace:640,effort:"competition",context:"course"}],
   ["X-Trail 56 km",{sport:"trail",dist:56,dplus:2800,pace:610,effort:"competition",context:"course"}],
   ["Diagonale",{sport:"trail",dist:180,dplus:10200,pace:660,effort:"competition",context:"course"}],
   ["Vélo 2 h",{sport:"velo",dist:60,dplus:600,pace:120,effort:"endurance",context:"entrainement"}],
   ["Natation 2 km",{sport:"natation",dist:2,dplus:0,pace:1200,effort:"endurance",context:"entrainement"}]
 ];
-const RACE_PRESET={"2026-11-08":{sport:"trail",dist:30,dplus:900,pace:420},"2027-01-24":{sport:"trail",dist:32,dplus:900,pace:420},
- "2027-02-21":{sport:"trail",dist:33.5,dplus:1000,pace:430},"2027-03-21":{sport:"trail",dist:42,dplus:1600,pace:480},"2027-04-18":{sport:"trail",dist:31,dplus:1500,pace:500},
- "2027-06-10":{sport:"trail",dist:79,dplus:3900,pace:679},"2027-07-08":{sport:"trail",dist:110,dplus:7200,pace:800},"2027-10-17":{sport:"trail",dist:80.4,dplus:3443,pace:560}};
+const RACE_PRESET={"2027-01-31":{sport:"trail",dist:25,dplus:700,pace:390},"2027-02-28":{sport:"trail",dist:36,dplus:850,pace:400},
+ "2027-05-01":{sport:"trail",dist:42,dplus:1800,pace:470},"2027-05-29":{sport:"trail",dist:45,dplus:2700,pace:560},"2027-07-10":{sport:"trail",dist:69,dplus:3950,pace:640}};
 let NI=Object.assign({sport:"trail",dist:24,dplus:1200,pace:450,effort:"endurance",temp:"doux",context:"entrainement",gut:"debutant",sweat:"",unit:"minkm",weight:null},store.json("nutri",{}));
 function presetFromRace(k){const ri=raceInfo(k);if(!ri||!ri.dist)return;const pr=predictRace(ri);
   Object.assign(NI,{sport:ri.terrain==="route"?"route":"trail",dist:ri.dist,dplus:ri.dplus||0,pace:pr?pr.pace:(RACE_PRESET[k]||{}).pace||420,effort:"competition",context:"course",unit:"minkm"});store.setJson("nutri",NI)}
@@ -2457,6 +2520,13 @@ function renderProgress(){
   {const vol={};Object.entries(logs).forEach(([k,v])=>{if(!v.done||!isRunSport(v.sport)||!v.dist)return;const d=kd(k);const mon=addDays(d,-((d.getUTCDay()+6)%7));const key=iso(mon);vol[key]=(vol[key]||0)+v.dist});
    const pts=Object.keys(vol).sort().filter(k=>k>="2026-09-01").map(k=>({x:addDays(parse(k),3),y:Math.round(vol[k]*10)/10,tip:"Semaine du "+shortDate(parse(k))+" : "+fr(vol[k])+" km de course (séances du plan + hors plan)"}));
    chart(document.getElementById("ch-vol"),{type:"bar",label:"Volume de course par semaine",yFmt:v=>v+" km",empty:"Le volume apparaît dès que tes séances ont une distance (saisie ou montre).",series:[{name:"km",color:c1,points:pts}]});}
+  {const W=PLAN.weeksFor("base").filter(w=>w[1]>="2026-11-16");const cur=iso(addDays(TODAY,-((TODAY.getUTCDay()+6)%7)));
+   const plan=W.map(w=>({x:addDays(parse(w[1]),3),y:w[3],tip:"Semaine du "+shortDate(parse(w[1]))+" ("+w[2]+") : "+fmtH(w[3])+" prévues"}));
+   const done=W.filter(w=>w[1]<=cur).map(w=>{const h=weekHours(parse(w[1]));return{x:addDays(parse(w[1]),3),y:Math.round(h*10)/10,tip:"Semaine du "+shortDate(parse(w[1]))+" : "+fmtH(h)+" courues sur "+fmtH(w[3])+" prévues"}});
+   chart(document.getElementById("ch-hours"),{type:"line",label:"Heures de course par semaine",yFmt:v=>v+" h",dots:false,yMin:0,empty:"",series:[{name:"Prévu",color:c2,points:plan},{name:"Couru",color:c1,points:done}]});
+   const last=W.filter(w=>w[1]<cur).slice(-3);const note=document.getElementById("hours-note");
+   if(note&&last.length){const r=last.reduce((a,w)=>a+weekHours(parse(w[1])),0)/last.reduce((a,w)=>a+w[3],0);
+     note.textContent="3 dernières semaines : "+Math.round(r*100)+" % du volume prévu. "+(r>=0.85?"Tu suis la montée, continue.":r>=0.65?"Un peu en dessous : garde en priorité la sortie longue et le footing du jeudi.":"Bien en dessous : ne cherche pas à rattraper, l'appli allège la semaine pour repartir sur une base tenable.")}}
   chart(document.getElementById("ch-reg"),{type:"bar",label:"Régularité par semaine",yFmt:v=>v+" %",empty:"La régularité s'affiche dès la première semaine du plan.",
     series:[{name:"Séances faites",color:c1,points:wk.map(x=>({x:addDays(x.d,3),y:x.pct,tip:"Semaine "+x.w[0]+" : "+x.done+"/"+x.planned+" séances ("+x.pct+" %)"}))}]});
   chart(document.getElementById("ch-weight"),{type:"line",label:"Poids",yFmt:v=>fr(v),empty:"Ajoute une pesée pour suivre ton poids.",

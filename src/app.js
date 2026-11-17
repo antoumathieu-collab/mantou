@@ -17,11 +17,11 @@ if(store.get("seeded","")!=="2"){
 }
 const kd=k=>parse(k.slice(0,10));
 /* ---------- Courses : conseillées (modifiables) + ajoutées ---------- */
-const RACE_INFO={"2026-11-08":{dist:30,dplus:900,terrain:"roulant",est:true},
- "2027-01-17":{dist:21,dplus:350,terrain:"roulant",est:true},"2027-02-21":{dist:20,dplus:600,terrain:"roulant"},
- "2027-03-28":{dist:40,dplus:2000,terrain:"montagne",prio:"B"},"2027-04-18":{dist:22,dplus:600,terrain:"roulant"},
- "2027-05-01":{dist:49,dplus:2000,terrain:"roulant",prio:"B"},
- "2027-07-08":{dist:110,dplus:7200,terrain:"technique",prio:"A"},"2027-08-22":{dist:21.8,dplus:530,terrain:"roulant"},
+const RACE_INFO={"2027-01-31":{dist:25,dplus:700,terrain:"roulant",est:true,prio:"B"},
+ "2027-02-28":{dist:36,dplus:850,terrain:"roulant",est:true,prio:"B"},
+ "2027-05-01":{dist:42,dplus:1800,terrain:"roulant",est:true,prio:"B"},
+ "2027-05-29":{dist:45,dplus:2700,terrain:"montagne",prio:"B"},
+ "2027-07-10":{dist:69,dplus:3950,terrain:"technique",prio:"A"},"2027-08-22":{dist:21.8,dplus:530,terrain:"roulant"},
  "2027-09-25":{dist:56,dplus:2800,terrain:"roulant",prio:"B"}};
 let raceEdits=store.json("raceEdits",{});
 let userRaces=store.json("userRaces",[]);
@@ -403,9 +403,11 @@ function weekFactor(w){
   if(iso(s0)!==iso(cur))return{f:1,why:""};
   const ws=weekStats();const prev=ws.filter(x=>x.d<s0).slice(-2);
   let f=1,why=[];
-  if(prev.length===2&&prev.every(x=>x.planned>=3)){const pct=(prev[0].done+prev[1].done)/(prev[0].planned+prev[1].planned);if(pct<0.6){f=0.85;why.push("2 semaines incomplètes ("+Math.round(pct*100)+" % des séances)")}}
+  {const W3=PLAN.weeksFor("base").filter(x=>parse(x[1])<s0&&parse(x[1])>=addDays(s0,-21));
+   if(W3.length===3&&W3[0][1]>="2026-11-16"){const pl=W3.reduce((a,x)=>a+x[3],0),dn=W3.reduce((a,x)=>a+weekHours(parse(x[1])),0);
+     if(pl>0&&dn/pl<0.65){f=0.85;why.push("volume des 3 dernières semaines à "+Math.round(dn/pl*100)+" % du prévu")}}}
   const p=_pmc||pmcNow();const row=p.find(x=>x.d===iso(addDays(s0,-1)));
-  if(row&&row.ctl>10&&row.atl/row.ctl>1.4){f=Math.min(f,0.85);why.push("charge qui monte trop vite (ratio "+(row.atl/row.ctl).toFixed(2).replace(".",",")+")")}
+  if(row&&row.ctl>10&&row.atl/row.ctl>1.5){f=Math.min(f,0.85);why.push("charge qui monte trop vite (ratio "+(row.atl/row.ctl).toFixed(2).replace(".",",")+")")}
   if(row&&row.tsb<-25){f=Math.min(f,0.85);why.push("fatigue accumulée (fraîcheur "+Math.round(row.tsb)+")")}
   return{f,why:why.join(", ")};
 }
@@ -594,8 +596,8 @@ function renderPlanning(){
   document.getElementById("site-t").setAttribute("aria-pressed",site==="t");
   document.getElementById("site-p").setAttribute("aria-pressed",site==="p");
   document.getElementById("mode-desc").textContent=mode==="race"
-    ?"Avec mes courses : un trail par mois ("+RACES.length+" courses) remplace la sortie longue de sa semaine, et le plan continue jusqu'au X-Trail Corrèze Dordogne (fin sept. 2027)."
-    :"Plan de base : seulement Voutezac (course de prépa) et l'UTC 110 km. Il s'arrête fin juillet 2027.";
+    ?"Avec mes courses : les 4 checkpoints et le RT100K, puis l'été jusqu'au X-Trail Corrèze Dordogne (fin sept. 2027)."
+    :"Plan de base : les 4 checkpoints et le RT100K. Il s'arrête fin juillet 2027.";
   document.getElementById("month").textContent=MONTHS[view.m]+" "+view.y;
   const g=document.getElementById("grid");g.innerHTML="";
   ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].forEach(x=>g.append(el("div",{class:"dow",text:x})));
@@ -658,12 +660,26 @@ function renderHome(){
   if(nr){const d2=parse(nr[0]);const days=Math.round((d2-TODAY)/864e5);
     document.getElementById("next-race").textContent=days===0?"Aujourd'hui":"J-"+days;
     document.getElementById("next-race-d").textContent=nr[1]+" · "+d2.getUTCDate()+" "+MONTHS[d2.getUTCMonth()]+(nr[4]?" (date estimée)":"");}
-  const da=Math.round((parse("2027-07-08")-TODAY)/864e5);
+  const da=Math.round((parse(PLAN.OBJ_DATE)-TODAY)/864e5);
   document.getElementById("cd-main").textContent=da>0?"J-"+da:da===0?"Aujourd'hui":"Courue";
 }
 
 
 /* ---------- Bande de la semaine (accueil) ---------- */
+/* ---------- Montée de volume : heures de course prévues / faites par semaine ---------- */
+const fmtH=h=>{const m=Math.round(h*60/5)*5;const H=Math.floor(m/60),M=m%60;return H+" h"+(M?" "+String(M).padStart(2,"0"):"")};
+function runSecOf(k,v){
+  if(!v||!v.done)return 0;
+  if(v.sport&&!isRunSport(v.sport))return 0;
+  if(v.time)return v.time;if(v.pace&&v.dist)return v.pace*v.dist;
+  if(k.includes("~"))return 0;
+  const d=parse(k);const s=PLAN.sessionFor(d,ctxFor(d));
+  if(!s||!(s.kind==="easy"||s.kind==="hard"||s.kind==="race"))return 0;
+  return (PRO.parseMin(s.dur)||0)*60;
+}
+function weekHours(mon){const lo=iso(mon),hi=iso(addDays(mon,7));let sec=0;
+  for(const[k,v]of Object.entries(logs)){const d=k.slice(0,10);if(d>=lo&&d<hi)sec+=runSecOf(k,v)}return sec/3600}
+function plannedHours(w){const f=weekFactor(w).f;return w[3]*f}
 function renderWeekStrip(){
   const box=document.getElementById("week-strip");if(!box)return;box.innerHTML="";
   const mon=addDays(TODAY,-((TODAY.getUTCDay()+6)%7));
@@ -676,6 +692,10 @@ function renderWeekStrip(){
     b.onclick=()=>{selected=d;view={y:d.getUTCFullYear(),m:d.getUTCMonth()};location.hash="#planning"};row.append(b)}
   const w=PLAN.lookup(TODAY,mode);
   box.append(el("div",{class:"wkhead"},el("b",{text:"Cette semaine"}),el("span",{class:"small",text:w?w.w[2]+" · "+SITE[siteFor(TODAY)]:""})),row);
+  if(w){const pl=plannedHours(w.w),dn=weekHours(mon);const pct=Math.min(100,Math.round(dn/pl*100));
+    const W=PLAN.weeksFor("base");const peak=W.reduce((a,x)=>x[3]>a[3]?x:a,W[0]);const nxt=W.find(x=>parse(x[1])>mon&&!/Allégée|Récup|Affûtage|Course|Reprise/.test(x[2]));
+    box.append(el("div",{class:"volbar",role:"img","aria-label":"Volume de course : "+fmtH(dn)+" sur "+fmtH(pl)+" prévues"},el("i",{style:"width:"+pct+"%"})),
+      el("p",{class:"small",text:"Course : "+fmtH(dn)+" / "+fmtH(pl)+" prévues"+(nxt?" · semaine pleine suivante : "+fmtH(nxt[3]):"")+" · pic : "+fmtH(peak[3])+" en juin"}))}
 }
 /* ---------- Courses, matériel, checklist ---------- */
 function renderCourses(){
@@ -707,15 +727,14 @@ const PRESETS=[
   ["Semi",{sport:"route",dist:21.1,dplus:0,pace:270,effort:"competition",context:"course"}],
   ["Marathon",{sport:"route",dist:42.195,dplus:0,pace:300,effort:"competition",context:"course"}],
   ["SL trail 3 h",{sport:"trail",dist:24,dplus:1200,pace:450,effort:"endurance",context:"entrainement"}],
-  ["UTC 110 km",{sport:"trail",dist:110,dplus:7200,pace:800,effort:"competition",context:"course"}],
+  ["RT100K 69 km",{sport:"trail",dist:69,dplus:3950,pace:640,effort:"competition",context:"course"}],
   ["X-Trail 56 km",{sport:"trail",dist:56,dplus:2800,pace:610,effort:"competition",context:"course"}],
   ["Diagonale",{sport:"trail",dist:180,dplus:10200,pace:660,effort:"competition",context:"course"}],
   ["Vélo 2 h",{sport:"velo",dist:60,dplus:600,pace:120,effort:"endurance",context:"entrainement"}],
   ["Natation 2 km",{sport:"natation",dist:2,dplus:0,pace:1200,effort:"endurance",context:"entrainement"}]
 ];
-const RACE_PRESET={"2026-11-08":{sport:"trail",dist:30,dplus:900,pace:420},"2027-01-24":{sport:"trail",dist:32,dplus:900,pace:420},
- "2027-02-21":{sport:"trail",dist:33.5,dplus:1000,pace:430},"2027-03-21":{sport:"trail",dist:42,dplus:1600,pace:480},"2027-04-18":{sport:"trail",dist:31,dplus:1500,pace:500},
- "2027-06-10":{sport:"trail",dist:79,dplus:3900,pace:679},"2027-07-08":{sport:"trail",dist:110,dplus:7200,pace:800},"2027-10-17":{sport:"trail",dist:80.4,dplus:3443,pace:560}};
+const RACE_PRESET={"2027-01-31":{sport:"trail",dist:25,dplus:700,pace:390},"2027-02-28":{sport:"trail",dist:36,dplus:850,pace:400},
+ "2027-05-01":{sport:"trail",dist:42,dplus:1800,pace:470},"2027-05-29":{sport:"trail",dist:45,dplus:2700,pace:560},"2027-07-10":{sport:"trail",dist:69,dplus:3950,pace:640}};
 let NI=Object.assign({sport:"trail",dist:24,dplus:1200,pace:450,effort:"endurance",temp:"doux",context:"entrainement",gut:"debutant",sweat:"",unit:"minkm",weight:null},store.json("nutri",{}));
 function presetFromRace(k){const ri=raceInfo(k);if(!ri||!ri.dist)return;const pr=predictRace(ri);
   Object.assign(NI,{sport:ri.terrain==="route"?"route":"trail",dist:ri.dist,dplus:ri.dplus||0,pace:pr?pr.pace:(RACE_PRESET[k]||{}).pace||420,effort:"competition",context:"course",unit:"minkm"});store.setJson("nutri",NI)}
@@ -882,6 +901,13 @@ function renderProgress(){
   {const vol={};Object.entries(logs).forEach(([k,v])=>{if(!v.done||!isRunSport(v.sport)||!v.dist)return;const d=kd(k);const mon=addDays(d,-((d.getUTCDay()+6)%7));const key=iso(mon);vol[key]=(vol[key]||0)+v.dist});
    const pts=Object.keys(vol).sort().filter(k=>k>="2026-09-01").map(k=>({x:addDays(parse(k),3),y:Math.round(vol[k]*10)/10,tip:"Semaine du "+shortDate(parse(k))+" : "+fr(vol[k])+" km de course (séances du plan + hors plan)"}));
    chart(document.getElementById("ch-vol"),{type:"bar",label:"Volume de course par semaine",yFmt:v=>v+" km",empty:"Le volume apparaît dès que tes séances ont une distance (saisie ou montre).",series:[{name:"km",color:c1,points:pts}]});}
+  {const W=PLAN.weeksFor("base").filter(w=>w[1]>="2026-11-16");const cur=iso(addDays(TODAY,-((TODAY.getUTCDay()+6)%7)));
+   const plan=W.map(w=>({x:addDays(parse(w[1]),3),y:w[3],tip:"Semaine du "+shortDate(parse(w[1]))+" ("+w[2]+") : "+fmtH(w[3])+" prévues"}));
+   const done=W.filter(w=>w[1]<=cur).map(w=>{const h=weekHours(parse(w[1]));return{x:addDays(parse(w[1]),3),y:Math.round(h*10)/10,tip:"Semaine du "+shortDate(parse(w[1]))+" : "+fmtH(h)+" courues sur "+fmtH(w[3])+" prévues"}});
+   chart(document.getElementById("ch-hours"),{type:"line",label:"Heures de course par semaine",yFmt:v=>v+" h",dots:false,yMin:0,empty:"",series:[{name:"Prévu",color:c2,points:plan},{name:"Couru",color:c1,points:done}]});
+   const last=W.filter(w=>w[1]<cur).slice(-3);const note=document.getElementById("hours-note");
+   if(note&&last.length){const r=last.reduce((a,w)=>a+weekHours(parse(w[1])),0)/last.reduce((a,w)=>a+w[3],0);
+     note.textContent="3 dernières semaines : "+Math.round(r*100)+" % du volume prévu. "+(r>=0.85?"Tu suis la montée, continue.":r>=0.65?"Un peu en dessous : garde en priorité la sortie longue et le footing du jeudi.":"Bien en dessous : ne cherche pas à rattraper, l'appli allège la semaine pour repartir sur une base tenable.")}}
   chart(document.getElementById("ch-reg"),{type:"bar",label:"Régularité par semaine",yFmt:v=>v+" %",empty:"La régularité s'affiche dès la première semaine du plan.",
     series:[{name:"Séances faites",color:c1,points:wk.map(x=>({x:addDays(x.d,3),y:x.pct,tip:"Semaine "+x.w[0]+" : "+x.done+"/"+x.planned+" séances ("+x.pct+" %)"}))}]});
   chart(document.getElementById("ch-weight"),{type:"line",label:"Poids",yFmt:v=>fr(v),empty:"Ajoute une pesée pour suivre ton poids.",
